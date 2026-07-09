@@ -12,9 +12,14 @@ Minha jornada no **Programa de Formação AGER**.
   - [1. Artigo: Como escolher minha carreira em TI?](#1-artigo-como-escolher-minha-carreira-em-ti)
   - [2. Artigo: 5 passos para aprender a programar](#2-artigo-5-passos-para-aprender-a-programar)
   - [3. Trilha: Iniciante em programação](#3-trilha-iniciante-em-programação)
+    - [Módulo 1 - Primeiros passos em programação](#módulo-1---primeiros-passos-em-programação)
+    - [Módulo 2 - Entendendo a lógica de programação](#módulo-2---entendendo-a-lógica-de-programação)
+    - [Módulo 3 - Ferramentas essenciais para programar e compartilhar projetos](#módulo-3---ferramentas-essenciais-para-programar-e-compartilhar-projetos)
+    - [Módulo 4 - Praticando lógica de programação com desafios](#módulo-4---praticando-lógica-de-programação-com-desafios)
+  - [4. Trilha: Aprenda a programar em Java com orientação a objetos](#4-trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
 - [Projetos práticos](#projetos-práticos)
 - [Tecnologias](#tecnologias)
-- [Como executar os projetos](#como-executar-os-projetos)
+- [Como executar os projetos web](#como-executar-os-projetos-web)
 
 ---
 
@@ -32,16 +37,25 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 |---|----------|:------:|:------:|
 | 1 | Como escolher minha carreira em TI? | Artigo | Concluído |
 | 2 | 5 passos para aprender a programar | Artigo | Concluído |
-| 3 | Iniciante em programação | Trilha Alura | Em andamento (4/5) |
+| 3 | Iniciante em programação | Trilha Alura | Concluído |
+| 4 | Aprenda a programar em Java com orientação a objetos | Trilha Alura | ✎ A fazer |
 
-### Sub-trilha: Iniciante em programação (4/5)
+### Sub-trilha: Iniciante em programação (5/5)
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
-| 1 | Primeiros passos em Programação | Concluído |
+| 1 | Primeiros passos em programação | Concluído |
 | 2 | Entendendo a lógica de programação (2 cursos) | Concluído |
 | 3 | Ferramentas essenciais para programar e compartilhar projetos | Concluído |
-| 4 | _(em breve)_ | ✎ A fazer |
+| 4 | Praticando lógica de programação com desafios | Concluído |
+
+### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos
+
+| # | Módulo / Curso | Status |
+|---|----------------|:------:|
+| 1 | Entender a linguagem Java | ✎ A fazer |
+| 2 | Orientação a objetos | ✎ A fazer |
+| 3 | Manipule listas, consuma uma API e lide com exceções (2 cursos) | ✎ A fazer |
 
 ---
 
@@ -64,9 +78,9 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 
 ### 3. Trilha: Iniciante em programação
 
-Trilha Alura aninhada dentro do Passo a passo. Está em andamento (**4/5**). Abaixo, o que aprendi nos módulos já concluídos.
+Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos.
 
-#### Módulo 1 - Primeiros passos em Programação
+#### Módulo 1 - Primeiros passos em programação
 
 **Curso:** Começando em Programação: carreira e primeiros passos
 
@@ -155,6 +169,51 @@ Aqui o foco foi versionamento de código e colaboração, do setup inicial até 
 
 - Usar o **Gist** do GitHub para compartilhar snippets isolados, sem precisar criar um repositório inteiro. Podem ser públicos ou secretos e também têm histórico de versões.
 
+#### Módulo 4 - Praticando lógica de programação com desafios
+
+**Curso:** Lógica de programação: praticando com desafios
+
+Aqui a proposta foi treinar lógica construindo **5 pequenas aplicações web** do zero, cada uma reforçando um conjunto de conceitos. Em todas o ponto de partida foi o mesmo: **analisar o HTML da página** para entender a estrutura antes de escrever o JavaScript da funcionalidade.
+
+**AluGames** - alugar e devolver jogos de tabuleiro
+
+- Recuperar elementos com `document.querySelector()` e `document.getElementById()`.
+- Verificar e alternar o **status de um jogo** (alugado/disponível) com `if/else` e a `classList` (`contains`, `remove`, `add`).
+- Trocar o texto do botão com a propriedade `textContent`.
+
+**Carrinho de compras** - somar produtos e o valor total
+
+- Ler o produto selecionado, separar nome e preço da string e calcular o subtotal.
+- Validar a quantidade com condicionais e ir montando a lista na página com `innerHTML`.
+
+**Sorteador de números** - sortear N números únicos dentro de um intervalo
+
+- Recuperar elementos com `document.getElementById()` e ler campos de formulário com a propriedade `value`.
+- Converter texto em número inteiro com `parseInt()`.
+- Gerar números aleatórios dentro de um intervalo com `Math.random()`.
+- **Laço `for`** para sortear a quantidade pedida e **`array`** com `push()` para guardar os números já sorteados (evitando repetidos com `includes()`).
+- Manipular o botão *Reiniciar* com `if/else` e a `classList`: `contains()`, `remove()` e `add()` para trocar as classes CSS.
+- Alterar o conteúdo da página com `innerHTML` (e a diferença para `textContent`).
+- **Template String** para concatenar variáveis dentro de uma string.
+
+**e-Ticket** - comprar ingressos de diferentes setores
+
+- Escrever cada funcionalidade em **funções separadas** (uma por tipo de ingresso).
+- Usar um bloco condicional (`switch`) para **decidir qual função chamar** de acordo com o valor selecionado.
+- Converter valores com `parseInt()` e atualizar a quantidade disponível na tela.
+
+**Amigo Secreto** - montar a lista e sortear os pares
+
+- **Validar** as informações com condicionais (nome vazio, nome repetido, mínimo de participantes).
+- **Interromper** a execução de uma função com `return`.
+- Contar itens de um `array` com `length` e checar se um item existe com `includes()`.
+
+---
+
+### 4. Trilha: Aprenda a programar em Java com orientação a objetos
+
+Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos. _em breve_
+
 ---
 
 ## Projetos práticos
@@ -163,6 +222,11 @@ Aqui o foco foi versionamento de código e colaboração, do setup inicial até 
 |---------|-----------|------------|
 | [`logica-js-projeto_inicial`](./logica-js-projeto_inicial) | Jogo do Número Secreto (versão console, com `alert`/`prompt`) | variáveis, `while`, `if/else`, ternário |
 | [`js-curso-2-aula1`](./js-curso-2-aula1) | Jogo do Número Secreto (versão web, integrada à página) | funções, arrays, DOM, Web Speech API |
+| [`sorteador-numeros`](./3411-praticando-logica-projeto_inicial/sorteador-numeros) | Sorteador de N números únicos num intervalo | `for`, arrays, `push`/`includes`, `classList`, `innerHTML` |
+| [`alugames`](./3411-praticando-logica-projeto_inicial/alugames) | Alugar e devolver jogos de tabuleiro | `querySelector`, `classList`, `textContent`, `if/else` |
+| [`ingresso`](./3411-praticando-logica-projeto_inicial/ingresso) | Compra de ingressos (e-Ticket) por setor | funções separadas, `switch`, `parseInt` |
+| [`amigo-secreto`](./3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
+| [`carrinho-compras`](./3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
 
 ---
 
@@ -176,11 +240,11 @@ Aqui o foco foi versionamento de código e colaboração, do setup inicial até 
 
 ---
 
-##  Como executar os projetos
+##  Como executar os projetos web
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/SEU-USUARIO/formacao-ager.git
+   git clone https://github.com/YidaAmanda/Programa_de_Formacao_AGER.git
    ```
 2. Entre na pasta do projeto que quer testar (ex.: `js-curso-2-aula1`).
 3. Abra o arquivo `index.html` no navegador (duplo clique já funciona).

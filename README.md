@@ -32,15 +32,15 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 |---|----------|:------:|:------:|
 | 1 | Como escolher minha carreira em TI? | Artigo | Concluído |
 | 2 | 5 passos para aprender a programar | Artigo | Concluído |
-| 3 | Iniciante em programação | Trilha Alura | Em andamento (3/5) |
+| 3 | Iniciante em programação | Trilha Alura | Em andamento (4/5) |
 
-### Sub-trilha: Iniciante em programação (3/5)
+### Sub-trilha: Iniciante em programação (4/5)
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
 | 1 | Primeiros passos em Programação | Concluído |
 | 2 | Entendendo a lógica de programação (2 cursos) | Concluído |
-| 3 | _(em breve)_ | ✎ A fazer |
+| 3 | Ferramentas essenciais para programar e compartilhar projetos | Concluído |
 | 4 | _(em breve)_ | ✎ A fazer |
 
 ---
@@ -64,9 +64,9 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 
 ### 3. Trilha: Iniciante em programação
 
-Trilha Alura aninhada dentro do Passo a passo. Está em andamento (**3/5**). Abaixo, o que aprendi nos módulos já concluídos.
+Trilha Alura aninhada dentro do Passo a passo. Está em andamento (**4/5**). Abaixo, o que aprendi nos módulos já concluídos.
 
-#### Módulo 1 — Primeiros passos em Programação
+#### Módulo 1 - Primeiros passos em Programação
 
 **Curso:** Começando em Programação: carreira e primeiros passos
 
@@ -75,7 +75,7 @@ Trilha Alura aninhada dentro do Passo a passo. Está em andamento (**3/5**). Aba
 - Como funciona o mercado de trabalho e por onde começar.
 - Dicas essenciais para iniciar a trajetória como pessoa desenvolvedora.
 
-#### Módulo 2 — Entendendo a lógica de programação
+#### Módulo 2 - Entendendo a lógica de programação
 
 **Cursos:** Lógica de programação: mergulhe em programação com JavaScript · Lógica de programação: explore funções e listas
 
@@ -94,6 +94,67 @@ Aqui coloquei a mão na massa construindo o **Jogo do Número Secreto**, em duas
 - **Manipulação do DOM**: `document.querySelector()`, `innerHTML`, atributos (`disabled`).
 - **Web Speech API**: fazer o navegador "falar" o texto na tela.
 
+#### Módulo 3 - Ferramentas essenciais para programar e compartilhar projetos
+
+**Curso:** Git e GitHub: compartilhando e colaborando em projetos
+
+Aqui o foco foi versionamento de código e colaboração, do setup inicial até desfazer alterações e compartilhar snippets.
+
+**Configuração e primeiros passos**
+
+- Criar conta no GitHub e instalar o Git na máquina.
+- Configurar a identidade com `git config --global user.name` e `git config --global user.email`.
+- Criar um repositório local com `git init` e um repositório remoto no GitHub.
+- Conectar os dois com `git remote add origin <url>` e enviar o primeiro commit com `git push`.
+- Clonar um repositório já existente com `git clone`.
+
+**Fluxo de trabalho do dia a dia**
+
+- Registrar alterações com `git add` (stage) e `git commit` (confirmação).
+- Verificar o estado da árvore de trabalho com `git status`.
+- Inspecionar o histórico com `git log` - autor, data e mensagem de cada commit.
+  - Variações úteis: `git log --oneline`, `git log --graph`, `git log -p`.
+- Listar e inspecionar os remotos com `git remote` (`git remote -v`).
+- Sincronizar com `git push` (envia commits locais) e `git pull` (traz commits do remoto).
+
+**Colaboração**
+
+- Adicionar uma pessoa como colaboradora em um repositório e aceitar um convite recebido.
+- Creditar co-autoria em um commit com o trailer `Co-authored-by:`
+
+```
+  $ git commit -m "texto"
+  >
+  >
+  Co-authored-by: Nome <email@exemplo.com>
+```
+
+  O GitHub reconhece o e-mail e exibe os dois avatares no commit.
+
+**Desfazendo alterações**
+
+| Comando | O que faz | Reescreve histórico? |
+|---------|-----------|:--------------------:|
+| `git commit --amend` | Corrige o **último** commit (mensagem ou conteúdo) | Sim |
+| `git revert <hash>` | Cria um **novo** commit que desfaz o commit apontado | Não |
+| `git reset --soft <hash>` | Move o HEAD; mantém alterações no *stage* | Sim |
+| `git reset --mixed <hash>` | Move o HEAD; mantém alterações no diretório de trabalho (padrão) | Sim |
+| `git reset --hard <hash>` | Move o HEAD e **descarta** todas as alterações | Sim |
+
+- `revert` é a opção segura em branches compartilhadas, porque não reescreve o histórico.
+- `reset --hard` é destrutivo: o que não estava commitado é perdido.
+- `commit --amend` e `reset` em commits já publicados exigem `push --force`, o que pode quebrar o trabalho de outras pessoas.
+
+**Documentação e arquivos ignorados**
+
+- Criar o `README.md`, que serve como documentação e cartão de visitas do repositório.
+- Usar o arquivo oculto `.gitignore` para dizer ao Git quais arquivos e diretórios não devem ser rastreados (dependências, builds, `.env`, arquivos de IDE).
+- Detalhe importante: o `.gitignore` só afeta arquivos **não rastreados**. Se o arquivo já foi commitado antes, é preciso removê-lo do índice com `git rm --cached <arquivo>`.
+
+**Compartilhando trechos de código**
+
+- Usar o **Gist** do GitHub para compartilhar snippets isolados, sem precisar criar um repositório inteiro. Podem ser públicos ou secretos e também têm histórico de versões.
+
 ---
 
 ## Projetos práticos
@@ -110,6 +171,8 @@ Aqui coloquei a mão na massa construindo o **Jogo do Número Secreto**, em duas
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
 
 ---
 

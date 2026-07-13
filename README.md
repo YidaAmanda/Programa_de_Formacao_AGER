@@ -17,6 +17,8 @@ Minha jornada no **Programa de Formação AGER**.
     - [Módulo 3 - Ferramentas essenciais para programar e compartilhar projetos](#módulo-3---ferramentas-essenciais-para-programar-e-compartilhar-projetos)
     - [Módulo 4 - Praticando lógica de programação com desafios](#módulo-4---praticando-lógica-de-programação-com-desafios)
   - [4. Trilha: Aprenda a programar em Java com orientação a objetos](#4-trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
+    - [Módulo 1 - Entender a linguagem Java](#módulo-1---entender-a-linguagem-java)
+    - [Módulo 2 - Orientação a objetos](#módulo-2---orientação-a-objetos)
 - [Projetos práticos](#projetos-práticos)
 - [Tecnologias](#tecnologias)
 - [Como executar os projetos web](#como-executar-os-projetos-web)
@@ -31,14 +33,14 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 
 ## Progresso da trilha
 
-### Passo a passo — Conteúdo da Trilha
+### Passo a passo - Conteúdo da Trilha
 
 | # | Conteúdo | Tipo | Status |
 |---|----------|:------:|:------:|
 | 1 | Como escolher minha carreira em TI? | Artigo | Concluído |
 | 2 | 5 passos para aprender a programar | Artigo | Concluído |
 | 3 | Iniciante em programação | Trilha Alura | Concluído |
-| 4 | Aprenda a programar em Java com orientação a objetos | Trilha Alura | ✎ A fazer |
+| 4 | Aprenda a programar em Java com orientação a objetos | Trilha Alura | Em andamento |
 
 ### Sub-trilha: Iniciante em programação (5/5)
 
@@ -49,12 +51,12 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 3 | Ferramentas essenciais para programar e compartilhar projetos | Concluído |
 | 4 | Praticando lógica de programação com desafios | Concluído |
 
-### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos
+### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos (2/4)
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
-| 1 | Entender a linguagem Java | ✎ A fazer |
-| 2 | Orientação a objetos | ✎ A fazer |
+| 1 | Entender a linguagem Java | Concluído |
+| 2 | Orientação a objetos | Concluído |
 | 3 | Manipule listas, consuma uma API e lide com exceções (2 cursos) | ✎ A fazer |
 
 ---
@@ -212,7 +214,60 @@ Aqui a proposta foi treinar lógica construindo **5 pequenas aplicações web** 
 
 ### 4. Trilha: Aprenda a programar em Java com orientação a objetos
 
-Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos. _em breve_
+Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos.
+
+#### Módulo 1 - Entender a linguagem Java
+
+**Curso:** Java: criando a sua primeira aplicação
+
+Primeiro contato com o Java, do setup do ambiente ao "Alô Mundo!" e à construção do início do **Screen Match** (catálogo de filmes e séries).
+
+**Ambiente e como o Java funciona**
+
+- Configurar o ambiente instalando a **JDK 17** e a IDE **IntelliJ IDEA**.
+- Diferença entre os três pilares da plataforma:
+  - **JVM** (Java Virtual Machine) - máquina virtual que executa o *bytecode*.
+  - **JRE** (Java Runtime Environment) - ambiente de execução com as bibliotecas padrão.
+  - **JDK** (Java Development Kit) - kit que compila o código-fonte em *bytecode*.
+- Escrever e executar o primeiro programa pelo IntelliJ.
+
+**Conceitos praticados**
+
+- **Variáveis** e **tipos de dados**: `String`, `int`, `double`, `boolean`.
+- **Saída** com `System.out.println()` e formatação com `String.format()` / `.formatted()`.
+- **Entrada** de dados do usuário com a classe `Scanner`.
+- **Casting** implícito e explícito entre tipos numéricos.
+- **Estruturas condicionais** (`if` / `else if` / `else`/ `switch case`) e as comparações `==`, `!=`, `>`, `<`, além do operador **ternário**.
+- **Laços de repetição** com `for`, `while` e `do while`, e quando usar cada um.
+- Comparação de `String` com `.equals()`.
+- **Text Blocks** (Java 15) para textos de múltiplas linhas.
+- **Convenções de código**: classes em `PascalCase`, variáveis e métodos em `camelCase`, constantes em `MAIÚSCULAS`.
+
+#### Módulo 2 - Orientação a objetos
+
+**Curso:** Java: aplicando a Orientação a Objetos
+
+Aqui o Screen Match ganhou estrutura de verdade com classes, e ainda construí o projeto **Sounds** (sistema de músicas) aplicando os mesmos conceitos.
+
+**Classes e encapsulamento**
+
+- Modelar o mundo com **classes** (`Titulo`, `Filme`, `Serie`, `Episodio`) e criar objetos a partir delas.
+- **Encapsulamento**: proteger atributos com o modificador `private` e expô-los de forma controlada com métodos **getters** e **setters**.
+- Diferença entre `private` (acesso só na própria classe) e `public` (acesso de qualquer lugar).
+- A palavra-chave `this` para referenciar o próprio objeto e diferenciar atributos de parâmetros.
+- A palavra-chave `import` para usar classes de outros pacotes.
+- Organização em **pacotes** seguindo a convenção `br.com.amanda.screenmatch`.
+
+**Herança**
+
+- Usar `extends` para uma classe herdar atributos e métodos de outra, eliminando código duplicado (`Serie extends Titulo`, `Podcast extends Audio`).
+- **Sobrescrever** métodos herdados com a anotação `@Override` (ex.: `getDuracaoEmMinutos()` calculado de forma diferente na `Serie`).
+
+**Interfaces e polimorfismo**
+
+- Uma classe herda de **apenas uma** classe, mas pode implementar **várias interfaces**.
+- Criar **interfaces** (`Classificavel`) - todos os métodos são públicos por padrão.
+- Aplicar **polimorfismo**: um método como `FiltroRecomendacao.filtra()` recebe qualquer objeto `Classificavel` sem saber sua classe concreta.
 
 ---
 
@@ -227,6 +282,9 @@ Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulo
 | [`ingresso`](./3411-praticando-logica-projeto_inicial/ingresso) | Compra de ingressos (e-Ticket) por setor | funções separadas, `switch`, `parseInt` |
 | [`amigo-secreto`](./3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
 | [`carrinho-compras`](./3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
+| [`primeiroprojeto`](./primeiroprojeto) | Primeiros exercícios em Java (loops, condicionais, leitura, adivinhação) | `Scanner`, `for`/`while`, `if/else`, casting |
+| [`screenmatch`](./screenmatch) | Catálogo de filmes e séries (Screen Match) | classes, encapsulamento, herança, interface, polimorfismo |
+| [`sounds`](./sounds) | Sistema de músicas e podcasts | herança (`Audio`), `@Override`, polimorfismo |
 
 ---
 
@@ -235,6 +293,8 @@ Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulo
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
 
@@ -248,3 +308,9 @@ Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulo
    ```
 2. Entre na pasta do projeto que quer testar (ex.: `js-curso-2-aula1`).
 3. Abra o arquivo `index.html` no navegador (duplo clique já funciona).
+
+### Como executar os projetos Java
+
+1. Tenha a **JDK 17** (ou superior) instalada.
+2. Abra a pasta do projeto (ex.: `screenmatch`) no **IntelliJ IDEA**.
+3. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão ▶ da IDE.

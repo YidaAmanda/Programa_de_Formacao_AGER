@@ -8,21 +8,16 @@ public class Serie extends Titulo implements Classificavel {
     private boolean ativa;
     private int minutosPorEpisodio;
 
-    /* Setters */
-    public void setTemporadas(int temporadas) {
+    public Serie(String nome, int anoDeLancamento, boolean incluidoNoPlano, int temporadas, int episodiosPorTemporadas, int minutosPorEpisodio) {
+        super(nome, anoDeLancamento, incluidoNoPlano);
         this.temporadas = temporadas;
+        this.epsodiosPorTemporadas = episodiosPorTemporadas;
+        this.minutosPorEpisodio = minutosPorEpisodio;
     }
 
-    public void setEpsodiosPorTemporadas(int epsodiosPorTemporadas) {
-        this.epsodiosPorTemporadas = epsodiosPorTemporadas;
-    }
-
+    /* Setters */
     public void setAtiva(boolean ativa) {
         this.ativa = ativa;
-    }
-
-    public void setMinutosPorEpisodio(int minutosPorEpisodio) {
-        this.minutosPorEpisodio = minutosPorEpisodio;
     }
     /* Setters */
 
@@ -52,5 +47,18 @@ public class Serie extends Titulo implements Classificavel {
     @Override
     public int getClassificacao () {
         return (int) pegaMediaAvaliacoes() / 2;
+    }
+
+    @Override
+    public void exibeFichaTecnica() {
+        System.out.println("Nome: " + this.getNome());
+        System.out.println("Ano de lançamento: " + this.getAnoDeLancamento());
+        System.out.println("Duração em minutos: " + this.getDuracaoEmMinutos());
+        System.out.println("Incluído no plano: " + (this.isIncluidoNoPlano() ? "Sim" : "Não"));
+    }
+
+    @Override
+    public String toString() {
+        return "Serie: " + this.getNome() + " (" + this.getAnoDeLancamento() + ")";
     }
 }

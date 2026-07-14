@@ -1,18 +1,17 @@
+package br.com.amanda.screenmatch.Principal;
+
 import br.com.amanda.screenmatch.calculos.CalculadoraDeTempo;
 import br.com.amanda.screenmatch.calculos.FiltroRecomendacao;
 import br.com.amanda.screenmatch.models.Episodio;
 import br.com.amanda.screenmatch.models.Filme;
 import br.com.amanda.screenmatch.models.Serie;
 
+import java.util.ArrayList;
+
 public class Principal {
     public static void main(String[] args) {
         System.out.println("------");
-        Filme meuFilme = new Filme(); //tipo referência
-        meuFilme.setNome("Até que as cores acabem");
-        meuFilme.setAnoDeLancamento(2024);
-        meuFilme.setDuracaoEmMinutos(120);
-        meuFilme.setIncluidoNoPlano(true);
-
+        Filme meuFilme = new Filme("Até que as cores acabem", 2024, 120, true); //tipo referência
         meuFilme.exibeFichaTecnica();
 
         meuFilme.avalia(10);
@@ -22,12 +21,7 @@ public class Principal {
         System.out.println(meuFilme.pegaMediaAvaliacoes());
 
         System.out.println("------");
-        Filme outroFilme = new Filme(); //tipo referência
-        outroFilme.setNome("Given: The Movie");
-        outroFilme.setAnoDeLancamento(2020);
-        outroFilme.setDuracaoEmMinutos(59);
-        outroFilme.setIncluidoNoPlano(false);
-
+        Filme outroFilme = new Filme("Given: The Movie", 2020, 59, false); //tipo referência
         outroFilme.exibeFichaTecnica();
 
         outroFilme.avalia(6);
@@ -37,16 +31,8 @@ public class Principal {
         System.out.println(outroFilme.pegaMediaAvaliacoes());
 
         System.out.println("------");
-        Serie minhaSerie = new Serie();
-        minhaSerie.setNome("Because this is my first life");
-        minhaSerie.setAnoDeLancamento(2017);
-        minhaSerie.setTemporadas(1);
-        minhaSerie.setEpsodiosPorTemporadas(16);
-        minhaSerie.setMinutosPorEpisodio(75);
-        minhaSerie.setIncluidoNoPlano(true);
-
+        Serie minhaSerie = new Serie("Because this is my first life", 2017, true, 1, 16, 75);
         minhaSerie.exibeFichaTecnica();
-        System.out.println("Duração em minutos: " + minhaSerie.getDuracaoEmMinutos());
 
         minhaSerie.avalia(2);
         minhaSerie.avalia(3);
@@ -74,5 +60,17 @@ public class Principal {
         episodio.setSerie(minhaSerie);
         episodio.setTotalVisualizacoes(84);
         filtro.filtra(episodio);
+
+        ArrayList<Filme> listaDeFilmes = new ArrayList<>();
+        listaDeFilmes.add(meuFilme);
+        listaDeFilmes.add(outroFilme);
+        System.out.println(listaDeFilmes.size());
+        System.out.println(listaDeFilmes.get(0).getNome());
+        System.out.println(listaDeFilmes.get(0).toString());
+
+        System.out.println(listaDeFilmes);
+
+        //int[] numeros = new int[5];
+        //var (Java 10)
     }
 }

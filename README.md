@@ -19,9 +19,11 @@ Minha jornada no **Programa de Formação AGER**.
   - [4. Trilha: Aprenda a programar em Java com orientação a objetos](#4-trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
     - [Módulo 1 - Entender a linguagem Java](#módulo-1---entender-a-linguagem-java)
     - [Módulo 2 - Orientação a objetos](#módulo-2---orientação-a-objetos)
+    - [Módulo 3 - Manipule listas, consuma uma API e lide com exceções](#módulo-3---manipule-listas-consuma-uma-api-e-lide-com-exceções)
+  - [5. Trilha: Java Web: crie aplicações usando Spring Boot](#5-trilha-java-web-crie-aplicações-usando-spring-boot)
 - [Projetos práticos](#projetos-práticos)
 - [Tecnologias](#tecnologias)
-- [Como executar os projetos web](#como-executar-os-projetos-web)
+- [Como executar os projetos](#como-executar-os-projetos-web)
 
 ---
 
@@ -40,7 +42,8 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 1 | Como escolher minha carreira em TI? | Artigo | Concluído |
 | 2 | 5 passos para aprender a programar | Artigo | Concluído |
 | 3 | Iniciante em programação | Trilha Alura | Concluído |
-| 4 | Aprenda a programar em Java com orientação a objetos | Trilha Alura | Em andamento |
+| 4 | Aprenda a programar em Java com orientação a objetos | Trilha Alura | Concluído |
+| 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | ✎ A fazer |
 
 ### Sub-trilha: Iniciante em programação (5/5)
 
@@ -51,13 +54,21 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 3 | Ferramentas essenciais para programar e compartilhar projetos | Concluído |
 | 4 | Praticando lógica de programação com desafios | Concluído |
 
-### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos (2/4)
+### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos (4/4)
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
 | 1 | Entender a linguagem Java | Concluído |
 | 2 | Orientação a objetos | Concluído |
-| 3 | Manipule listas, consuma uma API e lide com exceções (2 cursos) | ✎ A fazer |
+| 3 | Manipule listas, consuma uma API e lide com exceções (2 cursos) | Concluído |
+
+### Sub-trilha: Java Web: crie aplicações usando Spring Boot (0/3)
+
+| # | Módulo / Curso | Status |
+|---|----------------|:------:|
+| 1 | Criando uma aplicação Web em Java | ✎ A fazer |
+| 2 | PostgreSQL e Spring Data JPA | ✎ A fazer |
+| 3 | Conectando uma API Rest ao Front | ✎ A fazer |
 
 ---
 
@@ -269,6 +280,74 @@ Aqui o Screen Match ganhou estrutura de verdade com classes, e ainda construí o
 - Criar **interfaces** (`Classificavel`) - todos os métodos são públicos por padrão.
 - Aplicar **polimorfismo**: um método como `FiltroRecomendacao.filtra()` recebe qualquer objeto `Classificavel` sem saber sua classe concreta.
 
+#### Módulo 3 - Manipule listas, consuma uma API e lide com exceções
+
+**Cursos:** Java: trabalhando com listas e coleções de dados · Java: consumindo API, gravando arquivos e lidando com erros
+
+O Screen Match evoluiu bastante: ganhou listas de títulos, passou a consumir a **API do OMDb** e a gravar os filmes favoritos em arquivo JSON. De desafio, construí um **sistema de compras** e o **busca CEP** integrado à API do ViaCEP.
+
+**Listas e coleções**
+
+- Representar listas de objetos com a classe **`ArrayList`** e manipulá-las com os métodos `add`, `size` e `get`.
+- O método **`toString()`**, usado para representar um objeto em texto (ex.: ao imprimir uma lista).
+- Identificar o tipo de uma instância com o operador **`instanceof`** e aprofundar a hierarquia da classe `Object`.
+- Criar **construtores** para iniciar os objetos já com valores.
+
+**Ordenação**
+
+- Ordenar uma lista com o método **`Collections.sort()`**.
+- Para ordenar objetos de classes do próprio projeto (como `Titulo`), implementar a interface **`Comparable`** e o método **`compareTo`** corretamente.
+- Flexibilizar o critério de ordenação com o método **`sort` da própria interface `List`**, passando o critério como parâmetro.
+- Além da `Comparable`, o Java tem a interface **`Comparator`**, outra alternativa para ordenar coleções.
+
+**A interface List e outras coleções**
+
+- A `ArrayList` implementa a interface **`List`**, que possui outras implementações - declarar a variável como `List` traz **polimorfismo**: dá para trocar a implementação instanciada sem mudar o resto do código.
+
+| Classe | Característica |
+|--------|----------------|
+| `ArrayList` | Baseada em **array dinâmico**, que cresce e encolhe conforme os elementos entram e saem; eficiente e a mais usada |
+| `LinkedList` | **Lista encadeada** (cada elemento referencia o próximo); boa para inserir/remover em qualquer posição, pior para busca |
+| `Vector` | Semelhante à `ArrayList`, mas **sincronizada** (segura entre threads, com custo de desempenho) |
+| `Stack` | **Pilha LIFO** (last-in, first-out): o último elemento adicionado é o primeiro a ser removido |
+
+- A interface **`Map`** e a classe **`HashMap`**: associam **chaves a valores** em uma tabela hash, com inserção, busca e remoção em tempo constante O(1), mas sem garantir a ordem dos elementos.
+- **Padrões de projeto (design patterns)**: soluções reutilizáveis para problemas comuns, em três categorias: **criação** (Factory Method, Builder, Singleton), **estrutura** (Adapter, Facade, Composite) e **comportamento** (Observer, Command, Strategy).
+
+**APIs, HTTP e JSON**
+
+- Conceitos fundamentais de **APIs**, realizando consultas na API do OMDb com o **Postman**.
+- O **JSON** é composto por duas estruturas: **objetos** (coleções de pares chave-valor) e **arrays**; os valores podem ser strings, números, booleanos, objetos ou arrays.
+- Os **códigos de status HTTP** (100 a 599), divididos em cinco classes: `1xx` informações, `2xx` sucesso, `3xx` redirecionamento, `4xx` erro do cliente, `5xx` erro do servidor.
+- Integrar o Screen Match à API com as classes **`HttpClient`**, **`HttpRequest`** e **`HttpResponse`** (pacote `java.net.http`).
+
+**Bibliotecas, Gson e records**
+
+- O que são **bibliotecas** Java e como instalar a **Gson** no projeto, baixando e configurando o arquivo `.jar`.
+- Converter um JSON em objeto Java (**desserialização**) e o caminho inverso (**serialização**) com a Gson, flexibilizando a conversão conforme a documentação da biblioteca.
+- Criar um **record**: estrutura similar a uma classe, mas usada apenas para representar **dados imutáveis**.
+- **Imutabilidade**: assim como o record, a `String` é imutável, "alterar" o valor na verdade cria um **novo objeto** e a variável passa a referenciar esse novo objeto. Isso traz ganhos de **concorrência** (sem necessidade de sincronização), **segurança** e **desempenho** (cache).
+
+**Exceções**
+
+- O que são **exceptions** e como tratá-las com o bloco **`try/catch`**, capturando os diferentes tipos que podem acontecer no código.
+- A hierarquia: todas herdam de `Throwable`, que se divide em **`Exception`** e **`Error`** (erros irrecuperáveis, como `OutOfMemoryError`).
+- **Exceções verificadas** (checked, herdam de `Exception`, ex.: `IOException`) exigem tratamento explícito ou cláusula `throws`; **não verificadas** (unchecked, herdam de `RuntimeException`, ex.: `NullPointerException`) indicam erros de lógica.
+- Nos blocos `catch`, tratar primeiro as exceções **filhas** (mais específicas) e depois as **mães** (mais genéricas): um `catch` de `IOException` também captura `FileNotFoundException`, mas o inverso não.
+- Criar uma **classe de exceção personalizada** e lançá-la em uma validação, em caso de erro.
+
+**Arquivos (java.io)**
+
+- **Escrever dados em arquivo** com classes do pacote `java.io` (como a `FileWriter`) e ler arquivos com a `Scanner`.
+- Serializar um objeto `Titulo` para JSON e gerar o arquivo com formatação mais elegante usando o **`setPrettyPrinting()`** da Gson.
+- Outras classes úteis do pacote: `BufferedReader`/`BufferedWriter` (texto com buffer, linha a linha), `FileInputStream`/`FileOutputStream` (dados binários, como imagens e áudio) e `ObjectInputStream`/`ObjectOutputStream` (objetos Java em arquivos).
+
+---
+
+### 5. Trilha: Java Web: crie aplicações usando Spring Boot
+
+Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos. _em breve_
+
 ---
 
 ## Projetos práticos
@@ -283,8 +362,11 @@ Aqui o Screen Match ganhou estrutura de verdade com classes, e ainda construí o
 | [`amigo-secreto`](./3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
 | [`carrinho-compras`](./3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
 | [`primeiroprojeto`](./primeiroprojeto) | Primeiros exercícios em Java (loops, condicionais, leitura, adivinhação) | `Scanner`, `for`/`while`, `if/else`, casting |
-| [`screenmatch`](./screenmatch) | Catálogo de filmes e séries (Screen Match) | classes, encapsulamento, herança, interface, polimorfismo |
+| [`screenmatch`](./screenmatch) | Catálogo de filmes e séries (Screen Match), agora com listas, busca na API do OMDb e gravação em arquivo | classes, herança, `Comparable`, `HttpClient`, Gson, `record`, exceções |
 | [`sounds`](./sounds) | Sistema de músicas e podcasts | herança (`Audio`), `@Override`, polimorfismo |
+| [`compras`](./compras) | Sistema de compras com cartão de crédito e lista ordenada (desafio de listas) | `ArrayList`, `Collections.sort`, `Comparable`, `toString()` |
+| [`buscador`](./buscador) | Busca CEP integrada à API do ViaCEP, gerando arquivo JSON | `HttpClient`, Gson, `record`, `FileWriter` |
+| [`buscacep`](./buscacep) | Busca CEP com validações e exceções personalizadas (desafio) | `try/catch`, exceções personalizadas, `java.net.http`, Gson |
 
 ---
 
@@ -295,6 +377,8 @@ Aqui o Screen Match ganhou estrutura de verdade com classes, e ainda construí o
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
 
@@ -309,7 +393,7 @@ Aqui o Screen Match ganhou estrutura de verdade com classes, e ainda construí o
 2. Entre na pasta do projeto que quer testar (ex.: `js-curso-2-aula1`).
 3. Abra o arquivo `index.html` no navegador (duplo clique já funciona).
 
-### Como executar os projetos Java
+## Como executar os projetos Java
 
 1. Tenha a **JDK 17** (ou superior) instalada.
 2. Abra a pasta do projeto (ex.: `screenmatch`) no **IntelliJ IDEA**.

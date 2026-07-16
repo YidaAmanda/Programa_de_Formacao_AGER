@@ -1,0 +1,5 @@
+# Arquivos gerados pelos programas durante a execução
+# (saída dos projetos, não fazem parte do código-fonte)
+buscacep/enderecos.json
+buscador/*.json
+screenmatch/filmes.json

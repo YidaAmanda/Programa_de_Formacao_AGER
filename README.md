@@ -2,6 +2,8 @@
 
 Minha jornada no **Programa de Formação AGER**.
 
+> Este README é um resumo do programa e do que aprendi. As anotações completas de estudo, com todos os conceitos explicados e exemplos de código, estão em [ANOTACOES.md](./ANOTACOES.md).
+
 ---
 
 ## Índice
@@ -9,18 +11,6 @@ Minha jornada no **Programa de Formação AGER**.
 - [Sobre o programa](#sobre-o-programa)
 - [Progresso da trilha](#progresso-da-trilha)
 - [O que aprendi?](#o-que-aprendi)
-  - [1. Artigo: Como escolher minha carreira em TI?](#1-artigo-como-escolher-minha-carreira-em-ti)
-  - [2. Artigo: 5 passos para aprender a programar](#2-artigo-5-passos-para-aprender-a-programar)
-  - [3. Trilha: Iniciante em programação](#3-trilha-iniciante-em-programação)
-    - [Módulo 1 - Primeiros passos em programação](#módulo-1---primeiros-passos-em-programação)
-    - [Módulo 2 - Entendendo a lógica de programação](#módulo-2---entendendo-a-lógica-de-programação)
-    - [Módulo 3 - Ferramentas essenciais para programar e compartilhar projetos](#módulo-3---ferramentas-essenciais-para-programar-e-compartilhar-projetos)
-    - [Módulo 4 - Praticando lógica de programação com desafios](#módulo-4---praticando-lógica-de-programação-com-desafios)
-  - [4. Trilha: Aprenda a programar em Java com orientação a objetos](#4-trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
-    - [Módulo 1 - Entender a linguagem Java](#módulo-1---entender-a-linguagem-java)
-    - [Módulo 2 - Orientação a objetos](#módulo-2---orientação-a-objetos)
-    - [Módulo 3 - Manipule listas, consuma uma API e lide com exceções](#módulo-3---manipule-listas-consuma-uma-api-e-lide-com-exceções)
-  - [5. Trilha: Java Web: crie aplicações usando Spring Boot](#5-trilha-java-web-crie-aplicações-usando-spring-boot)
 - [Projetos práticos](#projetos-práticos)
 - [Tecnologias](#tecnologias)
 - [Como executar os projetos](#como-executar-os-projetos-web)
@@ -37,15 +27,24 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 
 ### Passo a passo - Conteúdo da Trilha
 
-| # | Conteúdo | Tipo | Status |
-|---|----------|:------:|:------:|
-| 1 | Como escolher minha carreira em TI? | Artigo | Concluído |
-| 2 | 5 passos para aprender a programar | Artigo | Concluído |
-| 3 | Iniciante em programação | Trilha Alura | Concluído |
-| 4 | Aprenda a programar em Java com orientação a objetos | Trilha Alura | Concluído |
-| 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | ✎ A fazer |
+| # | Conteúdo | Tipo | Carga Horária | Status |
+|---|----------|:------:|:------:|:------:|
+| 1 | Como escolher minha carreira em TI? | Artigo | - | Concluído |
+| 2 | 5 passos para aprender a programar | Artigo | - | Concluído |
+| 3 | Iniciante em programação | Trilha Alura | 29h | Concluído |
+| 4 | Aprenda a programar em Java com Orientação a Objetos | Trilha Alura | 36h | Concluído |
+| 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Em andamento |
+| 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | ✎ A fazer|
+| 7 | JavaScript: programando na linguagem da web | Curso | 20h | ✎ A fazer |
+| 8 | React: desenvolvendo com JavaScript | Curso | 14h | ✎ A fazer |
+| 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | ✎ A fazer |
+| 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | ✎ A fazer |
+| 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | ✎ A fazer |
+| 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | ✎ A fazer |
+| 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | ✎ A fazer |
+| 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | ✎ A fazer |
 
-### Sub-trilha: Iniciante em programação (5/5)
+### Sub-trilha: Iniciante em programação
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
@@ -54,7 +53,9 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 3 | Ferramentas essenciais para programar e compartilhar projetos | Concluído |
 | 4 | Praticando lógica de programação com desafios | Concluído |
 
-### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos (4/4)
+
+
+### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
@@ -62,11 +63,11 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 2 | Orientação a objetos | Concluído |
 | 3 | Manipule listas, consuma uma API e lide com exceções (2 cursos) | Concluído |
 
-### Sub-trilha: Java Web: crie aplicações usando Spring Boot (0/3)
+### Sub-trilha: Java Web: crie aplicações usando Spring Boot
 
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
-| 1 | Criando uma aplicação Web em Java | ✎ A fazer |
+| 1 | Criando uma aplicação Web em Java | Concluído |
 | 2 | PostgreSQL e Spring Data JPA | ✎ A fazer |
 | 3 | Conectando uma API Rest ao Front | ✎ A fazer |
 
@@ -74,279 +75,35 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 
 ## O que aprendi?
 
-### 1. Artigo: Como escolher minha carreira em TI?
+### 1 e 2. Artigos de boas-vindas
 
-- Panorama das áreas de atuação em Tecnologia da Informação.
-- Pontos a considerar antes de decidir a carreira.
-
----
-
-### 2. Artigo: 5 passos para aprender a programar
-
-- Um roteiro prático de como começar a aprender programação.
-- A importância da constância e da prática para evoluir.
-- Mentalidade para encarar os desafios de quem está começando.
-
----
+Panorama das áreas de atuação em TI, pontos a considerar antes de escolher a carreira e um roteiro prático de 5 passos para aprender a programar, com destaque para a constância e a prática.
 
 ### 3. Trilha: Iniciante em programação
 
-Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos.
+Fundamentos de **lógica de programação com JavaScript**, construindo o **Jogo do Número Secreto** e mais **5 mini-aplicações web** (AluGames, carrinho de compras, sorteador de números, e-Ticket e amigo secreto). A trilha também cobriu **versionamento com Git e GitHub**: fluxo de commits, sincronização com o repositório remoto, como desfazer alterações com segurança e boas práticas de documentação.
 
-#### Módulo 1 - Primeiros passos em programação
+**Principais tópicos:** variáveis · condicionais · laços · funções · arrays · manipulação do DOM · `git add/commit/push/pull` · `git reset/revert` · README e `.gitignore`
 
-**Curso:** Começando em Programação: carreira e primeiros passos
-
-- O que é programação e como ela está presente no dia a dia.
-- Principais áreas de atuação na área de tecnologia.
-- Como funciona o mercado de trabalho e por onde começar.
-- Dicas essenciais para iniciar a trajetória como pessoa desenvolvedora.
-
-#### Módulo 2 - Entendendo a lógica de programação
-
-**Cursos:** Lógica de programação: mergulhe em programação com JavaScript · Lógica de programação: explore funções e listas
-
-Aqui coloquei a mão na massa construindo o **Jogo do Número Secreto**, em duas versões (do console ao navegador).
-
-**Conceitos praticados:**
-
-- **Variáveis** (`let`) e tipos de dados (números, strings).
-- **Entrada e saída** com `alert()` e `prompt()`.
-- **Estruturas condicionais**: `if`, `else if`, `else` e operador **ternário** (`condição ? a : b`).
-- **Operadores** de comparação (`>`, `<`, `==`, `!=`) e lógicos (`||`, `&&`).
-- **Laços de repetição** com `while` (contagem regressiva, progressiva e o loop do jogo).
-- **Números aleatórios** com `Math.random()` e `parseInt()`.
-- **Funções**: criar, reaproveitar código e organizar o programa em blocos.
-- **Listas (arrays)**: `push()`, `includes()`, `length` - evitando sortear números repetidos.
-- **Manipulação do DOM**: `document.querySelector()`, `innerHTML`, atributos (`disabled`).
-- **Web Speech API**: fazer o navegador "falar" o texto na tela.
-
-#### Módulo 3 - Ferramentas essenciais para programar e compartilhar projetos
-
-**Curso:** Git e GitHub: compartilhando e colaborando em projetos
-
-Aqui o foco foi versionamento de código e colaboração, do setup inicial até desfazer alterações e compartilhar snippets.
-
-**Configuração e primeiros passos**
-
-- Criar conta no GitHub e instalar o Git na máquina.
-- Configurar a identidade com `git config --global user.name` e `git config --global user.email`.
-- Criar um repositório local com `git init` e um repositório remoto no GitHub.
-- Conectar os dois com `git remote add origin <url>` e enviar o primeiro commit com `git push`.
-- Clonar um repositório já existente com `git clone`.
-
-**Fluxo de trabalho do dia a dia**
-
-- Registrar alterações com `git add` (stage) e `git commit` (confirmação).
-- Verificar o estado da árvore de trabalho com `git status`.
-- Inspecionar o histórico com `git log` - autor, data e mensagem de cada commit.
-  - Variações úteis: `git log --oneline`, `git log --graph`, `git log -p`.
-- Listar e inspecionar os remotos com `git remote` (`git remote -v`).
-- Sincronizar com `git push` (envia commits locais) e `git pull` (traz commits do remoto).
-
-**Colaboração**
-
-- Adicionar uma pessoa como colaboradora em um repositório e aceitar um convite recebido.
-- Creditar co-autoria em um commit com o trailer `Co-authored-by:`
-
-```
-  $ git commit -m "texto"
-  >
-  >
-  Co-authored-by: Nome <email@exemplo.com>
-```
-
-  O GitHub reconhece o e-mail e exibe os dois avatares no commit.
-
-**Desfazendo alterações**
-
-| Comando | O que faz | Reescreve histórico? |
-|---------|-----------|:--------------------:|
-| `git commit --amend` | Corrige o **último** commit (mensagem ou conteúdo) | Sim |
-| `git revert <hash>` | Cria um **novo** commit que desfaz o commit apontado | Não |
-| `git reset --soft <hash>` | Move o HEAD; mantém alterações no *stage* | Sim |
-| `git reset --mixed <hash>` | Move o HEAD; mantém alterações no diretório de trabalho (padrão) | Sim |
-| `git reset --hard <hash>` | Move o HEAD e **descarta** todas as alterações | Sim |
-
-- `revert` é a opção segura em branches compartilhadas, porque não reescreve o histórico.
-- `reset --hard` é destrutivo: o que não estava commitado é perdido.
-- `commit --amend` e `reset` em commits já publicados exigem `push --force`, o que pode quebrar o trabalho de outras pessoas.
-
-**Documentação e arquivos ignorados**
-
-- Criar o `README.md`, que serve como documentação e cartão de visitas do repositório.
-- Usar o arquivo oculto `.gitignore` para dizer ao Git quais arquivos e diretórios não devem ser rastreados (dependências, builds, `.env`, arquivos de IDE).
-- Detalhe importante: o `.gitignore` só afeta arquivos **não rastreados**. Se o arquivo já foi commitado antes, é preciso removê-lo do índice com `git rm --cached <arquivo>`.
-
-**Compartilhando trechos de código**
-
-- Usar o **Gist** do GitHub para compartilhar snippets isolados, sem precisar criar um repositório inteiro. Podem ser públicos ou secretos e também têm histórico de versões.
-
-#### Módulo 4 - Praticando lógica de programação com desafios
-
-**Curso:** Lógica de programação: praticando com desafios
-
-Aqui a proposta foi treinar lógica construindo **5 pequenas aplicações web** do zero, cada uma reforçando um conjunto de conceitos. Em todas o ponto de partida foi o mesmo: **analisar o HTML da página** para entender a estrutura antes de escrever o JavaScript da funcionalidade.
-
-**AluGames** - alugar e devolver jogos de tabuleiro
-
-- Recuperar elementos com `document.querySelector()` e `document.getElementById()`.
-- Verificar e alternar o **status de um jogo** (alugado/disponível) com `if/else` e a `classList` (`contains`, `remove`, `add`).
-- Trocar o texto do botão com a propriedade `textContent`.
-
-**Carrinho de compras** - somar produtos e o valor total
-
-- Ler o produto selecionado, separar nome e preço da string e calcular o subtotal.
-- Validar a quantidade com condicionais e ir montando a lista na página com `innerHTML`.
-
-**Sorteador de números** - sortear N números únicos dentro de um intervalo
-
-- Recuperar elementos com `document.getElementById()` e ler campos de formulário com a propriedade `value`.
-- Converter texto em número inteiro com `parseInt()`.
-- Gerar números aleatórios dentro de um intervalo com `Math.random()`.
-- **Laço `for`** para sortear a quantidade pedida e **`array`** com `push()` para guardar os números já sorteados (evitando repetidos com `includes()`).
-- Manipular o botão *Reiniciar* com `if/else` e a `classList`: `contains()`, `remove()` e `add()` para trocar as classes CSS.
-- Alterar o conteúdo da página com `innerHTML` (e a diferença para `textContent`).
-- **Template String** para concatenar variáveis dentro de uma string.
-
-**e-Ticket** - comprar ingressos de diferentes setores
-
-- Escrever cada funcionalidade em **funções separadas** (uma por tipo de ingresso).
-- Usar um bloco condicional (`switch`) para **decidir qual função chamar** de acordo com o valor selecionado.
-- Converter valores com `parseInt()` e atualizar a quantidade disponível na tela.
-
-**Amigo Secreto** - montar a lista e sortear os pares
-
-- **Validar** as informações com condicionais (nome vazio, nome repetido, mínimo de participantes).
-- **Interromper** a execução de uma função com `return`.
-- Contar itens de um `array` com `length` e checar se um item existe com `includes()`.
-
----
+➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-iniciante-em-programação)
 
 ### 4. Trilha: Aprenda a programar em Java com orientação a objetos
 
-Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos.
+Do "Alô Mundo!" à construção do **Screen Match**, um catálogo de filmes e séries orientado a objetos que evoluiu até consumir a **API do OMDb** e gravar arquivos JSON. De desafios, os projetos **Sounds** (músicas e podcasts), **compras** (lista ordenada com cartão de crédito) e **busca CEP** (integração com a API do ViaCEP).
 
-#### Módulo 1 - Entender a linguagem Java
+**Principais tópicos:** tipos e controle de fluxo · classes e encapsulamento · herança e polimorfismo · interfaces · `ArrayList`, `List` e `Map` · ordenação com `Comparable`/`Comparator` · HTTP e JSON · `HttpClient` · Gson · `record` · exceções · arquivos (`java.io`)
 
-**Curso:** Java: criando a sua primeira aplicação
+➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
 
-Primeiro contato com o Java, do setup do ambiente ao "Alô Mundo!" e à construção do início do **Screen Match** (catálogo de filmes e séries).
+### 5. Trilha: Java Web: crie aplicações usando Spring Boot (em andamento)
 
-**Ambiente e como o Java funciona**
+**Curso concluído:** Java: trabalhando com lambdas, streams e Spring Framework
 
-- Configurar o ambiente instalando a **JDK 17** e a IDE **IntelliJ IDEA**.
-- Diferença entre os três pilares da plataforma:
-  - **JVM** (Java Virtual Machine) - máquina virtual que executa o *bytecode*.
-  - **JRE** (Java Runtime Environment) - ambiente de execução com as bibliotecas padrão.
-  - **JDK** (Java Development Kit) - kit que compila o código-fonte em *bytecode*.
-- Escrever e executar o primeiro programa pelo IntelliJ.
+O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas pelo **Maven**, desserialização do JSON com a biblioteca **Jackson** e análise das avaliações dos episódios com **funções lambda e streams** - filtros, transformações, agrupamentos e estatísticas. De desafio, a **Tabela FIPE**: uma aplicação que consulta o valor médio de veículos direto da API.
 
-**Conceitos praticados**
+**Principais tópicos:** Spring Boot e `CommandLineRunner` · Maven e `pom.xml` · Jackson (`@JsonAlias`, `@JsonIgnoreProperties`) · interfaces com Generics · lambdas · streams (`filter`, `map`, `flatMap`, `collect`) · `Optional` · datas com `java.time` · estatísticas com `DoubleSummaryStatistics`
 
-- **Variáveis** e **tipos de dados**: `String`, `int`, `double`, `boolean`.
-- **Saída** com `System.out.println()` e formatação com `String.format()` / `.formatted()`.
-- **Entrada** de dados do usuário com a classe `Scanner`.
-- **Casting** implícito e explícito entre tipos numéricos.
-- **Estruturas condicionais** (`if` / `else if` / `else`/ `switch case`) e as comparações `==`, `!=`, `>`, `<`, além do operador **ternário**.
-- **Laços de repetição** com `for`, `while` e `do while`, e quando usar cada um.
-- Comparação de `String` com `.equals()`.
-- **Text Blocks** (Java 15) para textos de múltiplas linhas.
-- **Convenções de código**: classes em `PascalCase`, variáveis e métodos em `camelCase`, constantes em `MAIÚSCULAS`.
-
-#### Módulo 2 - Orientação a objetos
-
-**Curso:** Java: aplicando a Orientação a Objetos
-
-Aqui o Screen Match ganhou estrutura de verdade com classes, e ainda construí o projeto **Sounds** (sistema de músicas) aplicando os mesmos conceitos.
-
-**Classes e encapsulamento**
-
-- Modelar o mundo com **classes** (`Titulo`, `Filme`, `Serie`, `Episodio`) e criar objetos a partir delas.
-- **Encapsulamento**: proteger atributos com o modificador `private` e expô-los de forma controlada com métodos **getters** e **setters**.
-- Diferença entre `private` (acesso só na própria classe) e `public` (acesso de qualquer lugar).
-- A palavra-chave `this` para referenciar o próprio objeto e diferenciar atributos de parâmetros.
-- A palavra-chave `import` para usar classes de outros pacotes.
-- Organização em **pacotes** seguindo a convenção `br.com.amanda.screenmatch`.
-
-**Herança**
-
-- Usar `extends` para uma classe herdar atributos e métodos de outra, eliminando código duplicado (`Serie extends Titulo`, `Podcast extends Audio`).
-- **Sobrescrever** métodos herdados com a anotação `@Override` (ex.: `getDuracaoEmMinutos()` calculado de forma diferente na `Serie`).
-
-**Interfaces e polimorfismo**
-
-- Uma classe herda de **apenas uma** classe, mas pode implementar **várias interfaces**.
-- Criar **interfaces** (`Classificavel`) - todos os métodos são públicos por padrão.
-- Aplicar **polimorfismo**: um método como `FiltroRecomendacao.filtra()` recebe qualquer objeto `Classificavel` sem saber sua classe concreta.
-
-#### Módulo 3 - Manipule listas, consuma uma API e lide com exceções
-
-**Cursos:** Java: trabalhando com listas e coleções de dados · Java: consumindo API, gravando arquivos e lidando com erros
-
-O Screen Match evoluiu bastante: ganhou listas de títulos, passou a consumir a **API do OMDb** e a gravar os filmes favoritos em arquivo JSON. De desafio, construí um **sistema de compras** e o **busca CEP** integrado à API do ViaCEP.
-
-**Listas e coleções**
-
-- Representar listas de objetos com a classe **`ArrayList`** e manipulá-las com os métodos `add`, `size` e `get`.
-- O método **`toString()`**, usado para representar um objeto em texto (ex.: ao imprimir uma lista).
-- Identificar o tipo de uma instância com o operador **`instanceof`** e aprofundar a hierarquia da classe `Object`.
-- Criar **construtores** para iniciar os objetos já com valores.
-
-**Ordenação**
-
-- Ordenar uma lista com o método **`Collections.sort()`**.
-- Para ordenar objetos de classes do próprio projeto (como `Titulo`), implementar a interface **`Comparable`** e o método **`compareTo`** corretamente.
-- Flexibilizar o critério de ordenação com o método **`sort` da própria interface `List`**, passando o critério como parâmetro.
-- Além da `Comparable`, o Java tem a interface **`Comparator`**, outra alternativa para ordenar coleções.
-
-**A interface List e outras coleções**
-
-- A `ArrayList` implementa a interface **`List`**, que possui outras implementações - declarar a variável como `List` traz **polimorfismo**: dá para trocar a implementação instanciada sem mudar o resto do código.
-
-| Classe | Característica |
-|--------|----------------|
-| `ArrayList` | Baseada em **array dinâmico**, que cresce e encolhe conforme os elementos entram e saem; eficiente e a mais usada |
-| `LinkedList` | **Lista encadeada** (cada elemento referencia o próximo); boa para inserir/remover em qualquer posição, pior para busca |
-| `Vector` | Semelhante à `ArrayList`, mas **sincronizada** (segura entre threads, com custo de desempenho) |
-| `Stack` | **Pilha LIFO** (last-in, first-out): o último elemento adicionado é o primeiro a ser removido |
-
-- A interface **`Map`** e a classe **`HashMap`**: associam **chaves a valores** em uma tabela hash, com inserção, busca e remoção em tempo constante O(1), mas sem garantir a ordem dos elementos.
-- **Padrões de projeto (design patterns)**: soluções reutilizáveis para problemas comuns, em três categorias: **criação** (Factory Method, Builder, Singleton), **estrutura** (Adapter, Facade, Composite) e **comportamento** (Observer, Command, Strategy).
-
-**APIs, HTTP e JSON**
-
-- Conceitos fundamentais de **APIs**, realizando consultas na API do OMDb com o **Postman**.
-- O **JSON** é composto por duas estruturas: **objetos** (coleções de pares chave-valor) e **arrays**; os valores podem ser strings, números, booleanos, objetos ou arrays.
-- Os **códigos de status HTTP** (100 a 599), divididos em cinco classes: `1xx` informações, `2xx` sucesso, `3xx` redirecionamento, `4xx` erro do cliente, `5xx` erro do servidor.
-- Integrar o Screen Match à API com as classes **`HttpClient`**, **`HttpRequest`** e **`HttpResponse`** (pacote `java.net.http`).
-
-**Bibliotecas, Gson e records**
-
-- O que são **bibliotecas** Java e como instalar a **Gson** no projeto, baixando e configurando o arquivo `.jar`.
-- Converter um JSON em objeto Java (**desserialização**) e o caminho inverso (**serialização**) com a Gson, flexibilizando a conversão conforme a documentação da biblioteca.
-- Criar um **record**: estrutura similar a uma classe, mas usada apenas para representar **dados imutáveis**.
-- **Imutabilidade**: assim como o record, a `String` é imutável, "alterar" o valor na verdade cria um **novo objeto** e a variável passa a referenciar esse novo objeto. Isso traz ganhos de **concorrência** (sem necessidade de sincronização), **segurança** e **desempenho** (cache).
-
-**Exceções**
-
-- O que são **exceptions** e como tratá-las com o bloco **`try/catch`**, capturando os diferentes tipos que podem acontecer no código.
-- A hierarquia: todas herdam de `Throwable`, que se divide em **`Exception`** e **`Error`** (erros irrecuperáveis, como `OutOfMemoryError`).
-- **Exceções verificadas** (checked, herdam de `Exception`, ex.: `IOException`) exigem tratamento explícito ou cláusula `throws`; **não verificadas** (unchecked, herdam de `RuntimeException`, ex.: `NullPointerException`) indicam erros de lógica.
-- Nos blocos `catch`, tratar primeiro as exceções **filhas** (mais específicas) e depois as **mães** (mais genéricas): um `catch` de `IOException` também captura `FileNotFoundException`, mas o inverso não.
-- Criar uma **classe de exceção personalizada** e lançá-la em uma validação, em caso de erro.
-
-**Arquivos (java.io)**
-
-- **Escrever dados em arquivo** com classes do pacote `java.io` (como a `FileWriter`) e ler arquivos com a `Scanner`.
-- Serializar um objeto `Titulo` para JSON e gerar o arquivo com formatação mais elegante usando o **`setPrettyPrinting()`** da Gson.
-- Outras classes úteis do pacote: `BufferedReader`/`BufferedWriter` (texto com buffer, linha a linha), `FileInputStream`/`FileOutputStream` (dados binários, como imagens e áudio) e `ObjectInputStream`/`ObjectOutputStream` (objetos Java em arquivos).
-
----
-
-### 5. Trilha: Java Web: crie aplicações usando Spring Boot
-
-Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulos. _em breve_
+➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-java-web-crie-aplicações-usando-spring-boot)
 
 ---
 
@@ -362,11 +119,13 @@ Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulo
 | [`amigo-secreto`](./3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
 | [`carrinho-compras`](./3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
 | [`primeiroprojeto`](./primeiroprojeto) | Primeiros exercícios em Java (loops, condicionais, leitura, adivinhação) | `Scanner`, `for`/`while`, `if/else`, casting |
-| [`screenmatch`](./screenmatch) | Catálogo de filmes e séries (Screen Match), agora com listas, busca na API do OMDb e gravação em arquivo | classes, herança, `Comparable`, `HttpClient`, Gson, `record`, exceções |
+| [`screenmatch`](./screenmatch) | Catálogo de filmes e séries (Screen Match), com listas, busca na API do OMDb e gravação em arquivo | classes, herança, `Comparable`, `HttpClient`, Gson, `record`, exceções |
 | [`sounds`](./sounds) | Sistema de músicas e podcasts | herança (`Audio`), `@Override`, polimorfismo |
 | [`compras`](./compras) | Sistema de compras com cartão de crédito e lista ordenada (desafio de listas) | `ArrayList`, `Collections.sort`, `Comparable`, `toString()` |
 | [`buscador`](./buscador) | Busca CEP integrada à API do ViaCEP, gerando arquivo JSON | `HttpClient`, Gson, `record`, `FileWriter` |
 | [`buscacep`](./buscacep) | Busca CEP com validações e exceções personalizadas (desafio) | `try/catch`, exceções personalizadas, `java.net.http`, Gson |
+| [`spring sem web/screenmatch`](./spring%20sem%20web/screenmatch) | Screen Match reconstruído com Spring Boot: episódios de séries via API do OMDb e estatísticas de avaliações | Spring Boot, Maven, Jackson, lambdas, streams, `Optional` |
+| [`spring sem web/tabelafipe`](./spring%20sem%20web/tabelafipe) | Consulta do valor médio de veículos na API da Tabela FIPE (desafio) | Spring Boot, Jackson, Generics, streams, `Comparator` |
 
 ---
 
@@ -376,6 +135,8 @@ Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulo
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Maven-C71A36?style=flat&logo=apachemaven&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
@@ -395,6 +156,11 @@ Trilha Alura aninhada dentro do Passo a passo. Abaixo, o que aprendi nos módulo
 
 ## Como executar os projetos Java
 
-1. Tenha a **JDK 17** (ou superior) instalada.
-2. Abra a pasta do projeto (ex.: `screenmatch`) no **IntelliJ IDEA**.
-3. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão ▶ da IDE.
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/YidaAmanda/Programa_de_Formacao_AGER.git
+   ```
+2. Tenha a **JDK 17** (ou superior) instalada.
+3. Abra a pasta do projeto que quer testar (ex.: `screenmatch`) no **IntelliJ IDEA**.
+4. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão ▶ da IDE.
+5. Nos projetos Spring (pasta `spring sem web`), a classe a rodar é a `...Application` (ex.: `ScreenmatchApplication`) - o Spring sobe e executa o método `run` no console.

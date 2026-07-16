@@ -16,7 +16,7 @@ public class Endereco {
     public Endereco(EnderecoViaCep enderecoViaCep) {
         this.cep = enderecoViaCep.cep();
         this.logradouro = enderecoViaCep.logradouro();
-        this.bairro = enderecoViaCep.Bairro();
+        this.bairro = enderecoViaCep.bairro();
         this.cidade = enderecoViaCep.localidade();
         this.estado = enderecoViaCep.estado();
         this.uf = enderecoViaCep.uf();

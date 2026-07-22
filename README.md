@@ -34,15 +34,15 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 3 | Iniciante em programação | Trilha Alura | 29h | Concluído |
 | 4 | Aprenda a programar em Java com Orientação a Objetos | Trilha Alura | 36h | Concluído |
 | 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Em andamento |
-| 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | ✎ A fazer|
-| 7 | JavaScript: programando na linguagem da web | Curso | 20h | ✎ A fazer |
-| 8 | React: desenvolvendo com JavaScript | Curso | 14h | ✎ A fazer |
-| 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | ✎ A fazer |
-| 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | ✎ A fazer |
-| 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | ✎ A fazer |
-| 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | ✎ A fazer |
-| 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | ✎ A fazer |
-| 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | ✎ A fazer |
+| 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | A fazer |
+| 7 | JavaScript: programando na linguagem da web | Curso | 20h | A fazer |
+| 8 | React: desenvolvendo com JavaScript | Curso | 14h | A fazer |
+| 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | A fazer |
+| 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | A fazer |
+| 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | A fazer |
+| 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | A fazer |
+| 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | A fazer |
+| 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | A fazer |
 
 ### Sub-trilha: Iniciante em programação
 
@@ -68,8 +68,8 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | # | Módulo / Curso | Status |
 |---|----------------|:------:|
 | 1 | Criando uma aplicação Web em Java | Concluído |
-| 2 | PostgreSQL e Spring Data JPA | ✎ A fazer |
-| 3 | Conectando uma API Rest ao Front | ✎ A fazer |
+| 2 | PostgreSQL e Spring Data JPA | Concluído |
+| 3 | Conectando uma API Rest ao Front | A fazer |
 
 ---
 
@@ -99,9 +99,15 @@ Do "Alô Mundo!" à construção do **Screen Match**, um catálogo de filmes e s
 
 **Curso concluído:** Java: trabalhando com lambdas, streams e Spring Framework
 
-O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas pelo **Maven**, desserialização do JSON com a biblioteca **Jackson** e análise das avaliações dos episódios com **funções lambda e streams** - filtros, transformações, agrupamentos e estatísticas. De desafio, a **Tabela FIPE**: uma aplicação que consulta o valor médio de veículos direto da API.
+O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas pelo **Maven**, desserialização do JSON com a biblioteca **Jackson** e análise das avaliações dos episódios com **funções lambda e streams**, filtros, transformações, agrupamentos e estatísticas. De desafio, a **Tabela FIPE**: uma aplicação que consulta o valor médio de veículos direto da API.
 
 **Principais tópicos:** Spring Boot e `CommandLineRunner` · Maven e `pom.xml` · Jackson (`@JsonAlias`, `@JsonIgnoreProperties`) · interfaces com Generics · lambdas · streams (`filter`, `map`, `flatMap`, `collect`) · `Optional` · datas com `java.time` · estatísticas com `DoubleSummaryStatistics`
+
+**Curso concluído:** Java: persistência de dados e consultas com Spring Data JPA
+
+Os dados do Screen Match saíram da memória e foram para o **PostgreSQL**. As classes viraram **entidades mapeadas com JPA/Hibernate**, o relacionamento entre séries e episódios ganhou chave estrangeira, `cascade` e carregamento configurável, e as buscas migraram dos streams para o banco: **derived queries** escritas no nome do método e consultas personalizadas em **JPQL**. No caminho, os gêneros viraram um **enum com métodos próprios**, as credenciais foram para **variáveis de ambiente** e a sinopse passou a ser traduzida por uma **API de IA**. De desafios, o **ScreenSound** (artistas e músicas) e o **Gerenciador de Pedidos** (produtos, categorias, fornecedores e pedidos).
+
+**Principais tópicos:** PostgreSQL · JPA, Hibernate e ORM · `@Entity`, `@Table`, `@Id`, `@Column`, `@Enumerated` · `@OneToMany`/`@ManyToOne`/`@ManyToMany` · `cascade` e `fetch` · `JpaRepository` · injeção de dependências (`@Autowired`) · derived queries · JPQL e `@Query` · native queries · enums com atributos e métodos · variáveis de ambiente
 
 ➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-java-web-crie-aplicações-usando-spring-boot)
 
@@ -126,6 +132,9 @@ O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas 
 | [`buscacep`](./buscacep) | Busca CEP com validações e exceções personalizadas (desafio) | `try/catch`, exceções personalizadas, `java.net.http`, Gson |
 | [`spring sem web/screenmatch`](./spring%20sem%20web/screenmatch) | Screen Match reconstruído com Spring Boot: episódios de séries via API do OMDb e estatísticas de avaliações | Spring Boot, Maven, Jackson, lambdas, streams, `Optional` |
 | [`spring sem web/tabelafipe`](./spring%20sem%20web/tabelafipe) | Consulta do valor médio de veículos na API da Tabela FIPE (desafio) | Spring Boot, Jackson, Generics, streams, `Comparator` |
+| [`spring sem web/screenmatch-jpa`](./spring%20sem%20web/screenmatch-jpa) | Screen Match com os dados salvos no PostgreSQL: séries e episódios persistidos, buscas no banco e sinopse traduzida por IA | Spring Data JPA, Hibernate, PostgreSQL, derived queries, JPQL, enums, API de tradução |
+| [`spring sem web/screensounds`](./spring%20sem%20web/screensounds) | Cadastro de artistas e músicas com busca por artista (desafio) | Spring Data JPA, PostgreSQL, `@OneToMany`/`@ManyToOne`, `@Enumerated`, `@Query` |
+| [`spring sem web/gerenciador-pedidos`](./spring%20sem%20web/gerenciador-pedidos) | Menu de gestão de produtos, categorias, fornecedores e pedidos, com camada de serviços e relatórios | Spring Data JPA, PostgreSQL, `@ManyToMany` com `@JoinTable`, `@Service`, derived queries, JPQL, native query |
 
 ---
 
@@ -136,6 +145,8 @@ O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas 
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=flat&logo=hibernate&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Maven-C71A36?style=flat&logo=apachemaven&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
@@ -145,7 +156,7 @@ O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas 
 
 ---
 
-##  Como executar os projetos web
+## Como executar os projetos web
 
 1. Clone este repositório:
    ```bash
@@ -164,3 +175,19 @@ O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas 
 3. Abra a pasta do projeto que quer testar (ex.: `screenmatch`) no **IntelliJ IDEA**.
 4. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão ▶ da IDE.
 5. Nos projetos Spring (pasta `spring sem web`), a classe a rodar é a `...Application` (ex.: `ScreenmatchApplication`) - o Spring sobe e executa o método `run` no console.
+
+### Projetos que usam banco de dados
+
+Os projetos `screenmatch-jpa`, `screensounds` e `gerenciador-pedidos` precisam de um **PostgreSQL** rodando. Antes de executá-los:
+
+1. Crie o banco no PostgreSQL (ex.: `screenmatch`, `screensounds`, `pedidos`).
+2. Defina as variáveis de ambiente que o `application.properties` espera (nas *run configurations* da IDE ou no sistema):
+
+   | Variável | Exemplo |
+   |----------|---------|
+   | `DB_HOST` | `localhost` |
+   | `DB_NAME` | `screenmatch` |
+   | `DB_USER` | `postgres` |
+   | `DB_PASSWORD` | *sua senha* |
+
+3. Rode a classe `...Application` com `spring.jpa.hibernate.ddl-auto=update`, o Hibernate cria as tabelas automaticamente na primeira execução.

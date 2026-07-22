@@ -33,6 +33,16 @@
   - [Optional](#optional)
   - [Datas com java.time](#datas-com-javatime)
   - [Estatísticas com streams](#estatísticas-com-streams)
+  - [Enums: um tipo com valores fixos](#enums-um-tipo-com-valores-fixos)
+  - [Do record da API para a classe de domínio](#do-record-da-api-para-a-classe-de-domínio)
+  - [Bancos de dados relacionais e PostgreSQL](#bancos-de-dados-relacionais-e-postgresql)
+  - [JPA, Hibernate e ORM](#jpa-hibernate-e-orm)
+  - [Anotações de mapeamento](#anotações-de-mapeamento)
+  - [Configurando a persistência no projeto](#configurando-a-persistência-no-projeto)
+  - [Repositories e injeção de dependências](#repositories-e-injeção-de-dependências)
+  - [Relacionamentos entre entidades](#relacionamentos-entre-entidades)
+  - [Derived queries](#derived-queries)
+  - [JPQL e consultas personalizadas](#jpql-e-consultas-personalizadas)
 
 ---
 
@@ -837,7 +847,7 @@ Outras classes do pacote, para outros cenários:
 
 ## Trilha: Java Web: crie aplicações usando Spring Boot
 
-**Curso:** Java: trabalhando com lambdas, streams e Spring Framework
+**Cursos:** Java: trabalhando com lambdas, streams e Spring Framework · Java: persistência de dados e consultas com Spring Data JPA
 
 ### Spring e Spring Boot
 
@@ -953,13 +963,13 @@ O `readValue` recebe o texto JSON e a classe de destino, e devolve o objeto pree
 
 O JSON de uma API raramente usa os nomes que queremos no código (vem `Title`, queremos `titulo`; vem em inglês, queremos português). As anotações do Jackson resolvem o mapeamento sem renomear nada:
 
-- **`@JsonAlias`** - aceita nomes **alternativos** na hora de **ler** o JSON (pode listar vários);
+- **`@JsonAlias`** - aceita nomes **alternativos** na hora de **ler** o JSON (mais de um vai entre chaves: `@JsonAlias({"Title", "Titulo"})`);
 - **`@JsonProperty`** - define o nome do campo **tanto na leitura quanto na escrita** do JSON;
 - **`@JsonIgnoreProperties(ignoreUnknown = true)`** - instrui o Jackson a **ignorar os campos do JSON que não foram mapeados**. Sem ela, qualquer campo desconhecido derruba a conversão com exceção, e APIs costumam devolver dezenas de campos que não nos interessam.
 
 ```java
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DadosSerie(@JsonAlias("Title, title") String titulo,
+public record DadosSerie(@JsonAlias({"Title", "Titulo"}) String titulo,
                          @JsonAlias("totalSeasons") Integer totalTemporadas,
                          @JsonAlias("imdbRating") String avaliacao) {
 }
@@ -1248,4 +1258,508 @@ est.getCount();     // quantidade considerada
 
 #### Higiene dos dados antes da análise
 
-Repare no `filter` presente nos dois exemplos: elementos sem avaliação real (convertidos para `0.0` no tratamento de exceção) **distorceriam a média** se entrassem no cálculo. A lição vale para qualquer análise: **defina o que é dado válido e filtre antes de calcular**;  estatística sobre dado sujo produz conclusão errada com cara de certa.
+Repare no `filter` presente nos dois exemplos: elementos sem avaliação real (convertidos para `0.0` no tratamento de exceção) **distorceriam a média** se entrassem no cálculo. A lição vale para qualquer análise: **defina o que é dado válido e filtre antes de calcular**; estatística sobre dado sujo produz conclusão errada com cara de certa.
+
+### Enums: um tipo com valores fixos
+
+Alguns dados só podem assumir um conjunto **conhecido e limitado** de valores: o gênero de uma série, o tipo de um artista, o status de um pedido. Guardar isso em uma `String` deixa a porta aberta para erro de digitação e valor inválido, e o compilador não ajuda em nada. O **enum** cria um tipo próprio cujos valores possíveis são fixos:
+
+```java
+public enum Categoria {
+    ACAO, ROMANCE, COMEDIA, DRAMA, CRIME;
+}
+```
+
+A partir daí, `Categoria.DRAMA` é um valor válido e `"drma"` sequer compila.
+
+#### Enums com atributos e construtor
+
+Em Java, cada valor de um enum é um **objeto**, e pode carregar atributos próprios. Isso resolve um problema concreto do Screen Match: a API do OMDb devolve `"Action"`, mas o menu precisa entender `"Ação"`. O enum guarda as duas formas:
+
+```java
+public enum Categoria {
+    ACAO("Action", "Ação"),
+    ROMANCE("Romance", "Romance"),
+    COMEDIA("Comedy", "Comédia"),
+    DRAMA("Drama", "Drama"),
+    CRIME("Crime", "Crime");
+
+    private String categoriaOmdb;
+    private String categoriaPtbr;
+
+    Categoria(String categoriaOmdb, String categoriaPtbr) {  // recebe o que está entre parênteses acima
+        this.categoriaOmdb = categoriaOmdb;
+        this.categoriaPtbr = categoriaPtbr;
+    }
+}
+```
+
+O construtor de um enum é sempre privado (nem precisa escrever `private`): os únicos objetos que existem são os declarados no topo.
+
+#### Métodos personalizados: convertendo texto em enum
+
+Enum também tem métodos, inclusive estáticos. O método `values()` (que o Java gera de graça) devolve todos os valores, e um `for` sobre ele faz a correspondência entre o texto recebido e a constante certa:
+
+```java
+public static Categoria fromString(String text) {
+    for (Categoria categoria : Categoria.values()) {
+        if (categoria.categoriaOmdb.equalsIgnoreCase(text)) {
+            return categoria;
+        }
+    }
+    throw new IllegalArgumentException("Nenhuma categoria encontrada para a string fornecida: " + text);
+}
+```
+
+`fromString` converte o texto recebido da API (inglês) na constante correspondente. Note a escolha de lançar `IllegalArgumentException` em vez de retornar `null`: um dado que não bate com nenhuma categoria é um erro, e erro deve aparecer imediatamente, não se esconder como `null` para causar um `NullPointerException` inexplicável lá na frente.
+
+Quando o texto já é idêntico ao nome da constante, nem isso é preciso: o `valueOf` já vem pronto no enum.
+
+```java
+this.tipo = TipoArtista.valueOf(tipo.toUpperCase());   // "banda" → TipoArtista.BANDA
+```
+
+### Do record da API para a classe de domínio
+
+O caminho completo do dado no projeto tem três estágios: **JSON → record → classe de domínio**. O record carrega os dados crus, com o vocabulário da API; a classe de domínio (`Serie`) carrega o vocabulário do projeto, os comportamentos e, a partir deste curso, o mapeamento para o banco. Um construtor faz a ponte:
+
+```java
+public Serie(DadosSerie dadosSerie) {
+    this.titulo = dadosSerie.titulo();
+    this.totalTemporadas = dadosSerie.totalTemporadas();
+    this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
+    this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
+    this.atores = dadosSerie.atores();
+    this.poster = dadosSerie.poster();
+    this.sinopse = ConsultaMyMemory.obterTraducao(dadosSerie.sinopse()).trim();
+}
+```
+
+Dois detalhes valem atenção:
+
+- **`genero().split(",")[0].trim()`** - a API manda `"Drama, Crime, Thriller"` em um único campo; separamos por vírgula, ficamos com o primeiro e tiramos os espaços das pontas;
+- **`OptionalDouble.of(...).orElse(0)`** - o *"if reduzido"*: em vez de escrever um `if` para o caso de não haver valor, o `OptionalDouble` embrulha o número e o `orElse` já entrega o padrão. Vale lembrar que `OptionalDouble.of` sempre recebe um valor de fato, quando a origem pode ser nula ou o texto pode não ser numérico, quem protege de verdade é o `Optional.ofNullable(...)` ou o `try/catch` em volta da conversão (foi o caminho usado em `Episodio`).
+
+Ampliar o que se busca é só ampliar o record: mapeando mais campos do JSON (`Genre`, `Actors`, `Poster`, `Plot`) com `@JsonAlias`, eles passam a existir no record e, na sequência, na entidade.
+
+#### Métodos privados: encapsulamento de comportamento
+
+A classe `Principal` expõe **um** método público, o `exibeMenu()`. Tudo o que ele coordena (`buscarSerieWeb()`, `listarSeriesBuscadas()`, `buscarSeriePorTitulo()`...) é **`private`**. Encapsulamento não vale só para atributos: métodos que são passos internos de um fluxo não fazem parte do contrato da classe, e mantê-los privados deixa claro o que é serviço oferecido e o que é cozinha.
+
+O menu em si roda dentro de um `do/while` com `switch`, o que permite **buscar várias séries seguidas** sem reiniciar o programa: o laço só termina quando a opção digitada é `0`.
+
+#### Traduzindo dados com uma API de IA
+
+A sinopse chega em inglês, e traduzi-la é trabalho para um modelo de linguagem. Com a dependência `com.theokanning.openai-gpt3-java` no `pom.xml`, uma classe de serviço encapsula a chamada:
+
+```java
+public static String obterTraducao(String texto) {
+    OpenAiService service = new OpenAiService(System.getenv("OPENAI_APIKEY"));
+
+    CompletionRequest requisicao = CompletionRequest.builder()
+            .model("gpt-3.5-turbo-instruct")
+            .prompt("traduza para o português o texto: " + texto)
+            .maxTokens(1000)
+            .temperature(0.7)
+            .build();
+
+    return service.createCompletion(requisicao).getChoices().get(0).getText();
+}
+```
+
+Os parâmetros da requisição:
+
+- **`model`** - qual modelo responde;
+- **`prompt`** - a instrução em linguagem natural, é o "código" que se escreve para uma IA;
+- **`maxTokens`** - teto de tamanho da resposta (e, na prática, do custo);
+- **`temperature`** - o quanto a resposta pode variar: perto de `0` é mais previsível, mais alto é mais criativo.
+
+Como a API da OpenAI é paga, o projeto usa por padrão a alternativa gratuita **MyMemory**, consumida com o mesmo `ConsumoApi` de sempre. O detalhe novo é o **`URLEncoder`**: texto com espaços, acentos ou `|` não pode ir cru numa URL, ele precisa ser codificado antes.
+
+```java
+String texto = URLEncoder.encode(text);
+String langpair = URLEncoder.encode("en|pt-br");
+String url = "https://api.mymemory.translated.net/get?q=" + texto + "&langpair=" + langpair;
+```
+
+E a regra que vale para as duas: **chave de API não fica no código-fonte**, e sim em variável de ambiente.
+
+---
+
+### Bancos de dados relacionais e PostgreSQL
+
+#### Por que sair da memória?
+
+Até aqui, tudo o que a aplicação buscava vivia em uma `List` na memória: fechou o programa, os dados sumiram. Gravar em arquivo JSON resolvia metade do problema (persistia), mas não a outra metade: buscar, filtrar, ordenar e relacionar dados em arquivo é lento e manual. Isso é trabalho de **banco de dados**.
+
+#### Relacional x não relacional
+
+Um banco **relacional** organiza os dados em **tabelas** (linhas e colunas), com esquema definido e relacionamentos explícitos entre elas. É a escolha natural quando os dados têm estrutura estável e as relações importam, o próprio banco garante a consistência (tipos, campos obrigatórios, valores únicos, integridade das relações), e a linguagem de consulta é o **SQL**.
+
+Os **não relacionais** (NoSQL) abrem mão de parte disso em troca de flexibilidade: documentos (MongoDB), chave-valor (Redis), grafos (Neo4j). Sem esquema rígido, cada registro pode ter uma forma diferente.
+
+O vocabulário mínimo do mundo relacional:
+
+- **Tabela** - o conjunto de registros de um tipo (`series`, `episodios`);
+- **Coluna** - um atributo, com tipo definido (`titulo` é texto, `avaliacao` é numérico);
+- **Linha / registro** - uma ocorrência (uma série específica);
+- **Chave primária (PK)** - a coluna que identifica cada linha de forma única (o `id`);
+- **Chave estrangeira (FK)** - a coluna que aponta para a chave primária de outra tabela, é ela que **materializa o relacionamento**.
+
+#### PostgreSQL
+
+O **PostgreSQL** é um SGBD relacional open source, maduro e muito usado no mercado. A instalação traz o servidor, que roda por padrão na porta **5432**, e o **pgAdmin**, interface gráfica para administrar os bancos. Com ele no ar, o passo inicial é criar o banco da aplicação (por exemplo, `screenmatch`) e guardar quatro informações: **host**, **nome do banco**, **usuário** e **senha**.
+
+---
+
+### JPA, Hibernate e ORM
+
+#### O problema: objetos de um lado, tabelas do outro
+
+O Java pensa em **objetos** (com herança, composição, listas de outros objetos); o banco pensa em **tabelas** (linhas, colunas, chaves). Traduzir manualmente entre os dois mundos, escrevendo SQL na mão para cada operação, é repetitivo e frágil. **ORM** (*Object-Relational Mapping*) é o nome da técnica que automatiza essa tradução.
+
+#### JPA: a especificação
+
+A **JPA** (*Jakarta/Java Persistence API*) é a **especificação** de ORM do ecossistema Java: define uma interface comum para persistir objetos, sem dizer *como* isso é feito. Seus conceitos-chave:
+
+- **Entidade** - uma classe Java que representa algo armazenado no banco; cada entidade é mapeada para uma tabela;
+- **EntityManager** - a interface central da JPA, que executa as operações de persistência (o CRUD) e gerencia o ciclo de vida das entidades;
+- **JPQL** - a linguagem de consulta da JPA: um SQL orientado a objetos, escrito sobre **classes e atributos**, não sobre tabelas e colunas.
+
+A vantagem de programar contra uma especificação é o **baixo acoplamento**: como a JPA encapsula a conversa com o banco, trocar o banco da aplicação (ou a implementação da JPA) não exige reescrever o código.
+
+#### Hibernate: a implementação
+
+A JPA sozinha não conecta em nada, ela é um contrato. Quem implementa esse contrato são frameworks como o **Hibernate**, a implementação mais popular e a usada aqui. É ele quem gera o SQL, conversa com o driver do banco e devolve objetos Java prontos.
+
+#### Onde cada peça entra
+
+```
+Aplicação
+   ↓
+Spring Data JPA   → repositórios prontos: save, findAll, derived queries
+   ↓
+JPA               → a especificação: @Entity, EntityManager, JPQL
+   ↓
+Hibernate         → a implementação: gera o SQL
+   ↓
+Driver JDBC       → conversa com o banco
+   ↓
+PostgreSQL
+```
+
+Na prática, escrevemos quase só na camada de cima; o resto é configuração.
+
+---
+
+### Anotações de mapeamento
+
+As anotações (do pacote `jakarta.persistence`) são o que transforma uma classe comum em entidade. As principais:
+
+| Anotação | Para que serve |
+|---|---|
+| `@Entity` | marca a classe como entidade, ou seja, mapeada para uma tabela |
+| `@Table(name = "...")` | personaliza o nome da tabela (por padrão, o Hibernate usa o nome da classe) |
+| `@Id` | define o atributo que é a **chave primária** |
+| `@GeneratedValue(strategy = ...)` | delega a geração do id ao banco (`IDENTITY`, `SEQUENCE`, `AUTO`, `TABLE`) |
+| `@Column(name, unique, nullable)` | personaliza nome, obrigatoriedade e unicidade da coluna |
+| `@Enumerated(EnumType.STRING)` | grava um enum como texto no banco |
+| `@Transient` | marca um atributo que **não** deve ser persistido |
+| `@OneToMany` / `@ManyToOne` | relacionamento um-para-muitos e muitos-para-um |
+| `@OneToOne` / `@ManyToMany` | relacionamento um-para-um e muitos-para-muitos |
+| `@JoinColumn(name = "...")` | define a coluna de chave estrangeira do relacionamento |
+| `@JoinTable(...)` | define a tabela intermediária de um muitos-para-muitos |
+| `@Embeddable` / `@Embedded` | reaproveita um grupo de campos dentro de outra entidade |
+| `@NamedQuery` | dá nome a uma consulta JPQL para reutilizá-la |
+
+A entidade `Serie` reunindo boa parte disso:
+
+```java
+@Entity
+@Table(name = "series")
+public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)          // não deixa gravar a mesma série duas vezes
+    private String titulo;
+
+    private Integer totalTemporadas;
+    private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)    // grava "DRAMA", não 3
+    private Categoria genero;
+
+    public Serie() {}               // construtor vazio: obrigatório para a JPA
+    ...
+}
+```
+
+Três observações que economizam dor de cabeça:
+
+- **Construtor vazio é obrigatório.** A JPA instancia a entidade por reflexão antes de preencher os campos; sem o construtor sem argumentos, a aplicação quebra ao subir.
+- **`EnumType.STRING` em vez de `ORDINAL`.** O padrão (`ORDINAL`) grava a **posição** do valor no enum, se alguém reordenar as constantes depois, todos os registros antigos passam a significar outra coisa. `STRING` grava o nome e é imune a isso.
+- **Atributos sem anotação também viram coluna.** O Hibernate mapeia tudo por convenção (`totalTemporadas` → `total_temporadas`); as anotações só entram quando queremos algo **diferente** do padrão.
+
+---
+
+### Configurando a persistência no projeto
+
+#### Dependências
+
+Duas linhas no `pom.xml`: a estrela do Spring Data JPA (que traz a JPA e o Hibernate junto) e o driver do banco.
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+#### application.properties
+
+É o arquivo em `src/main/resources` onde a aplicação diz **onde** está o banco e **como** se comportar com ele:
+
+```properties
+spring.datasource.url=jdbc:postgresql://${DB_HOST}/${DB_NAME}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.format-sql=true
+```
+
+- **`ddl-auto`** - o que o Hibernate faz com o **esquema** ao subir: `update` cria o que falta e preserva os dados (ótimo para estudo), `create` recria do zero a cada execução (apaga tudo), `validate` só confere se o mapeamento bate com o banco, `none` não mexe. Em produção, quem controla o esquema são migrações versionadas, não o `ddl-auto`.
+- **`show-sql` / `format-sql`** - imprimem no console o SQL que o Hibernate gerou. É a melhor forma de **ver o ORM trabalhando** e entender o que uma consulta realmente faz.
+
+#### Variáveis de ambiente
+
+Repare que nenhuma senha aparece no arquivo: `${DB_HOST}`, `${DB_USER}` e `${DB_PASSWORD}` são **variáveis de ambiente**, lidas do sistema (ou configuradas nas *run configurations* da IDE) na hora de subir a aplicação. Assim o repositório pode ser público sem expor credenciais, e cada máquina, ou cada ambiente, aponta para um banco diferente sem alterar uma linha de código. A mesma ideia vale para as chaves de API.
+
+---
+
+### Repositories e injeção de dependências
+
+#### A interface que ninguém implementa
+
+Para operar sobre uma entidade, o Spring Data JPA pede apenas uma **interface** que estenda `JpaRepository`, informando a entidade e o tipo da chave primária:
+
+```java
+public interface SerieRepository extends JpaRepository<Serie, Long> { }
+```
+
+Não existe classe implementando essa interface, e é justamente esse o truque: o Spring **gera a implementação em tempo de execução**. Só com essa linha já vêm prontos:
+
+```java
+repositorio.save(serie);        // insere ou atualiza
+repositorio.saveAll(lista);     // salva vários
+repositorio.findAll();          // lista tudo
+repositorio.findById(id);       // busca por id → Optional
+repositorio.delete(serie);      // remove
+repositorio.count();            // conta
+```
+
+#### Injeção de dependências
+
+Uma interface não pode ser instanciada com `new`, então de onde vem o objeto? Do **contêiner do Spring**. O framework cria e gerencia esses objetos (os *beans*) e os **entrega** a quem declarar que precisa deles, é a **injeção de dependências**. A declaração se faz com `@Autowired`, e só funciona dentro de classes que o próprio Spring gerencia (como a classe anotada com `@SpringBootApplication`):
+
+```java
+@SpringBootApplication
+public class ScreenmatchApplication implements CommandLineRunner {
+
+    @Autowired
+    private SerieRepository repositorio;   // o Spring preenche isto sozinho
+
+    @Override
+    public void run(String... args) {
+        Principal principal = new Principal(repositorio);   // e a Principal recebe pelo construtor
+        principal.exibeMenu();
+    }
+}
+```
+
+A `Principal` não é gerenciada pelo Spring, então ela **recebe o repositório pelo construtor**. Esse padrão, depender de uma abstração recebida de fora em vez de construí-la internamente, é o que mantém as classes desacopladas e testáveis.
+
+---
+
+### Relacionamentos entre entidades
+
+Uma série tem **vários** episódios; cada episódio pertence a **uma** série. É um relacionamento **um-para-muitos**, e a JPA quer os dois lados declarados:
+
+```java
+// em Serie.java
+@OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+private List<Episodio> episodios = new ArrayList<>();
+
+// em Episodio.java
+@ManyToOne
+private Serie serie;
+```
+
+No banco, quem guarda a relação é a tabela `episodios`, através de uma coluna **`serie_id`**, a chave estrangeira apontando para a chave primária de `series`. O **`mappedBy = "serie"`** diz exatamente isso: "o dono da relação é o atributo `serie` do outro lado, não crie uma tabela extra para isso".
+
+Os tipos de relacionamento possíveis são quatro: **um-para-um** (`@OneToOne`), **um-para-muitos** e **muitos-para-um** (`@OneToMany`/`@ManyToOne`) e **muitos-para-muitos** (`@ManyToMany`, que exige uma tabela intermediária, definida no `@JoinTable`).
+
+#### Cascade: operações que se propagam
+
+Salvamos a série e, depois, os episódios dela. Sem configuração, o Hibernate reclamaria de estar salvando uma série com episódios ainda não persistidos. O atributo **`cascade`** define quais operações se propagam do pai para os filhos: `CascadeType.ALL` propaga todas (salvar, atualizar, remover), o que aqui faz sentido, um episódio não existe sem a sua série.
+
+#### Fetch: quando os dados relacionados são carregados
+
+- **`FetchType.LAZY`** (padrão do `@OneToMany`) - carrega a série agora e os episódios **só quando forem acessados**. Economiza consulta, mas exige que a sessão com o banco ainda esteja aberta na hora do acesso;
+- **`FetchType.EAGER`** - traz série **e** episódios de uma vez. Mais simples numa aplicação de console como esta, e mais pesado quanto maior a coleção.
+
+Não há opção universalmente certa: é uma troca entre número de consultas e volume de dados trazido.
+
+#### Relacionamento bidirecional consistente
+
+Quando os dois lados existem no código, os dois lados precisam ser atualizados, senão o objeto em memória fica com uma relação "pela metade" (o episódio não sabe de qual série é, e a FK vai nula para o banco). A solução é resolver isso **dentro do próprio setter**:
+
+```java
+public void setEpisodios(List<Episodio> episodios) {
+    episodios.forEach(e -> e.setSerie(this));   // cada episódio passa a conhecer a série
+    this.episodios = episodios;
+}
+```
+
+Assim quem usa a classe não precisa lembrar de fazer as duas chamadas, a entidade cuida da própria coerência.
+
+---
+
+### Derived queries
+
+#### Consultas escritas no nome do método
+
+O Spring Data JPA lê o **nome do método** declarado no repositório, interpreta as palavras-chave e **gera a consulta**. Nada de corpo, nada de SQL:
+
+```java
+public interface SerieRepository extends JpaRepository<Serie, Long> {
+    Optional<Serie> findByTituloContainingIgnoreCase(String nomeSerie);
+    List<Serie> findByAtoresContainingIgnoreCase(String nomeAtor);
+    List<Serie> findTop5ByOrderByAvaliacaoDesc();
+    List<Serie> findByGenero(Categoria categoria);
+    List<Serie> findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(int temporadas, double avaliacao);
+}
+```
+
+As palavras-chave mais usadas:
+
+| Palavra-chave | Exemplo | O que gera |
+|---|---|---|
+| `findBy` | `findByTitulo(String titulo)` | igualdade exata |
+| `Containing` | `findByTituloContaining(...)` | `like %valor%` |
+| `IgnoreCase` | `findByTituloContainingIgnoreCase(...)` | ignora maiúsculas/minúsculas |
+| `And` / `Or` | `findByGeneroAndAvaliacao(...)` | combina condições |
+| `GreaterThan(Equal)` / `LessThan(Equal)` | `findByAvaliacaoGreaterThanEqual(...)` | `>` / `>=` / `<` / `<=` |
+| `Between` | `findByAvaliacaoBetween(a, b)` | intervalo |
+| `OrderBy...Asc/Desc` | `findByGeneroOrderByAvaliacaoDesc(...)` | ordenação |
+| `Top` / `First` | `findTop5ByOrderByAvaliacaoDesc()` | limita a quantidade |
+| `countBy` | `countByCategoriaNome(...)` | contagem |
+| navegação por atributo | `findByCategoriaNome(String nome)` | entra na entidade relacionada |
+
+#### Streams ou banco?
+
+Antes, buscar uma série pelo título era filtrar uma lista em memória com stream. Agora é uma chamada ao repositório. A diferença não é só estética: o stream exige **carregar tudo** para depois descartar quase tudo, enquanto a consulta filtra **dentro do banco**, com índices, e traz só o que interessa. Com dez séries dá na mesma; com dez mil, não. A regra prática: **filtrar e ordenar é trabalho do banco**; streams continuam ótimos para transformar em memória os dados que já vieram.
+
+> **E quando o banco é o recurso mais caro?** Aí a tentação é jogar o filtro pra aplicação "pra poupar o banco", mas é o contrário: ele ainda leria tudo do disco *e* trafegaria tudo pela rede pra você descartar 90% na memória. Filtro bem indexado é uma das operações mais baratas que existem; o que pesa é query ruim (scan, ordenação sem índice, N+1). A saída é **bater menos e mais leve**, sem tirar o filtro do SQL: índice no que se filtra, projeção só das colunas necessárias, paginação, cache, e, se a métrica cobrar, réplica de leitura ou view materializada. Mover leitura pesada pra fora (réplica, Elasticsearch, CQRS) é sobre *onde* o SQL roda, não sobre trocar SQL por stream.
+
+#### Tipos de retorno
+
+A assinatura declara o que a busca pode devolver, e cada escolha tem consequência:
+
+- **`Serie`** - devolve `null` se não achar (e explode se achar mais de um);
+- **`List<Serie>`** - devolve lista vazia quando não há resultado, nunca `null`;
+- **`Optional<Serie>`** - deixa a ausência **explícita**, e obriga quem chama a tratá-la com `isPresent()`/`orElse()`.
+
+Para buscas que podem não encontrar nada, `Optional` é a opção mais honesta:
+
+```java
+Optional<Serie> serie = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+if (serie.isPresent()) {
+    System.out.println("Dados da série: " + serie.get());
+} else {
+    System.out.println("Série não encontrada");
+}
+```
+
+#### Lendo um enum digitado pela pessoa usuária
+
+Para filtrar por gênero, o texto digitado em português precisa virar `Categoria` antes de chegar ao repositório, é aí que o método personalizado do enum entra em cena:
+
+```java
+String nomeGenero = leitura.nextLine();
+Categoria categoria = Categoria.fromPtbr(nomeGenero);   // "comédia" → Categoria.COMEDIA
+List<Serie> series = repositorio.findByGenero(categoria);
+```
+
+---
+
+### JPQL e consultas personalizadas
+
+#### Quando o nome do método não dá conta
+
+`findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual` funciona, mas ninguém merece ler isso. Quando a consulta cresce, a **`@Query`** permite dar ao método um nome curto e escrever a consulta separadamente, em **JPQL**:
+
+```java
+@Query("select s from Serie s where s.totalTemporadas <= :totalTemporadas and s.avaliacao >= :avaliacao")
+List<Serie> seriesPorTemporadaEAvaliacao(int totalTemporadas, double avaliacao);
+```
+
+JPQL **se parece** com SQL, mas opera sobre o modelo de objetos: `Serie` é a **classe** (não a tabela `series`) e `s.avaliacao` é o **atributo** (não a coluna). Os `:parametros` são preenchidos pelos argumentos do método, o `@Param("nome")` só é necessário quando os nomes não coincidem.
+
+#### Junções pelo relacionamento
+
+Como o mapeamento já conhece a relação, o `join` é feito **pelo atributo**, sem `on` nem chave estrangeira à vista. Isso permite partir de uma série e buscar **episódios**:
+
+```java
+@Query("select e from Serie s join s.episodios e where e.titulo ilike %:trechoEpisodio%")
+List<Episodio> episodiosPorTrecho(String trechoEpisodio);
+
+@Query("select e from Serie s join s.episodios e where s = :serie order by e.avaliacao desc limit 5")
+List<Episodio> topEpisodiosPorSerie(Serie serie);
+```
+
+Note que o **retorno é `List<Episodio>`** mesmo estando em `SerieRepository`: o `select` define o que volta, não a entidade do repositório.
+
+#### Recursos de SQL que aparecem aqui
+
+- **`like` / `ilike`** - busca por trecho com `%`; o `ilike` (do PostgreSQL) ignora maiúsculas/minúsculas;
+- **`order by ... desc`** e **`limit`** - ordenar e cortar o resultado no banco;
+- **funções de data** - assim como o Java tem o `java.time`, o SQL tem as suas: `YEAR(e.dataLancamento)` extrai o ano direto na consulta;
+- **agregações** - `AVG`, `MAX`, `COUNT` com `GROUP BY` e `HAVING`.
+
+```java
+@Query("select e from Serie s join s.episodios e where s = :serie and YEAR(e.dataLancamento) >= :anoLancamento")
+List<Episodio> episodiosPorSerieEAno(Serie serie, int anoLancamento);
+
+@Query("SELECT c.nome, COUNT(p) FROM Produto p JOIN p.categoria c GROUP BY c.nome HAVING COUNT(p) > :quantidade")
+List<Object[]> categoriasComMaisDe(@Param("quantidade") long quantidade);
+```
+
+Quando o `select` não devolve uma entidade inteira, mas um conjunto de colunas, o retorno vem como `List<Object[]>`, cada posição do array é uma coluna projetada.
+
+#### Consultas nativas
+
+Se for preciso usar um recurso específico do banco, dá para escrever **SQL puro** com `nativeQuery = true`. Aí valem os nomes reais de **tabelas e colunas**, e a consulta deixa de ser portátil entre bancos, é a saída de emergência, não a primeira escolha:
+
+```java
+@Query(value = "SELECT * FROM produto ORDER BY preco DESC LIMIT 5", nativeQuery = true)
+List<Produto> buscarTop5ProdutosMaisCaros();
+```
+
+#### Resumo dos três caminhos
+
+| Forma | Como se escreve | Quando usar |
+|---|---|---|
+| **Derived query** | palavras-chave no nome do método | consultas simples e diretas |
+| **JPQL (`@Query`)** | consulta sobre classes e atributos | consultas complexas, junções, agregações |
+| **Native query** | SQL puro (`nativeQuery = true`) | recursos exclusivos do banco |

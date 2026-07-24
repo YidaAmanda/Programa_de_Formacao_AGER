@@ -35,6 +35,7 @@
   - [Estatísticas com streams](#estatísticas-com-streams)
   - [Enums: um tipo com valores fixos](#enums-um-tipo-com-valores-fixos)
   - [Do record da API para a classe de domínio](#do-record-da-api-para-a-classe-de-domínio)
+  - [Traduzindo dados com uma API de IA](#traduzindo-dados-com-uma-api-de-ia)
   - [Bancos de dados relacionais e PostgreSQL](#bancos-de-dados-relacionais-e-postgresql)
   - [JPA, Hibernate e ORM](#jpa-hibernate-e-orm)
   - [Anotações de mapeamento](#anotações-de-mapeamento)
@@ -43,6 +44,14 @@
   - [Relacionamentos entre entidades](#relacionamentos-entre-entidades)
   - [Derived queries](#derived-queries)
   - [JPQL e consultas personalizadas](#jpql-e-consultas-personalizadas)
+  - [Do console para a web](#do-console-para-a-web)
+  - [MVC e a organização em camadas](#mvc-e-a-organização-em-camadas)
+  - [Controllers: as rotas da API](#controllers-as-rotas-da-api)
+  - [A camada de serviço com @Service](#a-camada-de-serviço-com-service)
+  - [DTOs e serialização](#dtos-e-serialização)
+  - [CORS: a resposta que o navegador bloqueia](#cors-a-resposta-que-o-navegador-bloqueia)
+  - [DevTools e Live Reload](#devtools-e-live-reload)
+  - [O caminho completo de uma requisição](#o-caminho-completo-de-uma-requisição)
 
 ---
 
@@ -847,7 +856,9 @@ Outras classes do pacote, para outros cenários:
 
 ## Trilha: Java Web: crie aplicações usando Spring Boot
 
-**Cursos:** Java: trabalhando com lambdas, streams e Spring Framework · Java: persistência de dados e consultas com Spring Data JPA
+**Cursos:** Java: trabalhando com lambdas, streams e Spring Framework · Java: persistência de dados e consultas com Spring Data JPA · Java: criando a sua primeira API e conectando ao front-end
+
+É a trilha mais longa até aqui, e o foco é sempre o mesmo projeto, o Screen Match, atravessando três estágios: primeiro ele ganha a estrutura de um framework e os recursos modernos da linguagem (lambdas, streams, Optional), depois troca a memória por um **banco de dados** e, por fim, sai do console e vira uma **API consumida por um front-end**.
 
 ### Spring e Spring Boot
 
@@ -946,6 +957,12 @@ Os ganhos são concretos:
 - **Reúso** - o mesmo serviço atende qualquer parte do programa (e pode ser copiado para outros projetos);
 - **Testabilidade** - classes pequenas com um propósito são fáceis de testar isoladamente.
 
+#### Métodos privados: encapsulamento de comportamento
+
+A mesma ideia vale dentro de uma classe. A `Principal` expõe **um** método público, o `exibeMenu()`; tudo o que ele coordena (`buscarSerieWeb()`, `listarSeriesBuscadas()`, `buscarSeriePorTitulo()`...) é **`private`**. Encapsulamento não vale só para atributos: métodos que são passos internos de um fluxo não fazem parte do contrato da classe, e mantê-los privados deixa claro o que é serviço oferecido e o que é interno.
+
+O menu em si roda dentro de um `do/while` com `switch`, o que permite **buscar várias séries seguidas** sem reiniciar o programa: o laço só termina quando a opção digitada é `0`.
+
 ### Jackson: JSON e objetos Java
 
 #### ObjectMapper
@@ -1006,7 +1023,7 @@ DadosSerie serie = conversor.obterDados(json, DadosSerie.class);         // T = 
 DadosTemporada temp = conversor.obterDados(json, DadosTemporada.class);  // T = DadosTemporada
 ```
 
-**Um único método, zero redundância** - e se alguém tentar atribuir o resultado ao tipo errado, o erro aparece em compilação, não em produção.
+**Um único método, zero redundância**, e se alguém tentar atribuir o resultado ao tipo errado, o erro aparece em compilação, não em produção.
 
 #### Generics com listas
 
@@ -1321,7 +1338,7 @@ this.tipo = TipoArtista.valueOf(tipo.toUpperCase());   // "banda" → TipoArtist
 
 ### Do record da API para a classe de domínio
 
-O caminho completo do dado no projeto tem três estágios: **JSON → record → classe de domínio**. O record carrega os dados crus, com o vocabulário da API; a classe de domínio (`Serie`) carrega o vocabulário do projeto, os comportamentos e, a partir deste curso, o mapeamento para o banco. Um construtor faz a ponte:
+O caminho completo do dado no projeto tem três estágios: **JSON → record → classe de domínio**. O record carrega os dados crus, com o vocabulário da API; a classe de domínio (`Serie`) carrega o vocabulário do projeto, os comportamentos e, quando entra a JPA, o mapeamento para o banco. Um construtor faz a ponte:
 
 ```java
 public Serie(DadosSerie dadosSerie) {
@@ -1342,13 +1359,7 @@ Dois detalhes valem atenção:
 
 Ampliar o que se busca é só ampliar o record: mapeando mais campos do JSON (`Genre`, `Actors`, `Poster`, `Plot`) com `@JsonAlias`, eles passam a existir no record e, na sequência, na entidade.
 
-#### Métodos privados: encapsulamento de comportamento
-
-A classe `Principal` expõe **um** método público, o `exibeMenu()`. Tudo o que ele coordena (`buscarSerieWeb()`, `listarSeriesBuscadas()`, `buscarSeriePorTitulo()`...) é **`private`**. Encapsulamento não vale só para atributos: métodos que são passos internos de um fluxo não fazem parte do contrato da classe, e mantê-los privados deixa claro o que é serviço oferecido e o que é cozinha.
-
-O menu em si roda dentro de um `do/while` com `switch`, o que permite **buscar várias séries seguidas** sem reiniciar o programa: o laço só termina quando a opção digitada é `0`.
-
-#### Traduzindo dados com uma API de IA
+### Traduzindo dados com uma API de IA
 
 A sinopse chega em inglês, e traduzi-la é trabalho para um modelo de linguagem. Com a dependência `com.theokanning.openai-gpt3-java` no `pom.xml`, uma classe de serviço encapsula a chamada:
 
@@ -1384,8 +1395,6 @@ String url = "https://api.mymemory.translated.net/get?q=" + texto + "&langpair="
 
 E a regra que vale para as duas: **chave de API não fica no código-fonte**, e sim em variável de ambiente.
 
----
-
 ### Bancos de dados relacionais e PostgreSQL
 
 #### Por que sair da memória?
@@ -1409,8 +1418,6 @@ O vocabulário mínimo do mundo relacional:
 #### PostgreSQL
 
 O **PostgreSQL** é um SGBD relacional open source, maduro e muito usado no mercado. A instalação traz o servidor, que roda por padrão na porta **5432**, e o **pgAdmin**, interface gráfica para administrar os bancos. Com ele no ar, o passo inicial é criar o banco da aplicação (por exemplo, `screenmatch`) e guardar quatro informações: **host**, **nome do banco**, **usuário** e **senha**.
-
----
 
 ### JPA, Hibernate e ORM
 
@@ -1449,8 +1456,6 @@ PostgreSQL
 ```
 
 Na prática, escrevemos quase só na camada de cima; o resto é configuração.
-
----
 
 ### Anotações de mapeamento
 
@@ -1502,8 +1507,6 @@ Três observações que economizam dor de cabeça:
 - **`EnumType.STRING` em vez de `ORDINAL`.** O padrão (`ORDINAL`) grava a **posição** do valor no enum, se alguém reordenar as constantes depois, todos os registros antigos passam a significar outra coisa. `STRING` grava o nome e é imune a isso.
 - **Atributos sem anotação também viram coluna.** O Hibernate mapeia tudo por convenção (`totalTemporadas` → `total_temporadas`); as anotações só entram quando queremos algo **diferente** do padrão.
 
----
-
 ### Configurando a persistência no projeto
 
 #### Dependências
@@ -1544,8 +1547,6 @@ spring.jpa.format-sql=true
 #### Variáveis de ambiente
 
 Repare que nenhuma senha aparece no arquivo: `${DB_HOST}`, `${DB_USER}` e `${DB_PASSWORD}` são **variáveis de ambiente**, lidas do sistema (ou configuradas nas *run configurations* da IDE) na hora de subir a aplicação. Assim o repositório pode ser público sem expor credenciais, e cada máquina, ou cada ambiente, aponta para um banco diferente sem alterar uma linha de código. A mesma ideia vale para as chaves de API.
-
----
 
 ### Repositories e injeção de dependências
 
@@ -1589,8 +1590,6 @@ public class ScreenmatchApplication implements CommandLineRunner {
 
 A `Principal` não é gerenciada pelo Spring, então ela **recebe o repositório pelo construtor**. Esse padrão, depender de uma abstração recebida de fora em vez de construí-la internamente, é o que mantém as classes desacopladas e testáveis.
 
----
-
 ### Relacionamentos entre entidades
 
 Uma série tem **vários** episódios; cada episódio pertence a **uma** série. É um relacionamento **um-para-muitos**, e a JPA quer os dois lados declarados:
@@ -1633,8 +1632,6 @@ public void setEpisodios(List<Episodio> episodios) {
 
 Assim quem usa a classe não precisa lembrar de fazer as duas chamadas, a entidade cuida da própria coerência.
 
----
-
 ### Derived queries
 
 #### Consultas escritas no nome do método
@@ -1670,7 +1667,19 @@ As palavras-chave mais usadas:
 
 Antes, buscar uma série pelo título era filtrar uma lista em memória com stream. Agora é uma chamada ao repositório. A diferença não é só estética: o stream exige **carregar tudo** para depois descartar quase tudo, enquanto a consulta filtra **dentro do banco**, com índices, e traz só o que interessa. Com dez séries dá na mesma; com dez mil, não. A regra prática: **filtrar e ordenar é trabalho do banco**; streams continuam ótimos para transformar em memória os dados que já vieram.
 
-> **E quando o banco é o recurso mais caro?** Aí a tentação é jogar o filtro pra aplicação "pra poupar o banco", mas é o contrário: ele ainda leria tudo do disco *e* trafegaria tudo pela rede pra você descartar 90% na memória. Filtro bem indexado é uma das operações mais baratas que existem; o que pesa é query ruim (scan, ordenação sem índice, N+1). A saída é **bater menos e mais leve**, sem tirar o filtro do SQL: índice no que se filtra, projeção só das colunas necessárias, paginação, cache, e, se a métrica cobrar, réplica de leitura ou view materializada. Mover leitura pesada pra fora (réplica, Elasticsearch, CQRS) é sobre *onde* o SQL roda, não sobre trocar SQL por stream.
+> E o argumento de "filtrar na aplicação para poupar o banco" não se sustenta: ele leria tudo do disco **e** mandaria tudo pela rede do mesmo jeito, só para a aplicação descartar quase tudo depois.
+
+#### Quando a consulta pesa
+
+Filtro em coluna indexada é das operações mais baratas que existem, então a saída para uma consulta lenta é **deixá-la mais leve**, não tirar o filtro do SQL:
+
+- **índice** na coluna que se filtra ou ordena, é o que evita percorrer a tabela inteira (*scan*);
+- **projeção** só das colunas necessárias, em vez de trazer a entidade inteira;
+- **paginação**, para não carregar milhares de registros de uma vez.
+
+O que costuma pesar não é o filtro em si, e sim a consulta mal montada: ordenação sem índice ou o problema **N+1**, uma consulta para trazer a lista e mais uma para cada item dela, que é justamente o risco do `FetchType.LAZY` quando os dados relacionados são acessados num laço.
+
+> Existem caminhos mais pesados (cache, réplica de leitura, view materializada), mas eles respondem a **outra** pergunta: o que vale a pena guardar pronto em vez de recalcular. Isso é assunto de arquitetura, não da escolha entre stream e consulta.
 
 #### Tipos de retorno
 
@@ -1700,8 +1709,6 @@ String nomeGenero = leitura.nextLine();
 Categoria categoria = Categoria.fromPtbr(nomeGenero);   // "comédia" → Categoria.COMEDIA
 List<Serie> series = repositorio.findByGenero(categoria);
 ```
-
----
 
 ### JPQL e consultas personalizadas
 
@@ -1735,7 +1742,13 @@ Note que o **retorno é `List<Episodio>`** mesmo estando em `SerieRepository`: o
 - **`like` / `ilike`** - busca por trecho com `%`; o `ilike` (do PostgreSQL) ignora maiúsculas/minúsculas;
 - **`order by ... desc`** e **`limit`** - ordenar e cortar o resultado no banco;
 - **funções de data** - assim como o Java tem o `java.time`, o SQL tem as suas: `YEAR(e.dataLancamento)` extrai o ano direto na consulta;
-- **agregações** - `AVG`, `MAX`, `COUNT` com `GROUP BY` e `HAVING`.
+- **agregações** - `AVG`, `MAX`, `COUNT` com `GROUP BY` e `HAVING`;
+- **`random()`** - ordenação aleatória; com `limit 1`, é a forma mais curta de **sortear um registro** sem carregar a tabela inteira na aplicação:
+
+```java
+@Query("select f from Frase f order by random() limit 1")
+Frase sorteioFrase();
+```
 
 ```java
 @Query("select e from Serie s join s.episodios e where s = :serie and YEAR(e.dataLancamento) >= :anoLancamento")
@@ -1763,3 +1776,251 @@ List<Produto> buscarTop5ProdutosMaisCaros();
 | **Derived query** | palavras-chave no nome do método | consultas simples e diretas |
 | **JPQL (`@Query`)** | consulta sobre classes e atributos | consultas complexas, junções, agregações |
 | **Native query** | SQL puro (`nativeQuery = true`) | recursos exclusivos do banco |
+
+### Do console para a web
+
+#### A aplicação ganha um servidor
+
+Até aqui o Screen Match era uma aplicação **de console**: o `CommandLineRunner` subia o menu e o resultado aparecia no terminal de quem executou. Para que outra aplicação, um site ou um app, consiga usar esses dados, ele precisa **responder por HTTP**. Uma dependência resolve:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+O *starter* `web` traz o Spring MVC, o Jackson e um **Tomcat embutido**, não há servidor para instalar nem arquivo para publicar. Rodar a classe `...Application` sobe a aplicação em **`http://localhost:8080`**, e ela **não termina mais sozinha**: fica no ar esperando requisições. A porta é configurável:
+
+```properties
+server.port=8081
+```
+
+Com o servidor no lugar, a classe principal deixa de implementar `CommandLineRunner`, quem "chama" a aplicação agora é o navegador.
+
+#### Front-end e back-end conversando
+
+O front-end (HTML, CSS e JavaScript, aberto com a extensão *Live Server* do VS Code) não sabe nada de Java: ele faz um `fetch` para uma URL e espera **JSON** de volta.
+
+```javascript
+const baseURL = 'http://localhost:8080';
+
+export default function getDados(endpoint) {
+    return fetch(`${baseURL}${endpoint}`)
+        .then(response => response.json());
+}
+```
+
+O trabalho do back-end é fazer com que cada endereço que o front chama (`/series`, `/series/top5`, `/series/{id}`...) **exista e devolva os dados no formato esperado**. São dois projetos separados, rodando em portas separadas, unidos apenas pelo contrato das rotas, e é por isso que o desenvolvimento vira **incremental**: implementa-se uma rota, confere-se na tela o que passou a funcionar, e segue para a próxima.
+
+### MVC e a organização em camadas
+
+**MVC** (*Model-View-Controller*) separa a aplicação em três papéis:
+
+- **Model** - os dados e as regras do domínio;
+- **View** - a apresentação, o que a pessoa vê;
+- **Controller** - o intermediário, que recebe a requisição, aciona o model e devolve a resposta.
+
+Em Java, o padrão já foi aplicado com **JSP** (código Java misturado ao HTML) e com o **Thymeleaf** (páginas HTML na pasta `resources`, sem mistura de código), os dois mantendo a View **dentro** da aplicação Java. O mais comum hoje é **separar front-end e back-end**: o back-end fica com Model e Controller e entrega só dados; o front-end, uma aplicação à parte, cuida da View.
+
+No projeto, isso vira um pacote por responsabilidade:
+
+```
+br.com.amanda.screenmatch
+├── model/        → entidades e records (os dados)
+├── repository/   → acesso ao banco
+├── service/      → regras de negócio
+├── dto/          → os dados que saem pela API
+├── controller/   → as rotas
+└── config/       → configurações (CORS, por exemplo)
+```
+
+Cada camada conversa apenas com a vizinha: o controller chama o serviço, o serviço chama o repositório, o repositório fala com o banco.
+
+### Controllers: as rotas da API
+
+#### A primeira rota
+
+Um **controller** é a porta de entrada HTTP da aplicação:
+
+```java
+@RestController
+@RequestMapping("/series")
+public class SerieController {
+
+    @Autowired
+    private SerieService servico;
+
+    @GetMapping
+    public List<SerieDTO> obterSeries() {
+        return servico.obterTodasSeries();
+    }
+}
+```
+
+- **`@RestController`** - registra a classe como controladora e faz com que **o retorno dos métodos vire o corpo da resposta**, serializado em JSON. É a soma de `@Controller` + `@ResponseBody`; o `@Controller` sozinho devolveria o nome de uma página a ser renderizada;
+- **`@RequestMapping("/series")`** - o prefixo comum a todas as rotas da classe, evita repetir `/series` em cada método;
+- **`@GetMapping`** - mapeia o método para o verbo **GET** naquele caminho (aqui, `/series` puro).
+
+Basta subir a aplicação e abrir `localhost:8080/series` no navegador para ver o JSON. Não escrevemos uma linha de conversão: o Jackson, que veio junto com o *starter* `web`, **serializa** a lista de objetos automaticamente.
+
+#### Parâmetros na URL com @PathVariable
+
+Rotas que dependem de um dado (o id da série, o nome de um gênero) declaram o trecho variável **entre chaves** no mapeamento e recebem esse valor em um parâmetro anotado com **`@PathVariable`**:
+
+```java
+@GetMapping("/{id}")
+public SerieDTO obterPorId(@PathVariable Long id) {
+    return servico.obterPorId(id);
+}
+
+@GetMapping("/{id}/temporadas/{numero}")
+public List<EpisodioDTO> obterTemporadasPorNumero(@PathVariable Long id, @PathVariable Long numero) {
+    return servico.obterTemporadasPorNumero(id, numero);
+}
+
+@GetMapping("/categoria/{genero}")
+public List<SerieDTO> obterSeriesPorCategoria(@PathVariable String genero) {
+    return servico.obterSeriesPorCategoria(genero);
+}
+```
+
+O nome entre chaves precisa ser **igual** ao do parâmetro do método, e o tipo pode ser número ou texto: `/series/1` e `/series/categoria/comédia` usam o mesmo recurso. Vale a mesma lição da integração com o front: **testar com registros diferentes**, e não só com o primeiro da lista, é o que confirma que a busca está mesmo correta.
+
+> **`@PathVariable` ou `@RequestParam`?** O primeiro lê um pedaço do **caminho** (`/series/1`); o segundo lê a **query string** (`/series?id=1`). Caminho para identificar o recurso, query string para filtros e opções.
+
+#### As anotações web mais usadas
+
+| Anotação | Para que serve |
+|---|---|
+| `@Controller` | classe controladora no padrão MVC (devolve páginas) |
+| `@RestController` | controladora de API REST: o retorno vira JSON (`@Controller` + `@ResponseBody`) |
+| `@RequestMapping` | mapeia URL e verbo HTTP para a classe ou o método |
+| `@GetMapping` / `@PostMapping` / `@PutMapping` / `@DeleteMapping` | atalhos para GET, POST, PUT e DELETE |
+| `@PathVariable` | lê um trecho variável da URL |
+| `@RequestParam` | lê um parâmetro da query string |
+| `@RequestBody` | converte o JSON enviado na requisição em um objeto |
+| `@ResponseBody` | usa o retorno do método como corpo da resposta |
+| `@Valid` / `@Validated` | dispara a validação dos dados recebidos |
+| `@CrossOrigin` | libera o acesso de outra origem (CORS) |
+
+### A camada de serviço com @Service
+
+É a mesma separação de responsabilidades da [modularização](#modularização-classes-de-serviço), agora com o Spring cuidando das instâncias. A regra que mantém o controller legível: **a única responsabilidade dele é a comunicação**, receber a requisição, chamar quem sabe resolver e devolver a resposta. Regra de negócio não mora ali. Quem faz o trabalho é uma classe anotada com **`@Service`**, que o Spring gerencia e injeta no controller:
+
+```java
+@Service
+public class SerieService {
+
+    @Autowired
+    private SerieRepository serieRepository;
+
+    public List<SerieDTO> obterTodasSeries() {
+        return converteDados(serieRepository.findAll());
+    }
+
+    public List<SerieDTO> obterTop5Series() {
+        return converteDados(serieRepository.findTop5ByOrderByAvaliacaoDesc());
+    }
+
+    private List<SerieDTO> converteDados(List<Serie> series) {   // extraído: a conversão se repetia em todo método
+        return series.stream()
+                .map(s -> new SerieDTO(s.getId(), s.getTitulo(), s.getTotalTemporadas(),
+                        s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse()))
+                .collect(Collectors.toList());
+    }
+}
+```
+
+Repare no `converteDados`: a mesma transformação de `Serie` em `SerieDTO` aparecia em cada método do serviço. **Extrair o trecho repetido para um método privado** é das refatorações mais simples e mais valiosas: no dia em que o DTO ganhar um campo novo, um único lugar muda.
+
+### DTOs e serialização
+
+#### O problema: serialização circular
+
+Devolver a entidade `Serie` direto do controller parece o caminho curto, mas quebra. `Serie` tem uma lista de `Episodio`, e cada `Episodio` tem uma referência de volta para `Serie`: é o **relacionamento bidirecional** que a JPA pediu. Na hora de gerar o JSON, o Jackson entra em **loop infinito** - série → episódios → série → episódios... até estourar.
+
+#### A solução: Data Transfer Object
+
+Um **DTO** (*Data Transfer Object*) é uma classe simples, sem relacionamentos e sem comportamento, que existe só para **transportar os dados que a API devolve**. Um `record` cumpre esse papel com uma única declaração:
+
+```java
+public record SerieDTO(Long id, String titulo, Integer totalTemporadas,
+                       Double avaliacao, Categoria genero, String atores,
+                       String poster, String sinopse) {
+}
+```
+
+Sem a lista de episódios não há ciclo, e vêm três ganhos junto:
+
+- **Segurança** - só sai da API o que foi declarado no DTO; o resto da entidade fica de fora;
+- **Contrato estável** - renomear um atributo da entidade não muda o JSON que o front consome;
+- **Personalização** - cada rota tem o seu recorte (o `EpisodioDTO` leva só temporada, número e título).
+
+A conversão acontece na camada de serviço: **entidade entra, DTO sai**, e o controller nunca vê a entidade.
+
+### CORS: a resposta que o navegador bloqueia
+
+Com a rota pronta e o front no ar, o navegador ainda recusa a resposta com um erro de **CORS** (*Cross-Origin Resource Sharing*). O motivo é uma política de segurança do próprio navegador, a *same-origin policy*: uma página só consome livremente recursos da **mesma origem**, ou seja, mesmo protocolo, mesmo domínio e mesma porta. O front roda em `127.0.0.1:5501` (Live Server) e a API em `localhost:8080`, portas diferentes, origens diferentes.
+
+Quem precisa autorizar é o **servidor**. Uma classe de configuração declara quais origens e métodos são aceitos:
+
+```java
+@Configuration
+public class CorsConfiguration implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")                        // vale para todas as rotas
+                .allowedOrigins("http://127.0.0.1:5501")  // a origem do front-end
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
+    }
+}
+```
+
+- **`@Configuration`** - marca a classe como fonte de configuração, carregada pelo Spring na subida;
+- **`WebMvcConfigurer`** - a interface com os pontos de extensão do Spring MVC; aqui sobrescrevemos o `addCorsMappings`.
+
+Um detalhe que economiza tempo de depuração: a origem precisa bater **exatamente**, `http://127.0.0.1:5501` e `http://localhost:5501` são endereços diferentes para o navegador.
+
+### DevTools e Live Reload
+
+Reiniciar a aplicação a cada alteração custa segundos que viram minutos ao longo do dia. O **Spring Boot DevTools** faz isso sozinho assim que percebe que as classes foram recompiladas:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+    <optional>true</optional>
+</dependency>
+```
+
+No IntelliJ, duas configurações completam o arranjo:
+
+- em *Build, Execution, Deployment → Compiler*, ligar o **Build project automatically**;
+- na *run configuration* da aplicação, definir o **Update action / On frame deactivation** como **Update classes and resources**, assim, sair da janela da IDE já dispara a atualização.
+
+Vale saber o limite: o DevTools reinicia o **back-end**; recarregar a página continua sendo trabalho do Live Server.
+
+### O caminho completo de uma requisição
+
+Fechando o ciclo, o percurso de um clique no navegador até o banco e de volta:
+
+```
+navegador (fetch /series/top5)
+   ↓
+Controller     → @RestController + @GetMapping: recebe a requisição
+   ↓
+Service        → @Service: aplica as regras e converte entidade em DTO
+   ↓
+Repository     → Spring Data JPA: consulta o banco
+   ↓
+PostgreSQL
+   ↑
+DTO → JSON     → o Jackson serializa a resposta
+   ↑
+navegador renderiza a tela
+```
+
+O Screen Match percorreu esse caminho inteiro ao longo da trilha: começou como um programa de console que imprimia texto, ganhou consumo de API e streams, depois um banco de dados e, por fim, um servidor e rotas próprias, virando uma aplicação que outras pessoas conseguem abrir e usar.

@@ -13,7 +13,7 @@ Minha jornada no **Programa de Formação AGER**.
 - [O que aprendi?](#o-que-aprendi)
 - [Projetos práticos](#projetos-práticos)
 - [Tecnologias](#tecnologias)
-- [Como executar os projetos](#como-executar-os-projetos-web)
+- [Como executar os projetos](#como-executar-os-projetos-javascript)
 
 ---
 
@@ -33,7 +33,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 2 | 5 passos para aprender a programar | Artigo | - | Concluído |
 | 3 | Iniciante em programação | Trilha Alura | 29h | Concluído |
 | 4 | Aprenda a programar em Java com Orientação a Objetos | Trilha Alura | 36h | Concluído |
-| 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Em andamento |
+| 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Concluído |
 | 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | A fazer |
 | 7 | JavaScript: programando na linguagem da web | Curso | 20h | A fazer |
 | 8 | React: desenvolvendo com JavaScript | Curso | 14h | A fazer |
@@ -53,8 +53,6 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 3 | Ferramentas essenciais para programar e compartilhar projetos | Concluído |
 | 4 | Praticando lógica de programação com desafios | Concluído |
 
-
-
 ### Sub-trilha: Aprenda a programar em Java com Orientação a Objetos
 
 | # | Módulo / Curso | Status |
@@ -69,7 +67,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 |---|----------------|:------:|
 | 1 | Criando uma aplicação Web em Java | Concluído |
 | 2 | PostgreSQL e Spring Data JPA | Concluído |
-| 3 | Conectando uma API Rest ao Front | A fazer |
+| 3 | Conectando uma API Rest ao Front | Concluído |
 
 ---
 
@@ -95,19 +93,11 @@ Do "Alô Mundo!" à construção do **Screen Match**, um catálogo de filmes e s
 
 ➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
 
-### 5. Trilha: Java Web: crie aplicações usando Spring Boot (em andamento)
+### 5. Trilha: Java Web: crie aplicações usando Spring Boot
 
-**Curso concluído:** Java: trabalhando com lambdas, streams e Spring Framework
+O **Screen Match** foi reconstruído três vezes ao longo da trilha: primeiro como **projeto Spring Boot**, com dependências gerenciadas pelo **Maven** e as avaliações dos episódios analisadas por **lambdas e streams**; depois trocando a memória pelo **PostgreSQL**, com as classes viradas em **entidades JPA/Hibernate** e as buscas migradas para o banco; e, por fim, saindo do console para virar uma **API REST em camadas MVC**, consumida por um front-end separado. De desafios, a **Tabela FIPE** (valor médio de veículos), o **ScreenSound** (artistas e músicas), o **Gerenciador de Pedidos** (produtos, categorias e fornecedores) e o **Screen Match Frases** (sorteio de frases de séries).
 
-O Screen Match renasceu como **projeto Spring Boot**: dependências gerenciadas pelo **Maven**, desserialização do JSON com a biblioteca **Jackson** e análise das avaliações dos episódios com **funções lambda e streams**, filtros, transformações, agrupamentos e estatísticas. De desafio, a **Tabela FIPE**: uma aplicação que consulta o valor médio de veículos direto da API.
-
-**Principais tópicos:** Spring Boot e `CommandLineRunner` · Maven e `pom.xml` · Jackson (`@JsonAlias`, `@JsonIgnoreProperties`) · interfaces com Generics · lambdas · streams (`filter`, `map`, `flatMap`, `collect`) · `Optional` · datas com `java.time` · estatísticas com `DoubleSummaryStatistics`
-
-**Curso concluído:** Java: persistência de dados e consultas com Spring Data JPA
-
-Os dados do Screen Match saíram da memória e foram para o **PostgreSQL**. As classes viraram **entidades mapeadas com JPA/Hibernate**, o relacionamento entre séries e episódios ganhou chave estrangeira, `cascade` e carregamento configurável, e as buscas migraram dos streams para o banco: **derived queries** escritas no nome do método e consultas personalizadas em **JPQL**. No caminho, os gêneros viraram um **enum com métodos próprios**, as credenciais foram para **variáveis de ambiente** e a sinopse passou a ser traduzida por uma **API de IA**. De desafios, o **ScreenSound** (artistas e músicas) e o **Gerenciador de Pedidos** (produtos, categorias, fornecedores e pedidos).
-
-**Principais tópicos:** PostgreSQL · JPA, Hibernate e ORM · `@Entity`, `@Table`, `@Id`, `@Column`, `@Enumerated` · `@OneToMany`/`@ManyToOne`/`@ManyToMany` · `cascade` e `fetch` · `JpaRepository` · injeção de dependências (`@Autowired`) · derived queries · JPQL e `@Query` · native queries · enums com atributos e métodos · variáveis de ambiente
+**Principais tópicos:** Spring Boot e Maven · Jackson · Generics · lambdas · streams · `Optional` · PostgreSQL · JPA, Hibernate e ORM · `@Entity` e relacionamentos · `JpaRepository` e injeção de dependências · derived queries e JPQL · variáveis de ambiente · API REST com `starter-web` · padrão MVC em camadas · `@RestController`, `@GetMapping` e `@PathVariable` · `@Service` · DTOs com `record` · CORS
 
 ➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-java-web-crie-aplicações-usando-spring-boot)
 
@@ -115,26 +105,47 @@ Os dados do Screen Match saíram da memória e foram para o **PostgreSQL**. As c
 
 ## Projetos práticos
 
+Os projetos estão organizados em quatro pastas, por tecnologia.
+
+### `JavaScript/`
+
 | Projeto | Descrição | O que usei |
 |---------|-----------|------------|
-| [`logica-js-projeto_inicial`](./logica-js-projeto_inicial) | Jogo do Número Secreto (versão console, com `alert`/`prompt`) | variáveis, `while`, `if/else`, ternário |
-| [`js-curso-2-aula1`](./js-curso-2-aula1) | Jogo do Número Secreto (versão web, integrada à página) | funções, arrays, DOM, Web Speech API |
-| [`sorteador-numeros`](./3411-praticando-logica-projeto_inicial/sorteador-numeros) | Sorteador de N números únicos num intervalo | `for`, arrays, `push`/`includes`, `classList`, `innerHTML` |
-| [`alugames`](./3411-praticando-logica-projeto_inicial/alugames) | Alugar e devolver jogos de tabuleiro | `querySelector`, `classList`, `textContent`, `if/else` |
-| [`ingresso`](./3411-praticando-logica-projeto_inicial/ingresso) | Compra de ingressos (e-Ticket) por setor | funções separadas, `switch`, `parseInt` |
-| [`amigo-secreto`](./3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
-| [`carrinho-compras`](./3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
-| [`primeiroprojeto`](./primeiroprojeto) | Primeiros exercícios em Java (loops, condicionais, leitura, adivinhação) | `Scanner`, `for`/`while`, `if/else`, casting |
-| [`screenmatch`](./screenmatch) | Catálogo de filmes e séries (Screen Match), com listas, busca na API do OMDb e gravação em arquivo | classes, herança, `Comparable`, `HttpClient`, Gson, `record`, exceções |
-| [`sounds`](./sounds) | Sistema de músicas e podcasts | herança (`Audio`), `@Override`, polimorfismo |
-| [`compras`](./compras) | Sistema de compras com cartão de crédito e lista ordenada (desafio de listas) | `ArrayList`, `Collections.sort`, `Comparable`, `toString()` |
-| [`buscador`](./buscador) | Busca CEP integrada à API do ViaCEP, gerando arquivo JSON | `HttpClient`, Gson, `record`, `FileWriter` |
-| [`buscacep`](./buscacep) | Busca CEP com validações e exceções personalizadas (desafio) | `try/catch`, exceções personalizadas, `java.net.http`, Gson |
-| [`spring sem web/screenmatch`](./spring%20sem%20web/screenmatch) | Screen Match reconstruído com Spring Boot: episódios de séries via API do OMDb e estatísticas de avaliações | Spring Boot, Maven, Jackson, lambdas, streams, `Optional` |
-| [`spring sem web/tabelafipe`](./spring%20sem%20web/tabelafipe) | Consulta do valor médio de veículos na API da Tabela FIPE (desafio) | Spring Boot, Jackson, Generics, streams, `Comparator` |
-| [`spring sem web/screenmatch-jpa`](./spring%20sem%20web/screenmatch-jpa) | Screen Match com os dados salvos no PostgreSQL: séries e episódios persistidos, buscas no banco e sinopse traduzida por IA | Spring Data JPA, Hibernate, PostgreSQL, derived queries, JPQL, enums, API de tradução |
-| [`spring sem web/screensounds`](./spring%20sem%20web/screensounds) | Cadastro de artistas e músicas com busca por artista (desafio) | Spring Data JPA, PostgreSQL, `@OneToMany`/`@ManyToOne`, `@Enumerated`, `@Query` |
-| [`spring sem web/gerenciador-pedidos`](./spring%20sem%20web/gerenciador-pedidos) | Menu de gestão de produtos, categorias, fornecedores e pedidos, com camada de serviços e relatórios | Spring Data JPA, PostgreSQL, `@ManyToMany` com `@JoinTable`, `@Service`, derived queries, JPQL, native query |
+| [`logica-js-projeto_inicial`](./JavaScript/logica-js-projeto_inicial) | Jogo do Número Secreto (versão console, com `alert`/`prompt`) | variáveis, `while`, `if/else`, ternário |
+| [`js-curso-2-aula1`](./JavaScript/js-curso-2-aula1) | Jogo do Número Secreto (versão web, integrada à página) | funções, arrays, DOM, Web Speech API |
+| [`sorteador-numeros`](./JavaScript/3411-praticando-logica-projeto_inicial/sorteador-numeros) | Sorteador de N números únicos num intervalo | `for`, arrays, `push`/`includes`, `classList`, `innerHTML` |
+| [`alugames`](./JavaScript/3411-praticando-logica-projeto_inicial/alugames) | Alugar e devolver jogos de tabuleiro | `querySelector`, `classList`, `textContent`, `if/else` |
+| [`ingresso`](./JavaScript/3411-praticando-logica-projeto_inicial/ingresso) | Compra de ingressos (e-Ticket) por setor | funções separadas, `switch`, `parseInt` |
+| [`amigo-secreto`](./JavaScript/3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
+| [`carrinho-compras`](./JavaScript/3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
+
+### `Java/`
+
+| Projeto | Descrição | O que usei |
+|---------|-----------|------------|
+| [`primeiroprojeto`](./Java/primeiroprojeto) | Primeiros exercícios em Java (loops, condicionais, leitura, adivinhação) | `Scanner`, `for`/`while`, `if/else`, casting |
+| [`screenmatch`](./Java/screenmatch) | Catálogo de filmes e séries (Screen Match), com listas, busca na API do OMDb e gravação em arquivo | classes, herança, `Comparable`, `HttpClient`, Gson, `record`, exceções |
+| [`sounds`](./Java/sounds) | Sistema de músicas e podcasts | herança (`Audio`), `@Override`, polimorfismo |
+| [`compras`](./Java/compras) | Sistema de compras com cartão de crédito e lista ordenada (desafio de listas) | `ArrayList`, `Collections.sort`, `Comparable`, `toString()` |
+| [`buscador`](./Java/buscador) | Busca CEP integrada à API do ViaCEP, gerando arquivo JSON | `HttpClient`, Gson, `record`, `FileWriter` |
+| [`buscacep`](./Java/buscacep) | Busca CEP com validações e exceções personalizadas (desafio) | `try/catch`, exceções personalizadas, `java.net.http`, Gson |
+
+### `Java - Spring Boot sem web/` (aplicações de console)
+
+| Projeto | Descrição | O que usei |
+|---------|-----------|------------|
+| [`screenmatch`](./Java%20-%20Spring%20Boot%20sem%20web/screenmatch) | Screen Match reconstruído com Spring Boot: episódios de séries via API do OMDb e estatísticas de avaliações | Spring Boot, Maven, Jackson, lambdas, streams, `Optional` |
+| [`tabelafipe`](./Java%20-%20Spring%20Boot%20sem%20web/tabelafipe) | Consulta do valor médio de veículos na API da Tabela FIPE (desafio) | Spring Boot, Jackson, Generics, streams, `Comparator` |
+| [`screenmatch-jpa`](./Java%20-%20Spring%20Boot%20sem%20web/screenmatch-jpa) | Screen Match com os dados salvos no PostgreSQL: séries e episódios persistidos, buscas no banco e sinopse traduzida por IA | Spring Data JPA, Hibernate, PostgreSQL, derived queries, JPQL, enums, API de tradução |
+| [`screensounds`](./Java%20-%20Spring%20Boot%20sem%20web/screensounds) | Cadastro de artistas e músicas com busca por artista (desafio) | Spring Data JPA, PostgreSQL, `@OneToMany`/`@ManyToOne`, `@Enumerated`, `@Query` |
+| [`gerenciador-pedidos`](./Java%20-%20Spring%20Boot%20sem%20web/gerenciador-pedidos) | Menu de gestão de produtos, categorias, fornecedores e pedidos, com camada de serviços e relatórios | Spring Data JPA, PostgreSQL, `@ManyToMany` com `@JoinTable`, `@Service`, derived queries, JPQL, native query |
+
+### `Java - Spring Boot/` (API REST + front-end)
+
+| Projeto | Descrição | O que usei |
+|---------|-----------|------------|
+| [`screenmatch`](./Java%20-%20Spring%20Boot/screenmatch) | Screen Match completo: a API (`api/`) serve o catálogo com top 5, lançamentos, filtro por categoria e detalhes de temporadas, e o front-end (`web/`) consome essas rotas | Spring Web, `@RestController`, `@PathVariable`, `@Service`, DTOs, CORS, DevTools, `fetch` |
+| [`screenmatch-frases`](./Java%20-%20Spring%20Boot/screenmatch-frases) | Frases clássicas de filmes e séries: a API sorteia uma frase no banco e o front-end a exibe com o pôster (desafio) | Spring Web, Spring Data JPA, `@Query` com `random()`, DTO, CORS |
 
 ---
 
@@ -156,13 +167,13 @@ Os dados do Screen Match saíram da memória e foram para o **PostgreSQL**. As c
 
 ---
 
-## Como executar os projetos web
+## Como executar os projetos JavaScript
 
 1. Clone este repositório:
    ```bash
    git clone https://github.com/YidaAmanda/Programa_de_Formacao_AGER.git
    ```
-2. Entre na pasta do projeto que quer testar (ex.: `js-curso-2-aula1`).
+2. Entre na pasta do projeto que quer testar (ex.: `JavaScript/js-curso-2-aula1`).
 3. Abra o arquivo `index.html` no navegador (duplo clique já funciona).
 
 ## Como executar os projetos Java
@@ -172,15 +183,15 @@ Os dados do Screen Match saíram da memória e foram para o **PostgreSQL**. As c
    git clone https://github.com/YidaAmanda/Programa_de_Formacao_AGER.git
    ```
 2. Tenha a **JDK 17** (ou superior) instalada.
-3. Abra a pasta do projeto que quer testar (ex.: `screenmatch`) no **IntelliJ IDEA**.
+3. Abra a pasta do projeto que quer testar (ex.: `Java/screenmatch`) no **IntelliJ IDEA**.
 4. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão ▶ da IDE.
-5. Nos projetos Spring (pasta `spring sem web`), a classe a rodar é a `...Application` (ex.: `ScreenmatchApplication`) - o Spring sobe e executa o método `run` no console.
+5. Nos projetos de console da pasta `Java - Spring Boot sem web`, a classe a rodar é a `...Application` (ex.: `ScreenmatchApplication`) - o Spring sobe e executa o método `run` no console.
 
 ### Projetos que usam banco de dados
 
-Os projetos `screenmatch-jpa`, `screensounds` e `gerenciador-pedidos` precisam de um **PostgreSQL** rodando. Antes de executá-los:
+Os projetos `screenmatch-jpa`, `screensounds`, `gerenciador-pedidos` e os dois da pasta `Java - Spring Boot` precisam de um **PostgreSQL** rodando. Antes de executá-los:
 
-1. Crie o banco no PostgreSQL (ex.: `screenmatch`, `screensounds`, `pedidos`).
+1. Crie o banco no PostgreSQL (ex.: `screenmatch`, `screensounds`, `pedidos`, `screenmatch_frases`).
 2. Defina as variáveis de ambiente que o `application.properties` espera (nas *run configurations* da IDE ou no sistema):
 
    | Variável | Exemplo |
@@ -191,3 +202,26 @@ Os projetos `screenmatch-jpa`, `screensounds` e `gerenciador-pedidos` precisam d
    | `DB_PASSWORD` | *sua senha* |
 
 3. Rode a classe `...Application` com `spring.jpa.hibernate.ddl-auto=update`, o Hibernate cria as tabelas automaticamente na primeira execução.
+
+## Como executar os projetos web em Java (API + front-end)
+
+Os projetos da pasta `Java - Spring Boot` têm duas partes que rodam ao mesmo tempo: a API (`api/`) e o front-end (`web/`).
+
+1. Suba o **back-end**: abra a pasta `api` no IntelliJ e rode a classe `...Application`. A aplicação fica no ar em `http://localhost:8080` (dá para conferir uma rota direto no navegador, ex.: `localhost:8080/series`).
+2. Suba o **front-end**: abra a pasta `web` no VS Code, instale a extensão **Live Server** e clique com o botão direito no `index.html` → *Open with Live Server*.
+3. Confira a porta: a classe `CorsConfiguration` libera o acesso da origem `http://127.0.0.1:5501`. Se o Live Server abrir em outra porta, ajuste o `allowedOrigins`, a origem precisa bater exatamente.
+
+### Dados dos projetos
+
+- **`screenmatch`** - a API só exibe as séries que já estão gravadas no banco. Para popular, rode o menu de console do `Java - Spring Boot sem web/screenmatch-jpa` apontando para o mesmo `DB_NAME`; a classe `Principal` continua no projeto web, mas não é mais executada pela aplicação.
+- **`screenmatch-frases`** - as frases são cadastradas na mão. Com a aplicação rodando uma vez (para o Hibernate criar a tabela `frase`, nomeada a partir da classe `Frase`), insira os registros:
+
+  ```sql
+  insert into frase (frase, personagem, titulo, poster)
+  values ('A vida passa muito depressa. Se não paramos para curti-la de vez em quando, ela passa e você nem vê.',
+          'Ferris Bueller',
+          'Curtindo a vida adoidado',
+          'https://.../poster.jpg');
+  ```
+
+  O `id` é gerado pelo banco. Para os pôsteres saírem todos no mesmo tamanho, vale pegar a URL da imagem na [API do OMDb](https://www.omdbapi.com/), buscando pelo título em inglês.

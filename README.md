@@ -34,7 +34,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 3 | Iniciante em programação | Trilha Alura | 29h | Concluído |
 | 4 | Aprenda a programar em Java com Orientação a Objetos | Trilha Alura | 36h | Concluído |
 | 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Concluído |
-| 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | A fazer |
+| 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | Concluído |
 | 7 | JavaScript: programando na linguagem da web | Curso | 20h | A fazer |
 | 8 | React: desenvolvendo com JavaScript | Curso | 14h | A fazer |
 | 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | A fazer |
@@ -101,6 +101,14 @@ O **Screen Match** foi reconstruído três vezes ao longo da trilha: primeiro co
 
 ➡️ [Anotações completas desta trilha](./ANOTACOES.md#trilha-java-web-crie-aplicações-usando-spring-boot)
 
+### 6. Curso: Boas práticas de programação: automatizando testes com Java
+
+Sobre o **Adopet**, uma API REST de adoção de pets, o foco deixou de ser construir a aplicação e passou a **garantir que ela funciona**: foram escritos testes automatizados para cada camada; o **cálculo da probabilidade de adoção**, as **validações**, a **camada de serviço** e as **rotas do controller**. Pelo caminho, o isolamento de dependências com **mocks** (Mockito), a organização de cada cenário no padrão **Triple A** e a simulação de requisições HTTP com o **MockMvc**, sem subir um servidor real.
+
+**Principais tópicos:** testes de unidade e de integração · JUnit (`@Test`, `Assertions`, `@DisplayName`) · padrões AAA e GWT · Mockito · mocks e spies · `@Mock`, `@InjectMocks`, `@Spy`, `@Captor` · `BDDMockito.given` · `ArgumentCaptor` · MockMvc · `@SpringBootTest` e `@MockBean` · `TestRestTemplate` · cobertura e teste de mutação (Pitest)
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-boas-práticas-de-programação-automatizando-testes-com-java)
+
 ---
 
 ## Projetos práticos
@@ -146,6 +154,7 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 |---------|-----------|------------|
 | [`screenmatch`](./Java%20-%20Spring%20Boot/screenmatch) | Screen Match completo: a API (`api/`) serve o catálogo com top 5, lançamentos, filtro por categoria e detalhes de temporadas, e o front-end (`web/`) consome essas rotas | Spring Web, `@RestController`, `@PathVariable`, `@Service`, DTOs, CORS, DevTools, `fetch` |
 | [`screenmatch-frases`](./Java%20-%20Spring%20Boot/screenmatch-frases) | Frases clássicas de filmes e séries: a API sorteia uma frase no banco e o front-end a exibe com o pôster (desafio) | Spring Web, Spring Data JPA, `@Query` com `random()`, DTO, CORS |
+| [`testes-automatizados`](./Java%20-%20Spring%20Boot/testes-automatizados) | API **Adopet** de adoção de pets, usada como base para escrever testes automatizados de cada camada: cálculo de probabilidade de adoção, validações, serviço e controllers | JUnit 5, Mockito, MockMvc, `@SpringBootTest`, Spring Web, Spring Data JPA, MySQL, Flyway |
 
 ---
 
@@ -158,7 +167,10 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=flat&logo=hibernate&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Maven-C71A36?style=flat&logo=apachemaven&logoColor=white)
+![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=flat&logo=junit5&logoColor=white)
+![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
@@ -225,3 +237,16 @@ Os projetos da pasta `Java - Spring Boot` têm duas partes que rodam ao mesmo te
   ```
 
   O `id` é gerado pelo banco. Para os pôsteres saírem todos no mesmo tamanho, vale pegar a URL da imagem na [API do OMDb](https://www.omdbapi.com/), buscando pelo título em inglês.
+
+## Como executar os testes automatizados
+
+O projeto [`testes-automatizados`](./Java%20-%20Spring%20Boot/testes-automatizados) (a API **Adopet**) concentra os testes escritos no curso de boas práticas.
+
+1. Abra a pasta no **IntelliJ IDEA**.
+2. Rode a suíte inteira pela IDE (▶ na pasta `src/test/java`) ou pelo Maven, na raiz do projeto:
+   ```bash
+   ./mvnw test
+   ```
+3. Para rodar um único cenário, use o ▶ ao lado do método de teste.
+
+Os testes de unidade (calculadora de probabilidade, validações e serviços) rodam isolados com **mocks**, sem tocar em banco nem em servidor de e-mail. Já os testes de controller usam `@SpringBootTest`, que carrega o contexto inteiro da aplicação: para eles subirem, é preciso um **MySQL** rodando em `localhost` com usuário e senha `root` (o `application.properties` já cria o banco `adopet` na primeira execução, via `createDatabaseIfNotExist=true`).

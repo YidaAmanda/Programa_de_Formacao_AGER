@@ -52,6 +52,17 @@
   - [CORS: a resposta que o navegador bloqueia](#cors-a-resposta-que-o-navegador-bloqueia)
   - [DevTools e Live Reload](#devtools-e-live-reload)
   - [O caminho completo de uma requisição](#o-caminho-completo-de-uma-requisição)
+- [Curso: Boas práticas de programação: automatizando testes com Java](#curso-boas-práticas-de-programação-automatizando-testes-com-java)
+  - [Por que escrever testes automatizados](#por-que-escrever-testes-automatizados)
+  - [JUnit: a anatomia de um teste](#junit-a-anatomia-de-um-teste)
+  - [Nomes descritivos com @DisplayName](#nomes-descritivos-com-displayname)
+  - [AAA e GWT: organizando o cenário](#aaa-e-gwt-organizando-o-cenário)
+  - [Mocks: testando código com dependências](#mocks-testando-código-com-dependências)
+  - [A camada de serviço: ArgumentCaptor e spy](#a-camada-de-serviço-argumentcaptor-e-spy)
+  - [Testando o controller com MockMvc](#testando-o-controller-com-mockmvc)
+  - [O que vale a pena testar?](#o-que-vale-a-pena-testar)
+  - [Teste de mutação com Pitest](#teste-de-mutação-com-pitest)
+  - [As anotações de teste mais usadas](#as-anotações-de-teste-mais-usadas)
 
 ---
 
@@ -2024,3 +2035,261 @@ navegador renderiza a tela
 ```
 
 O Screen Match percorreu esse caminho inteiro ao longo da trilha: começou como um programa de console que imprimia texto, ganhou consumo de API e streams, depois um banco de dados e, por fim, um servidor e rotas próprias, virando uma aplicação que outras pessoas conseguem abrir e usar.
+
+## Curso: Boas práticas de programação: automatizando testes com Java
+
+O projeto desta etapa foi o **Adopet**, uma API REST de adoção de pets: abrigos cadastram animais, tutores solicitam adoções e cada solicitação passa por validações e dispara e-mails de aviso. Diferente das trilhas anteriores, aqui o foco não foi construir a aplicação, e sim **provar que ela funciona** escrevendo testes automatizados para cada camada, do cálculo de regras de negócio até as rotas HTTP. As ferramentas centrais foram o **JUnit** (para estruturar e rodar os testes), o **Mockito** (para isolar dependências) e o **MockMvc** do Spring (para simular requisições). Todas vêm juntas numa única dependência, a `spring-boot-starter-test`.
+
+### Por que escrever testes automatizados
+
+Testar manualmente, subir a aplicação e disparar requisições no **Postman**, por exemplo, funciona, mas não escala: cada alteração no código exigiria repetir todos os cenários na mão. Um teste automatizado é um trecho de código que **verifica outro trecho de código** e pode ser reexecutado a qualquer momento, de graça. Os ganhos:
+
+- **Detecção precoce** - o erro aparece na hora de rodar os testes, e não em produção;
+- **Segurança para mudar** - dá para refatorar sabendo que, se algo quebrar, um teste vai acusar;
+- **Documentação viva** - os cenários de teste descrevem o comportamento esperado da aplicação.
+
+A boa prática que acompanha isso: **testar a aplicação sempre que o código muda**, e cuidar para que os cenários de teste acompanhem essas mudanças. Quando um teste falha, o primeiro passo é descobrir **onde está o bug**, ele pode estar no código da aplicação ou no próprio código de teste (um cenário mal montado, um valor esperado errado).
+
+> **Tipos de teste.** Existe uma pirâmide: os **testes de unidade** verificam uma peça isolada (um método, uma classe), são rápidos e numerosos; os **testes de integração** verificam várias peças conversando (a rota, o serviço e o banco juntos); e os **testes de ponta a ponta (E2E)** exercitam o sistema inteiro pela interface. A base da pirâmide (os de unidade) é onde mais se escreve, por serem baratos e rápidos.
+
+Um conceito ligado a isso é a **cobertura de testes**: quanto do código é de fato exercitado pelos testes. Cobrir vários cenários (o caminho feliz, os erros, os limites) aumenta a cobertura e a confiança na aplicação.
+
+### JUnit: a anatomia de um teste
+
+O **JUnit** é a biblioteca padrão de testes em Java. Os testes moram em `src/test/java`, **espelhando os pacotes** de `src/main/java`: a classe `CalculadoraProbabilidadeAdocao` (no pacote `service`) é testada pela `CalculadoraProbabilidadeAdocaoTest`, no mesmo pacote `service` do lado de teste. Por convenção, a classe de teste leva o sufixo `Test`.
+
+Cada cenário é um método anotado com **`@Test`**, é o que diz ao JUnit "este método é um teste, execute-o". Dentro dele, uma **asserção** compara o valor obtido com o esperado; se forem diferentes, o teste falha:
+
+```java
+class CalculadoraProbabilidadeAdocaoTest {
+
+    @Test
+    void probabilidadeAltaCenario1() {
+        Abrigo abrigo = new Abrigo(new CadastroAbrigoDto("Abrigo feliz", "94999999999", "abrigofeliz@email.com.br"));
+        Pet pet = new Pet(new CadastroPetDto(TipoPet.GATO, "Miau", "Siames", 4, "Cinza", 4.0f), abrigo);
+        CalculadoraProbabilidadeAdocao calculadora = new CalculadoraProbabilidadeAdocao();
+
+        ProbabilidadeAdocao probabilidade = calculadora.calcular(pet);
+
+        Assertions.assertEquals(ProbabilidadeAdocao.ALTA, probabilidade);
+    }
+}
+```
+
+As asserções mais usadas, todas da classe `Assertions` do JUnit:
+
+- **`assertEquals(esperado, obtido)`** - passa se os dois forem iguais; é a mais comum;
+- **`assertThrows(Excecao.class, () -> ...)`** - passa se o trecho lançar a exceção indicada (ótimo para testar validações);
+- **`assertDoesNotThrow(() -> ...)`** - o oposto: passa se **não** houver exceção.
+
+O cálculo da calculadora depende de faixas de idade e peso, então **um teste só não basta**: escrevemos um cenário para a probabilidade `ALTA` (gato jovem e leve), outro para a `MEDIA` (gato idoso), e assim por diante. Cada faixa de regra merece o seu cenário.
+
+### Nomes descritivos com @DisplayName
+
+`probabilidadeAltaCenario1` diz pouco sobre o que o teste faz. O JUnit resolve isso com **`@DisplayName`**, que dá ao teste um nome legível, exibido nos relatórios:
+
+```java
+@Test
+@DisplayName("Probabilidade alta para gatos jovens com peso baixo")
+void probabilidadeAltaCenario1() { ... }
+```
+
+A vantagem é separar duas coisas: o **nome do método** segue as regras do Java, enquanto o **`@DisplayName`** descreve o cenário claro, sem precisar espremer todos os detalhes no nome do método. Quando um teste falha, é essa frase que aparece e ela deve dizer, sozinha, o que se esperava.
+
+### AAA e GWT: organizando o cenário
+
+Para o corpo do teste não virar uma parede de código, existem padrões de organização. O mais usado é o **AAA** (*Arrange, Act, Assert*), também chamado de **Triple A**, que divide o teste em três blocos:
+
+- **Arrange (preparar)** - monta o cenário: cria objetos, define valores, configura dependências;
+- **Act (agir)** - executa a ação que está sendo testada (normalmente uma única chamada de método);
+- **Assert (verificar)** - confere se o resultado bate com o esperado.
+
+No projeto, esses blocos aparecem marcados por comentários:
+
+```java
+@Test
+void probabilidadeAltaCenario1() {
+    //ARRANGE
+    Pet pet = new Pet(new CadastroPetDto(TipoPet.GATO, "Miau", "Siames", 4, "Cinza", 4.0f), abrigo);
+    CalculadoraProbabilidadeAdocao calculadora = new CalculadoraProbabilidadeAdocao();
+
+    //ACT
+    ProbabilidadeAdocao probabilidade = calculadora.calcular(pet);
+
+    //ASSERT
+    Assertions.assertEquals(ProbabilidadeAdocao.ALTA, probabilidade);
+}
+```
+
+Um padrão irmão é o **GWT** (*Given, When, Then*), vindo do **BDD** (*Behavior-Driven Development*): **Given** (dado o contexto), **When** (quando a ação acontece), **Then** (então o resultado esperado). É a mesma ideia de três etapas, com uma linguagem mais próxima de como o comportamento é descrito entre as pessoas do time, inclusive as não técnicas. Não à toa, o Mockito traz uma API com esse vocabulário (`given(...).willReturn(...)`), que aparece nas próximas seções.
+
+### Mocks: testando código com dependências
+
+A calculadora era fácil de testar: ela não depende de nada, é só entrada e saída. Mas a maioria das classes tem **dependências**. O `AdocaoService` precisa dos repositórios, do `EmailService` e da lista de validações. Testar de verdade contra um banco e um servidor de e-mail deixaria o teste lento, instável e dependente de infraestrutura.
+
+A solução é o **mock**: um objeto **falso** que ocupa o lugar da dependência real, devolvendo respostas combinadas e registrando como foi chamado. Assim o teste isola **a classe sob teste**, e não o mundo em volta dela. A biblioteca padrão para isso em Java é o **Mockito**.
+
+Para o Mockito entrar em ação, a classe de teste é anotada com **`@ExtendWith(MockitoExtension.class)`**. A partir daí:
+
+- **`@Mock`** - cria um objeto simulado da dependência;
+- **`@InjectMocks`** - cria a classe sob teste e **injeta nela** os mocks declarados acima;
+- **`BDDMockito.given(...).willReturn(...)`** - combina o comportamento do mock: "quando este método for chamado, devolva isto".
+
+```java
+@ExtendWith(MockitoExtension.class)
+class TutorServiceTest {
+
+    @Mock
+    private TutorRepository repository;
+    @Mock
+    private CadastroTutorDto dto;
+
+    @InjectMocks
+    private TutorService service;
+
+    @Test
+    @DisplayName("Não cadastrar tutor: e-mail ou telefone já cadastrado")
+    void naoCadastrarTutor() {
+        //ARRANGE
+        given(repository.existsByTelefoneOrEmail(dto.telefone(), dto.email())).willReturn(true);
+
+        //ACT + ASSERT
+        assertThrows(ValidacaoException.class, () -> service.cadastrar(dto));
+    }
+}
+```
+
+O `repository` nunca toca no banco: ele foi **instruído** a responder `true` para aquela consulta, e o teste verifica que, nesse cenário, o serviço lança a exceção de validação. Trocando o `willReturn(true)` por `willReturn(false)`, o mesmo desenho de teste cobre o caminho oposto.
+
+> **Outras bibliotecas de mock.** O Mockito é o padrão, mas não o único. O **EasyMock** segue um estilo de "expectativa e verificação"; o **PowerMock** estende Mockito/EasyMock para casos difíceis (métodos estáticos, construtores privados, classes finais), úteis em código legado; e o **JMockit** oferece mocks e spies com gravação/reprodução de chamadas. Cada um cobre cenários que o Mockito sozinho não alcança.
+
+### A camada de serviço: ArgumentCaptor e spy
+
+A camada **`@Service`** coordena o fluxo de regras de negócio. No Adopet, o `AdocaoService.solicitar` busca o pet e o tutor, roda as validações, **cria** uma `Adocao`, a salva e ainda dispara um e-mail. Testar isso levanta uma pergunta nova: como conferir o objeto que o serviço **criou internamente** e passou para `repository.save(...)`, se ele nunca sai do método?
+
+A resposta é o **`ArgumentCaptor`**: um "grampo" que **captura o argumento** que chegou ao mock. Declarado com **`@Captor`**, ele é usado na verificação e depois inspecionado:
+
+```java
+@Captor
+private ArgumentCaptor<Adocao> adocaoCaptor;
+
+@Test
+@DisplayName("Salva adoção após solicitação")
+void salvarAdocaoCenario1() {
+    //ARRANGE
+    this.dto = new SolicitacaoAdocaoDto(10L, 20L, "motivo qualquer");
+    given(petRepository.getReferenceById(dto.idPet())).willReturn(pet);
+    given(tutorRepository.getReferenceById(dto.idTutor())).willReturn(tutor);
+    given(pet.getAbrigo()).willReturn(abrigo);
+
+    //ACT
+    service.solicitar(dto);
+
+    //ASSERT
+    then(repository).should().save(adocaoCaptor.capture());
+    Adocao adocaoSalva = adocaoCaptor.getValue();
+    Assertions.assertEquals(pet, adocaoSalva.getPet());
+    Assertions.assertEquals(tutor, adocaoSalva.getTutor());
+    Assertions.assertEquals(dto.motivo(), adocaoSalva.getMotivo());
+}
+```
+
+Duas coisas acontecem no bloco de asserção. Primeiro, **`then(repository).should().save(...)`** verifica que o `save` foi mesmo chamado (a API `BDDMockito.then(...).should()` é a versão "GWT" do `verify`). Segundo, o `adocaoCaptor.capture()` grava o argumento daquela chamada, e `getValue()` o devolve, permitindo afirmar que a `Adocao` salva tem o pet, o tutor e o motivo certos.
+
+Ao lado do mock existe o **spy**, declarado com **`@Spy`**. A diferença é essencial:
+
+- um **mock** é um objeto totalmente falso - todo método devolve um valor "vazio" até ser combinado com `given`;
+- um **spy** é um objeto **real** que executa o próprio código, mas cujo comportamento pode ser observado e, se preciso, substituído método a método.
+
+No `AdocaoServiceTest`, a lista de validações é um `@Spy` de um `ArrayList` real: o teste adiciona mocks de validadores a ela e, depois de chamar o serviço, confirma que **cada validador foi acionado** usando a lista de verdade, não uma simulação dela:
+
+```java
+@Spy
+private List<ValidacaoSolicitacaoAdocao> validacoes = new ArrayList<>();
+
+// ...
+validacoes.add(validador1);
+validacoes.add(validador2);
+
+service.solicitar(dto);
+
+then(validador1).should().validar(dto);
+then(validador2).should().validar(dto);
+```
+
+> **Mock ou spy?** Use **mock** quando quer isolar a dependência por completo e ditar as respostas dela. Use **spy** quando quer manter o comportamento real do objeto e só observar (ou ajustar um método pontual). Na dúvida, mock é o caso mais comum.
+
+### Testando o controller com MockMvc
+
+Falta a ponta HTTP: o **controller**. Aqui o interesse é outro; não a regra de negócio (já testada no serviço), e sim se a **rota responde com o código de status certo**: `200` quando o JSON é válido, `400` quando falha a validação do `@Valid`.
+
+Para isso o Spring oferece o **`MockMvc`**, que **simula requisições** à API sem subir um servidor de verdade. A classe de teste combina três anotações:
+
+- **`@SpringBootTest`** - carrega o contexto da aplicação;
+- **`@AutoConfigureMockMvc`** - disponibiliza o `MockMvc` pronto para injeção;
+- **`@MockBean`** - coloca no contexto um mock da dependência (o `AdocaoService`), para o teste focar só no controller.
+
+```java
+@SpringBootTest
+@AutoConfigureMockMvc
+class AdocaoControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
+    @MockBean
+    private AdocaoService service;
+
+    @Test
+    @DisplayName("Devolve código 400 para solicitação de adoção com erros")
+    void solicitarAdocaoComErrosCenario1() throws Exception {
+        //ARRANGE
+        String json = "{}";
+
+        //ACT
+        MockHttpServletResponse response = mvc.perform(
+                post("/adocoes")
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        //ASSERT
+        Assertions.assertEquals(400, response.getStatus());
+    }
+}
+```
+
+O `mvc.perform(...)` monta a requisição (verbo `post`, caminho `/adocoes`, corpo JSON), e `getResponse().getStatus()` devolve o código HTTP para a asserção. Um `{}` vazio não passa nas anotações de validação do DTO, então a API responde `400`; um JSON com os campos preenchidos passa, e a resposta é `200`. O mesmo desenho testa os `PUT /adocoes/aprovar` e `/adocoes/reprovar`.
+
+> **Escrevendo o JSON com um objeto.** Em vez de montar o JSON como `String` na mão, dá para usar o **`JacksonTester`**, que serializa um DTO (por exemplo o `SolicitacaoAdocaoDto`) no JSON esperado, mantendo o teste alinhado ao contrato real da requisição.
+
+> **MockMvc x TestRestTemplate.** O `MockMvc` simula a requisição internamente, sem tráfego HTTP real. Quando se quer disparar **requisições de verdade** contra a aplicação no ar, o Spring oferece o **`TestRestTemplate`**, usado com `@SpringBootTest(webEnvironment = RANDOM_PORT)`: ele sobe a aplicação numa porta real e faz chamadas HTTP autênticas com o método `exchange(...)`. É a abordagem de **teste de integração**, mais completa e mais lenta que o mock.
+
+### O que vale a pena testar?
+
+Nem toda classe merece teste. A régua é simples: **teste onde há lógica**.
+
+- **Interfaces `Repository`** - se só têm as operações CRUD geradas pelo Spring Data JPA, não precisam de teste: esse código já é exaustivamente testado pelo próprio framework. Mas **queries personalizadas** (derived queries ou `@Query`) valem teste, para garantir que a consulta traz o que se espera.
+- **Entidades e DTOs** - se são apenas atributos, construtores e getters/setters, não há o que testar. Se ganharem **métodos com lógica** (uma validação, uma regra de negócio), aí sim.
+
+A ideia é não gastar esforço testando código trivial ou de terceiros, e concentrar os testes onde um bug realmente poderia se esconder.
+
+### Teste de mutação com Pitest
+
+Uma pergunta natural: como saber se os testes são **bons**, e não só numerosos? O **teste de mutação** responde a isso. A ideia é introduzir pequenas alterações propositais no código (os **mutantes**, simulando erros comuns [trocar um `>=` por `>`, um `+` por `-`]) e rodar a suíte de testes contra cada versão mutante. Se os testes **continuam passando** mesmo com o código adulterado, é sinal de que faltam cenários: aquele trecho não está sendo de fato verificado. Em Java, a biblioteca **Pitest** automatiza esse processo, revelando lacunas de cobertura que a contagem simples de linhas cobertas não mostra.
+
+### As anotações de teste mais usadas
+
+| Anotação | Origem | Para que serve |
+|---|---|---|
+| `@Test` | JUnit | marca um método como teste a ser executado |
+| `@DisplayName` | JUnit | dá ao teste um nome legível nos relatórios |
+| `@ExtendWith(MockitoExtension.class)` | JUnit + Mockito | liga o Mockito à classe de teste |
+| `@Mock` | Mockito | cria um objeto simulado (falso) de uma dependência |
+| `@InjectMocks` | Mockito | instancia a classe sob teste e injeta os mocks nela |
+| `@Spy` | Mockito | cria um objeto real, com comportamento observável |
+| `@Captor` | Mockito | declara um `ArgumentCaptor` para capturar argumentos |
+| `@SpringBootTest` | Spring | carrega o contexto da aplicação no teste |
+| `@AutoConfigureMockMvc` | Spring | disponibiliza o `MockMvc` para simular requisições |
+| `@MockBean` | Spring | põe um mock no lugar de um bean do contexto |
+
+E os métodos que mais apareceram: `Assertions.assertEquals`, `assertThrows` e `assertDoesNotThrow`; e, do Mockito, `given(...).willReturn(...)` e `then(...).should()`.

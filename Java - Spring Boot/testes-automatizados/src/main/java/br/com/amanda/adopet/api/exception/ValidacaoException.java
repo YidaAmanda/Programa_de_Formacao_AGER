@@ -1,0 +1,7 @@
+package br.com.amanda.adopet.api.exception;
+
+public class ValidacaoException extends RuntimeException {
+    public ValidacaoException(String message) {
+        super(message);
+    }
+}

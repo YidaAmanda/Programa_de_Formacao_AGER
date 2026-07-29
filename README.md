@@ -35,7 +35,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 4 | Aprenda a programar em Java com Orientação a Objetos | Trilha Alura | 36h | Concluído |
 | 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Concluído |
 | 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | Concluído |
-| 7 | JavaScript: programando na linguagem da web | Curso | 20h | A fazer |
+| 7 | JavaScript: programando na linguagem da web | Curso | 20h | Concluído |
 | 8 | React: desenvolvendo com JavaScript | Curso | 14h | A fazer |
 | 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | A fazer |
 | 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | A fazer |
@@ -109,6 +109,14 @@ Sobre o **Adopet**, uma API REST de adoção de pets, o foco deixou de ser const
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-boas-práticas-de-programação-automatizando-testes-com-java)
 
+### 7. Curso: JavaScript: programando na linguagem da web
+
+O projeto foi o **Aparecida Nutrição**, a página de um consultório de nutrição que gerencia uma tabela de pacientes. A partir dela, a aplicação **calcula o IMC** de cada paciente, permite **cadastrar novos** por um formulário (com validação dos campos), **remover** uma linha com duplo clique e uma animação, **filtrar a tabela em tempo real** conforme se digita e ainda **importar pacientes de uma API externa**. Depois dos jogos da trilha inicial, o foco aqui foi fundo em **manipulação do DOM, eventos, formulários e comunicação assíncrona**.
+
+**Principais tópicos:** JavaScript além do navegador (Node.js) · organização em arquivos `.js` · `document` e o DOM · `addEventListener` (`click`, `input`, `dblclick`, `load`) · objeto `event` e `preventDefault()` · `createElement`/`appendChild` · leitura de formulário por `.name` e `.value` · objetos JavaScript · funções com responsabilidade única · validação com arrays e `push` · `forEach` · delegação de eventos · `setTimeout` e animação · busca com expressões regulares (`RegExp`) · AJAX · `XMLHttpRequest` · JSON e `JSON.parse()`
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-javascript-programando-na-linguagem-da-web)
+
 ---
 
 ## Projetos práticos
@@ -126,6 +134,7 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 | [`ingresso`](./JavaScript/3411-praticando-logica-projeto_inicial/ingresso) | Compra de ingressos (e-Ticket) por setor | funções separadas, `switch`, `parseInt` |
 | [`amigo-secreto`](./JavaScript/3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
 | [`carrinho-compras`](./JavaScript/3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
+| [`introducao-javascript`](./JavaScript/introducao-javascript) | Aparecida Nutrição: cadastro, cálculo de IMC, busca e importação de pacientes via API | eventos, `createElement`, validação, delegação, `RegExp`, `XMLHttpRequest`/JSON |
 
 ### `Java/`
 

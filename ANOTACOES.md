@@ -63,6 +63,16 @@
   - [O que vale a pena testar?](#o-que-vale-a-pena-testar)
   - [Teste de mutação com Pitest](#teste-de-mutação-com-pitest)
   - [As anotações de teste mais usadas](#as-anotações-de-teste-mais-usadas)
+- [Curso: JavaScript: programando na linguagem da web](#curso-javascript-programando-na-linguagem-da-web)
+  - [JavaScript além do navegador](#javascript-além-do-navegador)
+  - [O código em arquivos e a variável document](#o-código-em-arquivos-e-a-variável-document)
+  - [Eventos: addEventListener e o objeto event](#eventos-addeventlistener-e-o-objeto-event)
+  - [Criando elementos e lendo o formulário](#criando-elementos-e-lendo-o-formulário)
+  - [Objetos e funções com uma responsabilidade](#objetos-e-funções-com-uma-responsabilidade)
+  - [Validando o formulário](#validando-o-formulário)
+  - [Delegação de eventos e remoção animada](#delegação-de-eventos-e-remoção-animada)
+  - [Busca em tempo real com expressões regulares](#busca-em-tempo-real-com-expressões-regulares)
+  - [AJAX: requisições assíncronas com XMLHttpRequest e JSON](#ajax-requisições-assíncronas-com-xmlhttprequest-e-json)
 
 ---
 
@@ -2293,3 +2303,256 @@ Uma pergunta natural: como saber se os testes são **bons**, e não só numeroso
 | `@MockBean` | Spring | põe um mock no lugar de um bean do contexto |
 
 E os métodos que mais apareceram: `Assertions.assertEquals`, `assertThrows` e `assertDoesNotThrow`; e, do Mockito, `given(...).willReturn(...)` e `then(...).should()`.
+
+---
+
+## Curso: JavaScript: programando na linguagem da web
+
+O projeto foi o **Aparecida Nutrição**, a página de um consultório de nutrição construída em volta de uma **tabela de pacientes**. A partir dela, a aplicação calcula o **IMC** de cada paciente, cadastra novos por um **formulário** (com validação), remove uma linha com **duplo clique** e animação, **filtra a tabela** em tempo real conforme se digita e importa pacientes de uma **API externa**. Na trilha inicial o JavaScript apareceu para criar jogos; aqui o foco foi fundo no que a linguagem faz melhor no navegador: **manipular o DOM, reagir a eventos, lidar com formulários e conversar com um servidor sem recarregar a página**.
+
+### JavaScript além do navegador
+
+O JavaScript nasceu para rodar dentro do navegador, mas há tempos não vive só ali. Com o **Node.js** ele roda no servidor e na linha de comando, usando o mesmo motor de execução do Chrome (o V8) fora do browser. A partir daí a linguagem foi parar em lugares inesperados:
+
+- **Electron** - framework para criar aplicações **desktop** com HTML, CSS e JavaScript. O editor **Atom** (e também o VS Code) foi construído com ele;
+- **Johnny-Five** - biblioteca para programar **robótica e hardware** (Arduino e afins) em JavaScript.
+
+A lição é que aprender JavaScript abre portas para além da página web: back-end, aplicativos de mesa e até eletrônica.
+
+### O código em arquivos e a variável document
+
+Assim como no Java se separa cada responsabilidade em uma classe, aqui a organização começa **dividindo o código em arquivos `.js`** por funcionalidade, em vez de um `<script>` gigante no HTML. No projeto, cada arquivo cuida de uma coisa: `calcula-imc.js`, `form.js`, `filtra.js`, `remover-paciente.js`, `buscar-pacientes.js`.
+
+Esses arquivos são importados **sempre no final do `<body>`**:
+
+```html
+	<script src="js/calcula-imc.js"></script>
+	<script src="js/form.js"></script>
+	<script src="js/filtra.js"></script>
+</body>
+```
+
+O motivo é a ordem de carregamento: o navegador lê o HTML de cima para baixo, então, ao chegar nos scripts no fim, **todos os elementos da página já existem no DOM**. Se o script rodasse no `<head>`, um `querySelector` procuraria por um botão que ainda não foi desenhado e devolveria `null`.
+
+A ponte entre o JavaScript e a página é a variável **`document`**. Ela contém o **DOM** (*Document Object Model*), a representação em memória do HTML que o navegador cria ao carregar a página e usa para desenhá-la (revisada em [o DOM](#o-que-é-o-dom)). Um ponto que fica mais claro neste curso: quando o JavaScript troca o texto de um `<h1>` ou a classe de um elemento, ele altera **essa cópia em memória**, e o navegador redesenha na hora, mas o **arquivo HTML original fica intacto**. Recarregar a página descarta tudo e reconstrói o DOM do zero a partir do arquivo.
+
+A busca dos elementos é feita com **`document.querySelector()`** (o primeiro que casar) e **`querySelectorAll()`** (todos), preferindo selecionar por **`#id`** ou **`.classe`**, mais estáveis e específicos do que pelo nome da tag.
+
+### Eventos: addEventListener e o objeto event
+
+Uma página é interativa porque **reage a eventos**: um clique, uma tecla, o carregamento de um dado. Para escutar um evento, usa-se **`addEventListener('evento', função)`** no elemento: quando o evento acontece, o navegador chama a função.
+
+Aqui entra a diferença entre **funções nomeadas** e **funções anônimas**. A função anônima é declarada ali mesmo, sem nome, só para aquele evento; a nomeada existe por conta própria e pode ser reaproveitada:
+
+```javascript
+// função anônima: existe só para este clique
+var btnAdicionar = document.querySelector('#adicionar-paciente');
+btnAdicionar.addEventListener('click', function(event){
+    event.preventDefault();
+    // ...
+});
+```
+
+O parâmetro **`event`** que a função recebe é o **objeto do evento**: ele carrega tudo sobre o que aconteceu e traz atalhos úteis. Dois aparecem o tempo todo no projeto:
+
+- **`event.preventDefault()`** - cancela o comportamento padrão do navegador. O botão de adicionar está dentro de um `<form>`, e clicar nele **recarregaria a página** (o envio padrão do formulário); `preventDefault()` impede isso para o JavaScript assumir o controle;
+- **`event.target`** - o elemento exato que disparou o evento (usado adiante na delegação).
+
+### Criando elementos e lendo o formulário
+
+Para cadastrar um paciente, é preciso **ler o formulário** e **criar uma linha nova** na tabela. Os campos de um `<form>` são acessíveis pelo atributo **`name`** de cada input, e o valor digitado vem da propriedade **`.value`** (sempre uma **string**):
+
+```javascript
+function obtemPacienteDoFormulario(form){
+    var paciente = {
+        nome: form.nome.value,
+        peso: form.peso.value,
+        altura: form.altura.value,
+        gordura: form.gordura.value,
+        imc: calculaImc(form.peso.value, form.altura.value)
+    }
+    return paciente;
+}
+```
+
+Com os dados em mãos, a linha é montada **criando elementos do zero**. A função **`document.createElement('tag')`** cria um elemento, `textContent`/`classList` o preenchem, e **`appendChild()`** o encaixa dentro de outro:
+
+```javascript
+function montaTr(paciente){
+    var pacienteTr = document.createElement('tr');
+    pacienteTr.classList.add('paciente');
+    pacienteTr.appendChild(montaTd('info-nome', paciente.nome));
+    pacienteTr.appendChild(montaTd('info-peso', paciente.peso));
+    // ... demais colunas
+    return pacienteTr;
+}
+
+function montaTd(classe, dado){
+    var td = document.createElement('td');
+    td.classList.add(classe);
+    td.textContent = dado;
+    return td;
+}
+```
+
+O `<tr>` recém-criado é então inserido na tabela com um último `appendChild`, e a linha aparece na página, tudo sem tocar no arquivo HTML.
+
+### Objetos e funções com uma responsabilidade
+
+O `paciente` acima é um **objeto** JavaScript: uma coleção de pares **chave/valor** entre `{ }`, acessados por `paciente.nome`, `paciente.peso` etc. É a forma natural de agrupar dados que andam juntos, no lugar de quatro variáveis soltas.
+
+O outro cuidado é **quebrar funções grandes em funções menores**, cada uma com uma responsabilidade. Em vez de um único bloco fazendo tudo no clique, o fluxo é dividido: `obtemPacienteDoFormulario` (lê), `montaTr`/`montaTd` (constroem), `validaPaciente` (valida), `adicionaPacienteNaTabela` (insere), `exibeMensagemDeErro` (avisa). O `click` só orquestra:
+
+```javascript
+btnAdicionar.addEventListener('click', function(event){
+    event.preventDefault();
+    var form = document.querySelector('#form-adiciona');
+    var paciente = obtemPacienteDoFormulario(form);
+    var erros = validaPaciente(paciente);
+
+    if(erros.length > 0){
+        exibeMensagemDeErro(erros);
+    } else {
+        adicionaPacienteNaTabela(paciente);
+        form.reset();
+        document.querySelector('#mensagens-erro').innerHTML = '';
+    }
+});
+```
+
+Depois de um cadastro bem-sucedido, **`form.reset()`** limpa todos os campos do formulário de uma vez, e `innerHTML = ''` esvazia a lista de mensagens de erro.
+
+### Validando o formulário
+
+Antes de aceitar um paciente, cada campo é conferido. A validação usa muito o **operador de negação NOT (`!`)**, que inverte um booleano, `if(!validaPeso(...))` lê-se "se o peso **não** for válido":
+
+```javascript
+function validaPaciente(paciente){
+    var erros = [];
+
+    if(paciente.nome.length == 0){
+        erros.push('O nome não pode ser em branco!');
+    }
+    if(!validaPeso(paciente.peso)){
+        erros.push('Peso inválido!');
+    }
+    if(!validaAltura(paciente.altura)){
+        erros.push('Altura inválida!');
+    }
+    // ... demais campos
+
+    return erros;
+}
+```
+
+Em vez de parar no primeiro problema, os erros são **acumulados num array** com **`push()`**, que adiciona um item ao fim da lista. No fim, a função devolve o array inteiro: se estiver **vazio** (`erros.length == 0`), está tudo certo; se não, cada mensagem vira um `<li>` dentro da `<ul>` de erros:
+
+```javascript
+function exibeMensagemDeErro(erros){
+    var ul = document.querySelector('#mensagens-erro');
+    ul.innerHTML = '';                    // limpa erros anteriores
+    erros.forEach(function(erro) {
+        var li = document.createElement('li');
+        li.textContent = erro;
+        ul.appendChild(li);
+    });
+}
+```
+
+Duas ferramentas se destacam aqui: a propriedade **`innerHTML`**, usada com `''` para **apagar** os itens antigos da lista antes de mostrar os novos; e o método **`forEach`**, que percorre o array chamando a função para **cada elemento**, uma alternativa mais limpa ao `for` clássico quando o objetivo é só visitar todos os itens. Uma boa prática que acompanha isso é **separar as funções de validação** em seu próprio contexto, para que possam ser reaproveitadas (o cálculo do IMC, por exemplo, valida peso e altura com as mesmas `validaPeso`/`validaAltura`).
+
+### Delegação de eventos e remoção animada
+
+Um paciente é removido com **duplo clique** na linha, o evento **`dblclick`**. A primeira ideia seria adicionar um `addEventListener` em **cada** `<tr>`. Mas isso tem um furo: linhas cadastradas **depois**, pela função de adicionar, não teriam o listener, afinal, elas não existiam quando o código rodou.
+
+A saída é entender como os eventos **propagam** pela página. Quando se clica num `<td>`, o evento não fica só nele: ele **borbulha** (*bubbling*) para os elementos-pai, o `<tr>`, depois o `<tbody>`, a `<table>`, e assim por diante. Isso permite a **delegação de eventos**: em vez de um listener por linha, coloca-se **um único listener na tabela** e descobre-se quem foi clicado por `event.target`:
+
+```javascript
+var tabela = document.querySelector('#tabela-pacientes');
+tabela.addEventListener('dblclick', function(event){
+    event.target.parentNode.classList.add('fadeout');
+    setTimeout(function(){
+        event.target.parentNode.remove();
+    }, 500);
+});
+```
+
+Como o clique cai num `<td>`, `event.target.parentNode` sobe para o `<tr>` da linha. A delegação resolve o problema de origem: **qualquer** linha, inclusive as futuras, é coberta pelo mesmo listener, porque quem escuta é a tabela.
+
+A remoção também é **animada**. Em vez de sumir de imediato, a linha ganha a classe `fadeout` (que o CSS usa para um efeito de desaparecimento) e só é de fato retirada do DOM depois, com **`setTimeout`**, que agenda uma função para rodar após um tempo, aqui, os `500` milissegundos que a animação leva. Assim o `.remove()` espera o efeito terminar.
+
+### Busca em tempo real com expressões regulares
+
+O campo de filtro esconde e mostra pacientes **conforme se digita**, usando o evento **`input`**, que dispara a **cada alteração** do campo (cada tecla, colar, apagar), diferente do `change`, que só dispara ao perder o foco.
+
+O truque para "esconder" um paciente é puramente de CSS: uma classe **`invisivel`** com `display: none`. Adicionar a classe tira o elemento da tela; removê-la o traz de volta. A busca, então, é percorrer os pacientes, **esconder os que não interessam e mostrar os que interessam**:
+
+```javascript
+var campoFiltro = document.querySelector('#filtrar-tabela');
+campoFiltro.addEventListener('input', function(){
+    var pacientes = document.querySelectorAll('.paciente');
+    var valor = this.value;
+
+    if(valor.length > 0){
+        pacientes.forEach(function(paciente) {
+            var nome = paciente.querySelector('.info-nome').textContent;
+            var expressao = new RegExp(valor, 'i');
+
+            if(!expressao.test(nome)){
+                paciente.classList.add('invisivel');
+            } else {
+                paciente.classList.remove('invisivel');
+            }
+        });
+    } else {
+        pacientes.forEach(function(paciente) {
+            paciente.classList.remove('invisivel');
+        });
+    }
+});
+```
+
+Para casar o texto digitado com **qualquer pedaço** do nome (e não só o começo), entram as **expressões regulares**. Uma `RegExp` descreve um padrão de texto; `new RegExp(valor, 'i')` monta o padrão a partir do que foi digitado, e a flag **`'i'`** o torna **insensível a maiúsculas/minúsculas**. O método **`.test(nome)`** devolve `true`/`false` conforme o nome contenha ou não aquele padrão. Quando o campo está vazio (`valor.length` igual a `0`), todos voltam a aparecer.
+
+### AJAX: requisições assíncronas com XMLHttpRequest e JSON
+
+A última funcionalidade importa uma lista de pacientes de uma **API na internet**, sem recarregar a página. Isso exige uma **requisição assíncrona**: o JavaScript pede os dados ao servidor e **não trava** esperando a resposta, o resto da página segue funcionando, e quando a resposta chega, um evento avisa. Essa técnica de buscar dados em segundo plano e atualizar só um pedaço da tela é o **AJAX** (*Asynchronous JavaScript And XML*).
+
+A ferramenta clássica para isso é o objeto **`XMLHttpRequest`**. O fluxo tem três passos: **configurar** a requisição com `.open()`, **escutar** o retorno com o evento `load` e **enviar** com `.send()`:
+
+```javascript
+var botao = document.querySelector('#buscar-pacientes');
+botao.addEventListener('click', function(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://.../pacientes.json');   // 1. configura (método + URL)
+
+    xhr.addEventListener('load', function(){          // 2. escuta a resposta
+        if(xhr.status == 200){
+            document.querySelector('#erro-ajax').classList.add('invisivel');
+            var pacientes = JSON.parse(xhr.responseText);
+            pacientes.forEach(function(paciente){
+                adicionaPacienteNaTabela(paciente);
+            });
+        } else {                                      // deu erro
+            document.querySelector('#erro-ajax').classList.remove('invisivel');
+        }
+    });
+
+    xhr.send();                                       // 3. dispara
+});
+```
+
+O evento **`load`** dispara quando a resposta **termina de chegar**. Mas chegar não é o mesmo que dar certo: é preciso conferir o **`xhr.status`** (o código HTTP). `200` significa sucesso; qualquer outro valor (um `404`, um `500`) cai no `else`, onde a aplicação **trata o erro** exibindo uma mensagem, escondida por padrão com a classe `invisivel`. Lidar com o caminho de erro é parte do AJAX, não um extra.
+
+A resposta chega em **`xhr.responseText`** como **texto** no formato **JSON** (*JavaScript Object Notation*), a mesma notação de objetos da linguagem, usada como formato universal de troca de dados entre sistemas. Como é texto, não dá para usá-lo direto; a função **`JSON.parse()`** o **converte em um objeto/array JavaScript** de verdade, que aí pode ser percorrido com `forEach` para inserir cada paciente na tabela. O caminho inverso, de objeto para texto JSON, seria o `JSON.stringify()`.
+
+> **XMLHttpRequest e o que veio depois.** O `XMLHttpRequest` é a base histórica do AJAX, mas hoje o navegador oferece a **API `fetch`**, mais enxuta e baseada em *Promises*, que evita o encadeamento de listeners. O conceito, porém, é o mesmo: pedir dados de forma assíncrona e tratar a resposta (e os erros) quando ela chega.
+
+Um resumo dos eventos que apareceram no curso e do que cada um observa:
+
+| Evento | Dispara quando | Onde foi usado |
+|---|---|---|
+| `click` | o elemento é clicado | botões de adicionar e buscar pacientes |
+| `dblclick` | o elemento recebe duplo clique | remover uma linha da tabela |
+| `input` | o valor de um campo muda (a cada tecla) | filtrar a tabela em tempo real |
+| `load` | uma requisição termina de carregar | receber a resposta do AJAX |

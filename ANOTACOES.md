@@ -73,6 +73,20 @@
   - [Delegação de eventos e remoção animada](#delegação-de-eventos-e-remoção-animada)
   - [Busca em tempo real com expressões regulares](#busca-em-tempo-real-com-expressões-regulares)
   - [AJAX: requisições assíncronas com XMLHttpRequest e JSON](#ajax-requisições-assíncronas-com-xmlhttprequest-e-json)
+- [Curso: React: desenvolvendo com JavaScript](#curso-react-desenvolvendo-com-javascript)
+  - [O que é React (e o Node por trás dele)](#o-que-é-react-e-o-node-por-trás-dele)
+  - [Criando o projeto com Create React App](#criando-o-projeto-com-create-react-app)
+  - [Componentes funcionais e JSX](#componentes-funcionais-e-jsx)
+  - [Estilização: CSS por componente e estilos inline](#estilização-css-por-componente-e-estilos-inline)
+  - [Props: passando dados de pai para filho](#props-passando-dados-de-pai-para-filho)
+  - [Renderizando listas com map e a prop key](#renderizando-listas-com-map-e-a-prop-key)
+  - [A prop children](#a-prop-children)
+  - [Eventos e o envio do formulário](#eventos-e-o-envio-do-formulário)
+  - [Estado com useState e componentes controlados](#estado-com-usestate-e-componentes-controlados)
+  - [Funções como props: a comunicação de filho para pai](#funções-como-props-a-comunicação-de-filho-para-pai)
+  - [Transformando arrays: filter e renderização condicional](#transformando-arrays-filter-e-renderização-condicional)
+  - [Depurando: mensagens de erro e o debugger](#depurando-mensagens-de-erro-e-o-debugger)
+  - [O ecossistema React: bibliotecas e próximos passos](#o-ecossistema-react-bibliotecas-e-próximos-passos)
 
 ---
 
@@ -2556,3 +2570,288 @@ Um resumo dos eventos que apareceram no curso e do que cada um observa:
 | `dblclick` | o elemento recebe duplo clique | remover uma linha da tabela |
 | `input` | o valor de um campo muda (a cada tecla) | filtrar a tabela em tempo real |
 | `load` | uma requisição termina de carregar | receber a resposta do AJAX |
+
+---
+
+## Curso: React: desenvolvendo com JavaScript
+
+O projeto foi o **Organo**, uma página que organiza os colaboradores de uma empresa em **times coloridos**. Por um **formulário**, cadastra-se uma pessoa (nome, cargo, imagem e time) e a aplicação monta um **card** que aparece na seção do time correspondente. No curso anterior de JavaScript, a página era manipulada na mão (`createElement`, `appendChild`); aqui esse trabalho é do **React**: descreve-se a interface em **componentes** e o **estado** dos dados, e a biblioteca cuida de desenhar e redesenhar a tela sozinha.
+
+### O que é React (e o Node por trás dele)
+
+O **React** é uma **biblioteca** criada pelo Facebook para resolver um problema específico: páginas com muitos eventos e dados mudando na tela ficavam difíceis de manter em sincronia com o DOM manualmente. A ideia é descrever a interface em **componentes** e deixar um mecanismo de **databinding** manter a tela em dia com os dados: quando o dado muda, o React redesenha **só o que mudou**, em vez de ficar re-renderizando a página inteira o tempo todo. O componente original do React era baseado em **classes**; hoje o padrão são os componentes funcionais que veremos a seguir.
+
+Por baixo das ferramentas está o **Node.js**, que roda JavaScript fora do navegador (revisitado em [JavaScript além do navegador](#javascript-além-do-navegador)). O Node é feito de duas peças: o **V8** (o mesmo motor que executa JS no Chrome) e o **libuv** (que cuida da entrada e saída assíncrona). Como o JavaScript roda em uma **única thread** com um **event loop**, ele não trava esperando por I/O, o que o torna rápido para lidar com muitas conexões ao mesmo tempo.
+
+Em volta do Node vive o **npm** (*Node Package Manager*), que guarda as bibliotecas e frameworks JavaScript e ajuda a **automatizar os processos** (a ideia de automatizar tarefas com um gerenciador de pacotes vem de comunidades como a do Ruby). Ferramentas como o **webpack** ou o **rollup** empacotam os arquivos do projeto. Alguns nomes que aparecem no ecossistema: **express** (framework popular de back-end), **JWT** (tokens de autenticação), **GraphQL** (consulta de conjuntos massivos de dados) e a clusterização (rodar várias instâncias da aplicação).
+
+### Criando o projeto com Create React App
+
+Em vez de configurar webpack e babel na mão, o curso usa o **Create React App (CRA)**, uma ferramenta que gera um projeto já pronto e configurado. Os passos, no terminal:
+
+```bash
+# 1. entrar no diretório onde o projeto será criado
+# 2. criar o projeto (baixa o CRA e monta a estrutura)
+        npx create-react-app organo
+# 3. entrar na pasta criada
+        cd organo
+# 4. subir o servidor de desenvolvimento
+        npm start
+```
+
+O `npx` executa um pacote sem precisar instalá-lo globalmente. O `npm start` sobe um servidor local em `http://localhost:3000` com **recarga automática**: ao salvar um arquivo, a página se atualiza sozinha.
+
+O projeto já vem com as dependências listadas no **`package.json`**:
+
+- **`react`** e **`react-dom`** - a biblioteca em si e a peça que a desenha no DOM do navegador;
+- **`react-scripts`** - embrulha as ferramentas de build (webpack, babel...) por trás dos comandos.
+
+Essas bibliotecas ficam instaladas na pasta **`node_modules`**. O `package.json` também define os **scripts** disponíveis: `start` (desenvolvimento), `build` (gera a versão otimizada para produção), `test` (roda os testes) e `eject` (expõe a configuração escondida, um caminho sem volta).
+
+### Componentes funcionais e JSX
+
+Uma aplicação React é uma **árvore de componentes**. O ponto de entrada é o `src/index.js`, que renderiza o componente raiz `<App />` dentro da `<div id="root">` do `public/index.html`:
+
+```javascript
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+Um **componente funcional** é apenas uma função JavaScript que devolve **JSX**:
+
+```javascript
+function Banner() {
+    return (
+        <header className="banner">
+            <img src="/imagens/banner.png" alt="Banner principal da página do organo" />
+        </header>
+    )
+}
+
+export default Banner;
+```
+
+O **JSX** parece HTML dentro do JavaScript, mas não é HTML: é uma notação que o build converte em chamadas de função JS. Como vive dentro do JavaScript, alguns nomes mudam, o mais comum é **`class` virar `className`** (`class` é palavra reservada em JS). Comentários dentro do JSX vão entre `{/* */}`. Cada componente é exportado com `export default` e importado onde for usado.
+
+Sobre a forma de criar componentes: neste curso trabalhamos **apenas com componentes funcionais**, a maneira mais simples. Também é possível criar componentes com **classes do ES6** (a forma original do React), mas ela não é a única possível, e a versão funcional é hoje o padrão.
+
+Uma regra importante do JSX: o componente precisa devolver **um único elemento raiz**. Quando é preciso devolver elementos irmãos sem embrulhá-los num `<div>` extra, usa-se um **Fragment**: `<Fragment></Fragment>` ou a forma curta `<> </>`, que agrupa os filhos sem adicionar um nó ao DOM.
+
+### Estilização: CSS por componente e estilos inline
+
+Cada componente guarda o seu próprio **arquivo CSS** ao lado (`Banner.js` + `Banner.css`), importado no topo do arquivo:
+
+```javascript
+import './Banner.css'
+```
+
+O `import` avisa o build para incluir aquele CSS, e as classes são aplicadas pelo `className`. Além das classes, o React permite **estilos inline** com o atributo `style`, que recebe um **objeto** (e não uma string): as chaves são as propriedades CSS em camelCase e os valores são strings. É assim que os cards do time recebem a cor certa, conhecida só em tempo de execução:
+
+```javascript
+<section className='time' style={{backgroundColor: props.corSecundaria}}>
+    <h3 style={{borderColor: props.corPrimaria}}>{props.nome}</h3>
+```
+
+As chaves duplas `{{ }}` são duas coisas: as de fora dizem "aqui vem JavaScript" dentro do JSX, e as de dentro são o objeto JS com o estilo.
+
+### Props: passando dados de pai para filho
+
+As **props** (propriedades) são a forma de um componente-pai passar dados para um filho, como se fossem atributos HTML. Dentro do componente, elas chegam no objeto `props`, e as chaves `{ }` do JSX **interpolam** um valor JavaScript:
+
+```javascript
+const Colaborador = (props) => {
+    return <h4>{props.nome}</h4>
+}
+```
+
+As props são **somente leitura**: o filho recebe e usa, mas não altera. Para não repetir `props.` toda hora, dá para **desestruturar** as props já no parâmetro:
+
+```javascript
+const Colaborador = ({nome, cargo, img, corDeFundo}) => {
+    return(
+        <div className='colaborador'>
+            <div className='cabecalho' style={{backgroundColor: corDeFundo}}>
+                <img src={img} alt={nome} />
+            </div>
+            <div className='rodape'>
+                <h4>{nome}</h4>
+                <h5>{cargo}</h5>
+            </div>
+        </div>
+    );
+}
+```
+
+A passagem acontece no JSX do pai: `<Colaborador nome="Ana" cargo="Dev" />`. Qualquer tipo passa por props, strings, números, objetos, arrays e até funções (adiante).
+
+### Renderizando listas com map e a prop key
+
+Para desenhar uma **lista** de componentes a partir de um array, a ferramenta idiomática é o **`.map()`**, que transforma cada item em um pedaço de JSX. No `App`, o array de times vira uma lista de `<Time>`:
+
+```javascript
+{times.map(time => <Time 
+    key={time.nome} 
+    nome={time.nome} 
+    corPrimaria={time.corPrimaria} 
+    corSecundaria={time.corSecundaria}
+    colaboradores={colaboradores.filter(colaborador => colaborador.time === time.nome)} />)}
+```
+
+Cada elemento renderizado em lista precisa de uma **`key`**: um identificador único entre os irmãos. O React usa a key para saber **qual item mudou, foi adicionado ou removido** e redesenhar só aquele, em vez da lista inteira. Sem ela, aparece um aviso no console. A key deve ser estável e única (aqui, o nome do time); o índice do array é o último recurso.
+
+### A prop children
+
+Além das props nomeadas, todo componente recebe uma prop especial, a **`children`**: tudo o que for escrito **entre a tag de abertura e a de fechamento** do componente. O `Botao` a usa para renderizar o seu texto:
+
+```javascript
+const Botao = (props) => {
+    return(
+        <button className='botao'>
+            {props.children}
+        </button>
+    );
+}
+```
+
+Usado como `<Botao>Criar Card</Botao>`, o `props.children` é o texto "Criar Card". Isso cria componentes flexíveis: o conteúdo pode ser texto, elementos HTML ou até outros componentes, deixando o botão "embrulhar" o que for passado.
+
+### Eventos e o envio do formulário
+
+O React escuta eventos com atributos em **camelCase**: o `onclick` do HTML vira **`onClick`**, o `onsubmit` vira **`onSubmit`**, o `onchange` vira `onChange`. O valor passado é uma **função** (e não uma string de código como no HTML inline).
+
+O `Formulario` escuta o **`onSubmit`** do formulário, uma escolha proposital: enviar o formulário dispara a **validação nativa do HTML** dos campos `required` antes de a função rodar. Assim, aproveita-se a validação que o próprio navegador oferece:
+
+```javascript
+const aoSalvar = (event) => {
+    event.preventDefault();
+    props.aoColaboradorCadastrar({ nome, cargo, img, time });
+    setNome('');
+    setCargo('');
+    setImg('');
+    setTime('');
+}
+
+return (
+    <form onSubmit={aoSalvar}>
+        {/* campos */}
+        <Botao>Criar Card</Botao>
+    </form>
+);
+```
+
+O `event.preventDefault()` cancela o comportamento padrão do navegador, enviar um formulário **recarrega a página**, para o React assumir o controle dos dados (revisitado do curso de JavaScript, em [Eventos](#eventos-addeventlistener-e-o-objeto-event)). Um `<button>` dentro de um `<form>` já o envia por padrão, e é por isso que o `onSubmit` dispara. Fora esse, há uma lista imensa de eventos disponíveis no HTML, e no React todos ganham a forma em camelCase.
+
+### Estado com useState e componentes controlados
+
+Props vêm de fora e não mudam; quando um componente precisa de um dado que **muda com o tempo e redesenha a tela**, isso é **estado**. Em componentes funcionais, o estado vem do **hook `useState`**:
+
+```javascript
+const [nome, setNome] = useState('');
+```
+
+O `useState('')` devolve um par: o **valor atual** (`nome`) e uma **função para atualizá-lo** (`setNome`). A mudança de estado só é feita pelo setter, chamar `setNome('Ana')` atualiza o valor **e pede ao React para redesenhar** o componente com o novo valor. Atribuir direto à variável não dispararia o redesenho.
+
+O React tem duas abordagens para inputs de formulário. Um **componente controlado** (*statefull*) é um input cujo valor é controlado pelo React: o `value` vem do estado, e cada tecla dispara o `onChange`, que atualiza o estado, que redesenha o input. Um **componente não controlado** (*stateless*) funciona como um campo de formulário comum fora do React, o navegador guarda o valor e não dá para forçá-lo. O curso usa inputs **controlados**, ligando `value` + `onChange`:
+
+```javascript
+const CampoTexto = (props) => {
+    const aoDigitar = (event) => {
+        props.aoAlterar(event.target.value);
+    }
+    return (
+        <div className="campo-texto">
+            <label>{props.label}</label>
+            <input value={props.valor} onChange={aoDigitar} required={props.obrigatorio} placeholder={props.placeholder} />
+        </div>
+    )
+}
+```
+
+O ciclo é: eu digito → o `onChange` dispara → o estado muda → o React redesenha o input com o novo `value`. O campo e o estado ficam sempre em sincronia.
+
+### Funções como props: a comunicação de filho para pai
+
+As props descem (pai → filho), mas muitas vezes o filho precisa **avisar o pai** que algo aconteceu, aqui, que um colaborador foi cadastrado. A solução é passar uma **função como prop**: o pai entrega uma função ao filho, e o filho a chama quando o evento ocorre.
+
+A lista de colaboradores mora no **`App`** (o pai comum entre o formulário e os times), no estado:
+
+```javascript
+const [colaboradores, setColaboradores] = useState([]);
+
+const aoNovoColaboradorAdicionar = (colaborador) => {
+    setColaboradores([...colaboradores, colaborador]);
+}
+```
+
+O `App` passa essa função para o `Formulario` na prop `aoColaboradorCadastrar`; ao enviar o formulário, o filho **chama a prop**, mandando o novo colaborador para cima:
+
+```javascript
+// App
+<Formulario aoColaboradorCadastrar={colaborador => aoNovoColaboradorAdicionar(colaborador)} />
+
+// Formulario, dentro do aoSalvar
+props.aoColaboradorCadastrar({ nome, cargo, img, time });
+```
+
+Manter o estado no pai para que vários filhos o compartilhem é o que se chama de **elevação de estado** (*lifting state up*). O novo colaborador é adicionado com o **spread** `[...colaboradores, colaborador]`, que cria um **array novo** com os itens antigos mais o novo, o estado nunca é alterado no lugar, sempre substituído.
+
+> **Prop drilling.** Quando um dado precisa atravessar vários níveis, uma prop é passada do pai para o filho, do filho para o filho dele, e assim por diante, isso se chama **prop drilling** ("vazamento de props"). Funciona, mas em pouco tempo fica difícil rastrear onde o dado foi criado, atualizado e de fato usado. Para casos profundos existem outras ferramentas (Context, bibliotecas de estado), mas o conceito a reconhecer é esse: props sendo repassadas por componentes que nem as usam, só para chegar a um descendente.
+
+### Transformando arrays: filter e renderização condicional
+
+Com os colaboradores em uma única lista, cada time precisa mostrar **só os seus**. É o que o **`.filter()`** faz, devolve um **array novo** apenas com os itens que passam num teste:
+
+```javascript
+colaboradores.filter(colaborador => colaborador.time === time.nome)
+```
+
+O resultado é passado para cada `<Time>`, que recebe só os seus colaboradores. Juntando `.map()` (transformar) e `.filter()` (selecionar), lida-se com arrays de objetos sem laços na mão.
+
+O React também faz **renderização condicional**: decidir se algo aparece com base nos dados. Um time vazio não deve exibir a sua seção, então o `Time` só renderiza quando tem colaboradores, usando o **ternário**:
+
+```javascript
+props.colaboradores.length > 0 ? <section className='time'> ... </section> : ''
+```
+
+Se a condição for falsa, devolve `''` (nada aparece). Uma variação comum é o **`&&`**: `condição && <Componente />` renderiza o componente só quando a condição é verdadeira, útil quando não há um "senão".
+
+### Depurando: mensagens de erro e o debugger
+
+Errar faz parte, e o React ajuda: quando algo quebra, ele mostra uma **tela de erro** sobre a página com a mensagem e o arquivo/linha. O primeiro passo é sempre **ler a mensagem**, ela costuma dizer exatamente o quê e onde.
+
+Para erros de lógica (o código roda, mas faz a coisa errada), a ferramenta é o **`debugger`**: escrever a palavra `debugger` no código **pausa a execução** naquele ponto para inspecioná-lo linha a linha:
+
+1. na página, abra o **DevTools** do navegador (F12);
+2. no ponto suspeito do código, escreva a instrução `debugger`;
+3. ao chegar ali durante a navegação, a execução **pausa** e dá para ver os valores das variáveis naquele instante;
+4. **F8** retoma a execução (até a próxima pausa).
+
+Isso é mais preciso do que encher o código de `console.log`, porque congela o estado no exato momento em questão.
+
+### O ecossistema React: bibliotecas e próximos passos
+
+O React é só a base, a comunidade acrescenta muita coisa em volta:
+
+- **Bibliotecas de componentes** prontos e estilizados, que aceleram a construção da interface: o **MUI** (Material UI, https://mui.com) e o **Ant Design** (https://ant.design). Em vez de estilizar tudo do zero, usam-se botões, campos e tabelas já prontos;
+- **Next.js** - uma **framework** construída sobre o React que adiciona rotas, renderização no servidor e uma estrutura de projeto, um passo comum para aplicações reais;
+- **Vercel** (https://vercel.com, a antiga Zeit) - uma plataforma para **publicar** (*deploy*) aplicações React/Next.js com pouca configuração, colocando o projeto no ar.
+
+Nenhuma delas foi usada no Organo, mas mostram para onde o React caminha a partir daqui.
+
+Para fechar, um resumo dos componentes construídos no projeto e do que cada um exercita:
+
+| Componente | Papel na página | O que exercita |
+|---|---|---|
+| `App` | Componente raiz; guarda os times e o estado dos colaboradores | estado, elevação de estado, `map`, `filter` |
+| `Banner` | Cabeçalho com a imagem do topo | componente sem props |
+| `Formulario` | Formulário de cadastro do colaborador | estado, componentes controlados, `onSubmit` |
+| `CampoTexto` | Um campo de input rotulado e controlado | props, `value`/`onChange` |
+| `ListaSuspensa` | O `<select>` de times | props, `map` nas `<option>` |
+| `Botao` | Botão de enviar | prop `children` |
+| `Time` | Seção colorida de um time com seus cards | renderização condicional, `map`, estilo inline |
+| `Colaborador` | O card de uma pessoa | props desestruturadas, estilo inline |
+| `Rodape` | Rodapé com redes sociais e logo | componente sem props |

@@ -36,7 +36,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 5 | Java Web: crie aplicações usando Spring Boot | Trilha Alura | 40h | Concluído |
 | 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | Concluído |
 | 7 | JavaScript: programando na linguagem da web | Curso | 20h | Concluído |
-| 8 | React: desenvolvendo com JavaScript | Curso | 14h | A fazer |
+| 8 | React: desenvolvendo com JavaScript | Curso | 14h | Concluído |
 | 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | A fazer |
 | 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | A fazer |
 | 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | A fazer |
@@ -117,6 +117,14 @@ O projeto foi o **Aparecida Nutrição**, a página de um consultório de nutri�
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-javascript-programando-na-linguagem-da-web)
 
+### 8. Curso: React: desenvolvendo com JavaScript
+
+O projeto foi o **Organo**, uma página que organiza os colaboradores de uma empresa em **times coloridos**. Por um formulário, cadastra-se uma pessoa (nome, cargo, imagem e time) e a aplicação monta um **card** que aparece na seção do time certo, com validação dos campos, times que só aparecem quando têm gente e cada card pintado com a cor do seu time. Diferente do curso anterior, em que a página era montada na mão manipulando o DOM, aqui o trabalho passou a ser do React: descrever a interface em **componentes** e o **estado** dos dados, e deixar a biblioteca redesenhar a tela.
+
+**Principais tópicos:** Node.js (V8, libuv e event loop) · Create React App e `npm start` · componentes funcionais e JSX · `className` e Fragment · CSS por componente e estilos inline · props e desestruturação · renderização de listas com `.map()` e a prop `key` · prop `children` · eventos em camelCase (`onSubmit`, `onChange`) e `preventDefault()` · estado com `useState` · componentes controlados (`value`/`onChange`) · funções como props e elevação de estado · prop drilling · `.filter()` e renderização condicional (ternário e `&&`) · depuração com `debugger` · ecossistema (MUI, Ant Design, Next.js, Vercel)
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-react-desenvolvendo-com-javascript)
+
 ---
 
 ## Projetos práticos
@@ -135,6 +143,12 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 | [`amigo-secreto`](./JavaScript/3411-praticando-logica-projeto_inicial/amigo-secreto) | Lista de participantes e sorteio de pares | validações, `return`, `length`, `includes` |
 | [`carrinho-compras`](./JavaScript/3411-praticando-logica-projeto_inicial/carrinho-compras) | Somar produtos e valor total do carrinho | condicionais, `split`, `innerHTML` |
 | [`introducao-javascript`](./JavaScript/introducao-javascript) | Aparecida Nutrição: cadastro, cálculo de IMC, busca e importação de pacientes via API | eventos, `createElement`, validação, delegação, `RegExp`, `XMLHttpRequest`/JSON |
+
+### `JavaScript - React/`
+
+| Projeto | Descrição | O que usei |
+|---------|-----------|------------|
+| [`organo`](./JavaScript%20-%20React/organo) | Organo: cadastro de colaboradores em times coloridos, com formulário validado, cards por time e times que só aparecem quando têm gente | React, Create React App, componentes funcionais, JSX, props, `useState`, componentes controlados, `.map()`/`.filter()`, `key`, `children`, renderização condicional |
 
 ### `Java/`
 
@@ -172,6 +186,8 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=flat&logo=hibernate&logoColor=white)
@@ -196,6 +212,25 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
    ```
 2. Entre na pasta do projeto que quer testar (ex.: `JavaScript/js-curso-2-aula1`).
 3. Abra o arquivo `index.html` no navegador (duplo clique já funciona).
+
+## Como executar os projetos React
+
+O projeto [`organo`](./JavaScript%20-%20React/organo) foi criado com o **Create React App** e roda em um servidor de desenvolvimento.
+
+1. Tenha o **Node.js** instalado (o que já traz o `npm`).
+2. Entre na pasta do projeto:
+   ```bash
+   cd "JavaScript - React/organo"
+   ```
+3. Instale as dependências (a pasta `node_modules` não vai versionada):
+   ```bash
+   npm install
+   ```
+4. Suba a aplicação:
+   ```bash
+   npm start
+   ```
+5. Acesse `http://localhost:3000` no navegador. A página recarrega sozinha a cada alteração salva.
 
 ## Como executar os projetos Java
 

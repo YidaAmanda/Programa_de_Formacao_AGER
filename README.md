@@ -37,7 +37,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 6 | Boas práticas de programação: automatizando testes com Java | Curso | 10h | Concluído |
 | 7 | JavaScript: programando na linguagem da web | Curso | 20h | Concluído |
 | 8 | React: desenvolvendo com JavaScript | Curso | 14h | Concluído |
-| 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | A fazer |
+| 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | Concluído |
 | 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | A fazer |
 | 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | A fazer |
 | 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | A fazer |
@@ -125,6 +125,14 @@ O projeto foi o **Organo**, uma página que organiza os colaboradores de uma emp
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-react-desenvolvendo-com-javascript)
 
+### 9. Curso: React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end
+
+O projeto foi o **Bytebank**, a interface de um banco digital (cabeçalho, menu, saldo, extrato e formulário de transação). Diferente dos cursos anteriores, o foco não foi construir a aplicação, e sim **garantir que ela funciona**: foram escritos testes automatizados com **Jest** e **React Testing Library** para os componentes e para a regra de negócio, do saldo à submissão do formulário. Pelo caminho, a **pirâmide de testes** para decidir o que testar, a **análise estática** com ESLint e Prettier, o mock de funções com `jest.fn()`, um primeiro contato com **TDD** e a ideia de proteger a produção com **CI/CD**.
+
+**Principais tópicos:** pirâmide de testes (unidade, integração, E2E) · cultura de testes · análise estática com ESLint e Prettier · Jest (`describe`, `test`/`it`, `expect`, `toBe`) · React Testing Library (`render`, `screen`) · queries `getBy`/`getAllBy`/`queryBy`/`findBy` · consultas por texto, `role`, `placeholder` e `testId` · matchers do jest-dom (`toBeInTheDocument`, `toHaveClass`, `toHaveTextContent`, `toHaveAttribute`, `toHaveValue`) · testes de snapshot · `userEvent` (`type`, `click`, `selectOptions`) · testando props e `rerender` · mock com `jest.fn()` e `toHaveBeenCalledWith` · TDD · CI/CD e GitHub Actions
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-react-js-crie-testes-com-jest-e-testing-library-e-garanta-o-funcionamento-do-front-end)
+
 ---
 
 ## Projetos práticos
@@ -149,6 +157,7 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 | Projeto | Descrição | O que usei |
 |---------|-----------|------------|
 | [`organo`](./JavaScript%20-%20React/organo) | Organo: cadastro de colaboradores em times coloridos, com formulário validado, cards por time e times que só aparecem quando têm gente | React, Create React App, componentes funcionais, JSX, props, `useState`, componentes controlados, `.map()`/`.filter()`, `key`, `children`, renderização condicional |
+| [`bytebank`](./JavaScript%20-%20React/bytebank) | Bytebank: interface de banco digital (saldo, extrato e transações) usada como base para escrever testes automatizados dos componentes e da regra de negócio | Jest, React Testing Library, `userEvent`, jest-dom, snapshot, `jest.fn()`, TDD, ESLint, Prettier |
 
 ### `Java/`
 
@@ -196,6 +205,10 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 ![Apache Maven](https://img.shields.io/badge/Maven-C71A36?style=flat&logo=apachemaven&logoColor=white)
 ![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=flat&logo=junit5&logoColor=white)
 ![Mockito](https://img.shields.io/badge/Mockito-78A641?style=flat)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white)
+![Testing Library](https://img.shields.io/badge/Testing_Library-E33332?style=flat&logo=testinglibrary&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=prettier&logoColor=black)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
@@ -215,10 +228,10 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 
 ## Como executar os projetos React
 
-O projeto [`organo`](./JavaScript%20-%20React/organo) foi criado com o **Create React App** e roda em um servidor de desenvolvimento.
+Os projetos [`organo`](./JavaScript%20-%20React/organo) e [`bytebank`](./JavaScript%20-%20React/bytebank) foram criados com o **Create React App** e rodam em um servidor de desenvolvimento.
 
 1. Tenha o **Node.js** instalado (o que já traz o `npm`).
-2. Entre na pasta do projeto:
+2. Entre na pasta do projeto que quer testar:
    ```bash
    cd "JavaScript - React/organo"
    ```
@@ -231,6 +244,16 @@ O projeto [`organo`](./JavaScript%20-%20React/organo) foi criado com o **Create 
    npm start
    ```
 5. Acesse `http://localhost:3000` no navegador. A página recarrega sozinha a cada alteração salva.
+
+### Como rodar os testes do bytebank
+
+O projeto [`bytebank`](./JavaScript%20-%20React/bytebank) concentra os testes escritos no curso de testes automatizados no Front-end. Depois do `npm install`, na pasta do projeto:
+
+```bash
+npm test
+```
+
+O comando sobe o **Jest** em modo interativo, rodando os arquivos `*.test.js` ao lado de cada componente e reexecutando a cada alteração salva. O projeto também tem os scripts `npm run lint` (ESLint) e `npm run format` (Prettier) para a análise estática do código.
 
 ## Como executar os projetos Java
 

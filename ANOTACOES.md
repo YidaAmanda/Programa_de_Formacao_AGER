@@ -87,6 +87,17 @@
   - [Transformando arrays: filter e renderização condicional](#transformando-arrays-filter-e-renderização-condicional)
   - [Depurando: mensagens de erro e o debugger](#depurando-mensagens-de-erro-e-o-debugger)
   - [O ecossistema React: bibliotecas e próximos passos](#o-ecossistema-react-bibliotecas-e-próximos-passos)
+- [Curso: React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end](#curso-react-js-crie-testes-com-jest-e-testing-library-e-garanta-o-funcionamento-do-front-end)
+  - [Por que testar o Front-end e a pirâmide de testes](#por-que-testar-o-front-end-e-a-pirâmide-de-testes)
+  - [Análise estática: ESLint e Prettier](#análise-estática-eslint-e-prettier)
+  - [Jest e o primeiro teste](#jest-e-o-primeiro-teste)
+  - [Renderizando e consultando: render, screen e as queries](#renderizando-e-consultando-render-screen-e-as-queries)
+  - [Asserções e testes de snapshot](#asserções-e-testes-de-snapshot)
+  - [Simulando o usuário com o userEvent](#simulando-o-usuário-com-o-userevent)
+  - [Organizando testes e testando props](#organizando-testes-e-testando-props)
+  - [Mock de funções com jest.fn()](#mock-de-funções-com-jestfn)
+  - [TDD: desenvolvimento orientado a testes](#tdd-desenvolvimento-orientado-a-testes)
+  - [Integração contínua: CI/CD e GitHub Actions](#integração-contínua-cicd-e-github-actions)
 
 ---
 
@@ -2855,3 +2866,280 @@ Para fechar, um resumo dos componentes construídos no projeto e do que cada um 
 | `Time` | Seção colorida de um time com seus cards | renderização condicional, `map`, estilo inline |
 | `Colaborador` | O card de uma pessoa | props desestruturadas, estilo inline |
 | `Rodape` | Rodapé com redes sociais e logo | componente sem props |
+
+---
+
+## Curso: React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end
+
+O projeto foi o **Bytebank**, a interface de um banco digital (cabeçalho com o usuário logado, menu de navegação, saldo, extrato e o formulário de nova transação). Diferente dos cursos anteriores, em que o trabalho era construir a aplicação, aqui o foco foi **garantir que ela funciona**: escrever testes automatizados para os componentes e para a regra de negócio, do saldo à submissão do formulário. As ferramentas centrais foram o **Jest** (para estruturar e rodar os testes) e o **React Testing Library** (para renderizar e consultar os componentes como uma pessoa usuária os veria). As duas já vêm instaladas no projeto criado pelo Create React App, e os testes rodam com `npm test`.
+
+### Por que testar o Front-end e a pirâmide de testes
+
+Testar aumenta a confiança no código, melhora a qualidade do produto e otimiza o tempo de quem desenvolve e de quem garante a qualidade. Em aplicações pequenas, um **teste manual** (abrir a página e clicar para conferir) até resolve, mas ele não escala: conforme novas funcionalidades são adicionadas, repetir todos os cenários na mão fica complexo e improdutivo. A saída é o teste **automatizado**, um código que verifica outro código e pode ser reexecutado a qualquer momento.
+
+Para decidir **quais** testes escrever e **em que proporção**, existe a **pirâmide de testes**, que organiza os tipos por relação de tempo e custo:
+
+- **Testes de unidade** - verificam uma peça isolada (uma função, um componente). São únicos, **rápidos e baratos**; formam a base da pirâmide, onde mais se escreve;
+- **Testes de integração** - verificam como partes da aplicação **interagem entre si**;
+- **Testes de ponta a ponta (E2E)** - exercitam **todo o fluxo da pessoa usuária** pela interface. São os mais **demorados e caros**, no topo da pirâmide.
+
+Quanto mais alto na pirâmide, mais lento e caro o teste, por isso a base (unidade) é a mais numerosa. A pirâmide é uma ferramenta para guiar essas decisões, e criar uma **cultura de testes** na equipe é o que sustenta tudo isso.
+
+> **Outros tipos de teste.** Além dos três da pirâmide, há testes voltados a aspectos específicos: o **teste de análise estática** (verifica o código sem executá-lo, é o que ESLint e Prettier fazem na próxima seção); o **teste de acessibilidade**, que confere se a página funciona para todas as pessoas (ferramentas: Lighthouse, AChecker, Jest Axe, Pa11y); e o **teste de regressão visual**, que compara imagens da tela para detectar mudanças indesejadas no visual (ferramentas: Loki, Percy, Cypress).
+
+### Análise estática: ESLint e Prettier
+
+Antes mesmo de escrever um teste, dá para pegar problemas **em tempo de desenvolvimento** com a **análise estática**: ferramentas que leem o código sem executá-lo. Duas se complementam:
+
+- **Prettier** - cuida da **formatação** (aspas, indentação, quebras de linha), deixando o código com um estilo único. Instala-se o motor no projeto, definem-se as regras no arquivo `.prettierrc`, e falta o **gatilho** que aplica a formatação: a extensão do Prettier no VS Code com *Format On Save*, ou rodar o comando na mão.
+
+  ```bash
+  npm i -D prettier          # instala o motor no projeto
+  npx prettier --write .     # formata os arquivos segundo o .prettierrc
+  ```
+
+  ```json
+  // .prettierrc
+  { "singleQuote": true, "tabWidth": 2 }
+  ```
+
+- **ESLint** - faz a **análise do código** em busca de problemas e más práticas (variáveis não usadas, hooks mal utilizados). As regras ficam no `.eslintrc`, e o pacote **`eslint-config-prettier`** desliga as regras de estilo do ESLint que brigariam com o Prettier, para os dois não competirem.
+
+  ```bash
+  npm i -D eslint eslint-config-prettier
+  ```
+
+No projeto, esses comandos viram **scripts** no `package.json` (`"format"` e `"lint"`), para rodar tudo de uma vez pelo `npm run format` e `npm run lint`.
+
+### Jest e o primeiro teste
+
+O **Jest** é o executor de testes que já vem com o Create React App. Ele encontra automaticamente os arquivos terminados em **`.test.js`** e os roda. A convenção do projeto é deixar cada teste **ao lado do que ele testa**: `Menu.test.js` mora na mesma pasta que o componente `Menu`.
+
+A anatomia de um teste tem três peças:
+
+- **`test(descrição, fn)`** (ou seu apelido **`it`**) - declara um cenário; a descrição diz o que se espera;
+- **`expect(valor)`** - pega o valor obtido;
+- um **matcher** encadeado ao `expect`, que faz a comparação; o mais básico é o **`toBe`**, que checa igualdade.
+
+```javascript
+test('Que é um depósito, o saldo deve aumentar', () => {
+  const transacao = { transacao: 'Depósito', valor: 50 };
+  const novoSaldo = calculaNovoSaldo(transacao, 100);
+  expect(novoSaldo).toBe(150);
+});
+```
+
+Se o valor obtido bater com o esperado, o teste passa (verde); se não, falha (vermelho) e o Jest mostra o que esperava e o que recebeu. Para **agrupar** vários cenários relacionados, existe o **`describe(descrição, fn)`**, que embrulha os testes sob um título comum (visto adiante).
+
+### Renderizando e consultando: render, screen e as queries
+
+Para testar um **componente React**, o React Testing Library oferece duas peças importadas de `@testing-library/react`:
+
+- **`render(<Componente />)`** - desenha o componente num DOM de teste;
+- **`screen`** - o objeto por onde se **consulta** o que foi renderizado.
+
+A filosofia da biblioteca é consultar a tela **como uma pessoa usuária faria**: procurando por textos, papéis (*roles*) e rótulos, e não por classes CSS ou estrutura interna. O teste do `Cabecalho` só renderiza e procura o nome na tela:
+
+```javascript
+import { render, screen } from '@testing-library/react';
+import Cabecalho from './index';
+
+test('Deve renderizar o nome do usuário logado', () => {
+  render(<Cabecalho />);
+  const nomeUsuario = screen.getByText('Joana Fonseca Gomes');
+  expect(nomeUsuario).toBeInTheDocument();
+});
+```
+
+As funções de consulta (**queries**) seguem um padrão de nomes com três variações, e a diferença entre elas está em **o que fazem quando não encontram** (ou encontram vários):
+
+| Variante | Quantos | Se não achar | Uso típico |
+|---|---|---|---|
+| `getBy...` | um | **lança erro** | o elemento **deve** existir |
+| `getAllBy...` | vários (array) | lança erro | uma **lista** que deve existir |
+| `queryBy...` | um | devolve `null` | afirmar que algo **não** existe |
+| `findBy...` | um (assíncrono) | lança erro após esperar | elemento que aparece **depois** (Promise) |
+| `findAllBy...` | vários (assíncrono) | lança erro após esperar | lista que aparece depois |
+
+O sufixo diz **por onde procurar**: `...ByText` (pelo texto), `...ByRole` (pelo papel: `link`, `button`, `listitem`, `combobox`, `option`), `...ByPlaceholderText` (pelo *placeholder*) e `...ByTestId` (por um atributo `data-testid` que se coloca no elemento). O teste do `Menu` usa três variantes de uma vez:
+
+```javascript
+test('Deve renderizar uma lista de links', () => {
+  render(<Menu />);
+  const listaLinks = screen.getAllByRole('link');
+  expect(listaLinks).toHaveLength(4);
+});
+
+test('Não deve renderizar um link para extrato', () => {
+  render(<Menu />);
+  const linkExtrato = screen.queryByText('Extrato');
+  expect(linkExtrato).not.toBeInTheDocument();
+});
+```
+
+Repare no `queryByText`: para provar que algo **não** está na tela, não dá para usar `getByText` (ele lançaria erro na hora de não encontrar). O `queryBy...` devolve `null` e deixa a asserção `not.toBeInTheDocument()` fazer o trabalho.
+
+> **Por que o `findBy...` é assíncrono?** Ele é usado quando o elemento **não aparece na mesma hora**, por exemplo, depois de uma requisição a uma API: os dados da resposta não chegam imediatamente. Por baixo, o `findBy...` é a combinação de dois métodos: o **`waitFor`**, que **espera as Promises resolverem**, e só então o `getBy...`, que faz a consulta. Por isso ele devolve uma Promise e é usado com `await`.
+
+### Asserções e testes de snapshot
+
+As asserções sobre elementos do DOM ficam mais legíveis com os **matchers do jest-dom**, uma biblioteca importada uma única vez no `src/setupTests.js` (`import '@testing-library/jest-dom'`) e disponível em todos os testes. Os mais usados no projeto:
+
+- **`toBeInTheDocument()`** - o elemento está na tela;
+- **`toHaveTextContent('...')`** - contém aquele texto;
+- **`toHaveClass('...')`** - tem aquela classe CSS;
+- **`toHaveAttribute('type', 'number')`** - tem aquele atributo;
+- **`toHaveValue(50)`** - o campo tem aquele valor;
+- **`toHaveLength(4)`** - o array tem aquele tamanho.
+
+Um tipo de teste à parte é o **teste de snapshot**: o `toMatchSnapshot()` tira uma "fotografia" da renderização do componente na **primeira execução** e guarda num arquivo na pasta `__snapshots__`. Nas execuções seguintes, ele compara a saída atual com a foto salva e falha se elas divergirem, um jeito de perceber que algo no HTML mudou sem querer.
+
+```javascript
+test('Deve renderizar uma lista de links com a classe link', () => {
+  render(<Menu />);
+  const links = screen.getAllByRole('link');
+  links.forEach((link) => expect(link).toHaveClass('link'));
+  expect(links).toMatchSnapshot();
+});
+```
+
+> **Cuidado com o snapshot sozinho.** Uma dúvida comum é: "por que fazer várias asserções se um snapshot resolveria?" Porque o snapshot é **frágil**: ele é facilmente atualizado (basta um comando quando o componente muda) e precisa de um **olhar humano** para conferir se a renderização está mesmo certa. Ele é um bom aliado, mas só ele torna o teste frágil, sempre combine snapshot com **asserções fortes** que de fato testam o comportamento do componente, como o `toHaveClass` acima.
+
+### Simulando o usuário com o userEvent
+
+Testar um componente interativo exige **simular ações** da pessoa usuária. O **`userEvent`** (de `@testing-library/user-event`, já instalado pelo Create React App) faz isso de forma mais fiel ao navegador do que o `fireEvent` embutido, disparando a sequência de eventos que uma interação real geraria. Alguns dos seus métodos:
+
+- **`click()`** - dispara um clique num elemento;
+- **`dblClick()`** - um duplo clique;
+- **`type()`** - escreve um texto dentro de um `<input>` ou `<textarea>`;
+- **`keyboard()`** - simula eventos de teclado;
+- **`selectOptions()`** - seleciona opções de um `<select>`.
+
+No `Formulario`, o `userEvent` preenche o campo, seleciona uma opção e clica no botão:
+
+```javascript
+test('que pode ser preenchido', () => {
+  render(<Formulario />);
+  const campoTexto = screen.getByPlaceholderText('Digite um valor');
+  userEvent.type(campoTexto, '50');
+  expect(campoTexto).toHaveValue(50);
+});
+
+test('Deve ser possível selecionar uma opção do elemento select', () => {
+  render(<Formulario />);
+  const select = screen.getByRole('combobox');
+  userEvent.selectOptions(select, ['Depósito']);
+  expect(screen.getByRole('option', { name: 'Depósito' }).selected).toBe(true);
+});
+```
+
+### Organizando testes e testando props
+
+Quando um componente tem vários cenários, o **`describe`** os agrupa sob uma descrição geral, deixando a saída dos testes organizada:
+
+```javascript
+describe('Deve renderizar um campo de input', () => {
+  test('no documento', () => { /* ... */ });
+  test('com type number', () => { /* ... */ });
+  test('que pode ser preenchido', () => { /* ... */ });
+});
+```
+
+Componentes costumam receber **props**, e o teste as passa como atributos no JSX. O teste do `Saldo` passa um saldo e confere que ele aparece formatado:
+
+```javascript
+test('Deve renderizar o saldo com o valor monetário', () => {
+  render(<Saldo saldo={1000} />);
+  const saldo = screen.getByTestId('saldo');
+  expect(saldo).toHaveTextContent('R$ 1000');
+});
+```
+
+Um cuidado importante em componentes de lista é garantir que eles exibem **dados dinâmicos**, vindos das props, e não um HTML **estático** escrito na mão. Para provar isso, o teste do `Transacoes` renderiza com uma transação, verifica o que aparece e depois usa o **`rerender`** (devolvido pelo `render`) para **redesenhar o mesmo componente com props novas**, conferindo que a tela acompanhou:
+
+```javascript
+const { rerender } = render(<Transacoes transacao={transacao} estilos={estilos} />);
+expect(screen.getByTestId('tipoTransacao')).toHaveTextContent('Depósito');
+expect(screen.getByTestId('valorTransacao')).toHaveTextContent('R$ 100');
+
+const novaTransacao = { transacao: 'Transferência', valor: 50 };
+rerender(<Transacoes transacao={novaTransacao} estilos={estilos} />);
+expect(screen.getByTestId('tipoTransacao')).toHaveTextContent('Transferência');
+expect(screen.getByTestId('valorTransacao')).toHaveTextContent('R$ 50');
+```
+
+Se o componente exibisse texto fixo, ele não mudaria após o `rerender` e o teste falharia, exatamente o que se quer detectar.
+
+### Mock de funções com jest.fn()
+
+Para testar um componente sem depender do que uma função **de verdade** faz, cria-se uma **função dublada** com o **`jest.fn()`**: uma função falsa que se pode passar como prop e que **registra como foi chamada** (quantas vezes, com quais argumentos). É o que testa a submissão do `Formulario`, sem precisar da lógica real de transação:
+
+```javascript
+test('Deve chamar um evento de onSubmit ao clicar em realizar transação', () => {
+  const realizarTransacao = jest.fn();
+  render(<Formulario realizarTransacao={realizarTransacao} />);
+  const botao = screen.getByRole('button');
+  userEvent.click(botao);
+  expect(realizarTransacao).toHaveBeenCalledTimes(1);
+});
+```
+
+Os matchers para funções dubladas verificam a **interação**: `toBeCalled()` / `toHaveBeenCalled()` (foi chamada?), `toHaveBeenCalledTimes(1)` (quantas vezes?) e `toHaveBeenCalledWith(arg)` (com quais argumentos?). O `jest.fn()` também dá para **implementar** um comportamento simulado, útil para testar a **regra de negócio** e até para **imaginar features ainda não construídas**:
+
+```javascript
+test('Deve retornar o valor do saldo atualizado com o rendimento', () => {
+  const calculaRendimento = jest.fn((saldo) => saldo + saldo * 0.005);
+  const novoSaldo = calculaRendimento(100);
+  expect(novoSaldo).toBe(100.5);
+  expect(calculaRendimento).toHaveBeenCalledWith(100);
+});
+```
+
+### TDD: desenvolvimento orientado a testes
+
+**TDD** (*Test Driven Development*, Desenvolvimento Orientado a Testes) é uma metodologia que **inverte a ordem** de sempre: primeiro o teste, depois o código. O ciclo tem três passos:
+
+1. **Escrever um teste que falha** - como a funcionalidade ainda não existe, o teste começa vermelho;
+2. **Implementar o código** que faça o teste passar, satisfazendo imediatamente a asserção, nada além disso;
+3. **Refatorar** com segurança - com o teste verde, dá para melhorar o código sabendo que, se algo quebrar, o teste acusa, sem precisar reescrevê-lo.
+
+Foi assim que nasceu a função `calculaNovoSaldo` (em `src/utils`): primeiro escrevemos os cenários (depósito aumenta o saldo, transferência diminui) e só depois a implementação que os satisfaz.
+
+```javascript
+export const calculaNovoSaldo = (valores, saldo) => {
+  if (valores.transacao === 'Depósito') {
+    return saldo + parseInt(valores.valor);
+  } else {
+    return saldo - parseInt(valores.valor);
+  }
+};
+```
+
+### Integração contínua: CI/CD e GitHub Actions
+
+Testes rendem mais quando rodam **sozinhos** a cada mudança. É o que fazem as práticas de **CI/CD**:
+
+- **CI** (*Continuous Integration*, Integração Contínua) - a cada mudança no código, ela é **integrada e testada** automaticamente, e esse fluxo é compartilhado com o time todo. Reduz conflitos e pega problemas cedo;
+- **CD** (*Continuous Delivery*, Entrega Contínua) - reúne a integração, os testes e a etapa de **colocar a aplicação em produção**, isto é, no ar.
+
+O **GitHub Actions** é uma plataforma de CI/CD que automatiza compilação, testes e comandos de *pipeline*. Ele executa **fluxos de trabalho** (*workflows*), processos disparados por um **evento no repositório** (um `push` ou um `pull request`), e fornece máquinas virtuais Linux, Windows e macOS para rodá-los.
+
+A mesma ideia protege a aplicação **em produção**. Na Vercel, dá para configurar o *Build Command* para **rodar os testes antes de publicar**, de modo que um código que não passa nos testes nem chega a ir para produção:
+
+```bash
+react-scripts test && react-scripts build
+```
+
+O `&&` garante que o `build` só acontece se o `test` passar. Fecha o ciclo do curso: escrever testes com boas práticas e uma linguagem semântica, e usar essa rede de segurança para **impedir que código não testado chegue ao ar**.
+
+Para fechar, um resumo dos arquivos de teste do projeto e do que cada um exercita:
+
+| Arquivo de teste | O que testa | O que exercita |
+|---|---|---|
+| `utils.test.js` | A função `calculaNovoSaldo` | TDD, `toBe`, `describe`, `jest.fn()` |
+| `Cabecalho.test.js` | O nome do usuário logado | `render`, `screen`, `getByText` |
+| `Menu.test.js` | Os links de navegação | `getAllByRole`, `queryByText`, `toHaveClass`, snapshot |
+| `Saldo.test.js` | O saldo formatado | props, `getByTestId`, `toHaveTextContent` |
+| `Extrato.test.js` | A lista de transações | `getByRole('listitem')` |
+| `Transacoes.test.js` | Dados dinâmicos da transação | props, `rerender`, `getByTestId` |
+| `Formulario.test.js` | O formulário de nova transação | `userEvent`, `getByRole`, `jest.fn()`, `onSubmit` |

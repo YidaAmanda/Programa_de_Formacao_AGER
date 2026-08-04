@@ -98,6 +98,22 @@
   - [Mock de funções com jest.fn()](#mock-de-funções-com-jestfn)
   - [TDD: desenvolvimento orientado a testes](#tdd-desenvolvimento-orientado-a-testes)
   - [Integração contínua: CI/CD e GitHub Actions](#integração-contínua-cicd-e-github-actions)
+- [Curso: SQL com MySQL: manipule e consulte dados](#curso-sql-com-mysql-manipule-e-consulte-dados)
+  - [SQL e o MySQL: história e a família de comandos](#sql-e-o-mysql-história-e-a-família-de-comandos)
+  - [Instalando e acessando: Workbench e linha de comando](#instalando-e-acessando-workbench-e-linha-de-comando)
+  - [Criando e apagando bancos de dados](#criando-e-apagando-bancos-de-dados)
+  - [Os tipos de dados de uma coluna](#os-tipos-de-dados-de-uma-coluna)
+  - [Criando e apagando tabelas (DDL)](#criando-e-apagando-tabelas-ddl)
+  - [Chaves primárias](#chaves-primárias)
+  - [Inserindo dados: o INSERT](#inserindo-dados-o-insert)
+  - [Alterando e apagando: UPDATE e DELETE](#alterando-e-apagando-update-e-delete)
+  - [Consultando dados: o SELECT](#consultando-dados-o-select)
+  - [Ordenando e limitando: ORDER BY e LIMIT](#ordenando-e-limitando-order-by-e-limit)
+  - [Filtrando com o WHERE](#filtrando-com-o-where)
+  - [Buscando texto: LIKE e expressões regulares](#buscando-texto-like-e-expressões-regulares)
+  - [Números de ponto flutuante e o BETWEEN](#números-de-ponto-flutuante-e-o-between)
+  - [Filtrando por datas](#filtrando-por-datas)
+  - [Filtros compostos: AND, OR e parênteses](#filtros-compostos-and-or-e-parênteses)
 
 ---
 
@@ -3143,3 +3159,358 @@ Para fechar, um resumo dos arquivos de teste do projeto e do que cada um exercit
 | `Extrato.test.js` | A lista de transações | `getByRole('listitem')` |
 | `Transacoes.test.js` | Dados dinâmicos da transação | props, `rerender`, `getByTestId` |
 | `Formulario.test.js` | O formulário de nova transação | `userEvent`, `getByRole`, `jest.fn()`, `onSubmit` |
+
+---
+
+## Curso: SQL com MySQL: manipule e consulte dados
+
+Depois de usar bancos de dados por baixo do Hibernate e do Spring Data JPA, este curso foi um mergulho no **SQL puro**: escrever à mão os comandos que até agora o framework gerava sozinho. O projeto foi a base **Sucos**, o banco de uma distribuidora de sucos com as tabelas `Cliente`, `Vendedor` e `Produto`. A partir dela, o trabalho foi **criar o banco e as tabelas**, **incluir, alterar e apagar** registros e, principalmente, **consultar** os dados de formas cada vez mais específicas: filtrando por texto, por número, por data e combinando várias condições. A ferramenta central foi o **MySQL Workbench**, e tudo o que foi feito por lá também dá para fazer por linha de comando.
+
+### SQL e o MySQL: história e a família de comandos
+
+**SQL** (*Structured Query Language*) é a linguagem padrão para trabalhar com **bancos de dados relacionais**, aqueles que organizam a informação em **tabelas** (linhas e colunas) com relações entre si. Ela não é uma linguagem de programação de propósito geral como Java ou JavaScript: é uma linguagem feita sob medida para **definir, manipular e consultar** dados. Apesar de existir um padrão da ANSI, cada banco (MySQL, PostgreSQL, Oracle, SQL Server) traz suas pequenas variações de dialeto.
+
+Os comandos SQL se dividem em **famílias**, cada uma com um papel:
+
+- **DDL** (*Data Definition Language*) - **define a estrutura** do banco: cria e altera bancos, tabelas e colunas (`CREATE`, `ALTER`, `DROP`);
+- **DML** (*Data Manipulation Language*) - **manipula os dados** dentro das tabelas (`INSERT`, `UPDATE`, `DELETE`) e, para muitos, também o `SELECT` que consulta;
+- **DCL** (*Data Control Language*) - **controla o acesso**, gerenciando permissões de quem pode fazer o quê (`GRANT`, `REVOKE`).
+
+O **MySQL** é um dos bancos de dados relacionais mais usados no mundo, conhecido por ser rápido e de código aberto. Ele nasceu na empresa sueca MySQL AB, foi comprado pela Sun Microsystems e, quando a **Oracle** adquiriu a Sun e passou a controlar o MySQL, parte da comunidade ficou preocupada com o futuro do projeto e criou uma bifurcação (*fork*) livre a partir do código: o **MariaDB**, mantido de forma independente e compatível com o MySQL.
+
+### Instalando e acessando: Workbench e linha de comando
+
+Para usar o MySQL, instalam-se duas peças: o **servidor MySQL** (o banco em si, que roda em segundo plano e guarda os dados) e o **MySQL Workbench**, uma interface gráfica para escrever comandos, visualizar tabelas e administrar o banco sem precisar decorar tudo. Durante a instalação define-se a senha do usuário **`root`**, o administrador do banco.
+
+Tudo o que o Workbench faz também pode ser feito pela **linha de comando**, entrando no cliente do MySQL e digitando os comandos direto no terminal:
+
+```text
+C:\Program Files\MySQL\MySQL Server 8.0\bin> mysql -h localhost -u root -p
+mysql> -- seus comandos SQL aqui, sempre terminados com ;
+mysql> EXIT
+```
+
+Os parâmetros são: **`-h`** o *host* (o endereço do servidor, aqui a própria máquina, `localhost`), **`-u`** o usuário (`root`) e **`-p`** para que ele **peça a senha**. Já dentro do prompt `mysql>`, cada comando é encerrado com **ponto e vírgula (`;`)**, e o `EXIT` encerra a sessão.
+
+No **Workbench**, o fluxo é visual: cria-se uma **conexão** com o servidor, e a partir dela dá para navegar pelos bancos (*schemas*) no painel lateral, abrir uma aba de SQL para escrever comandos e executá-los com o botão de **raio** (⚡) ou com `Ctrl+Enter`. As tabelas, colunas e dados aparecem em painéis, e boa parte das operações (criar banco, criar tabela, editar linhas) pode ser feita tanto **por script SQL** quanto por um **assistente** de janelas, que no fim gera o mesmo SQL.
+
+### Criando e apagando bancos de dados
+
+Um **banco de dados** (no MySQL, também chamado de ***schema***) é o contêiner que agrupa as tabelas de um sistema. Cria-se com `CREATE DATABASE` (ou o sinônimo `CREATE SCHEMA`) e apaga-se com `DROP DATABASE`:
+
+```sql
+CREATE SCHEMA IF NOT EXISTS Sucos DEFAULT CHARACTER SET utf8;
+DROP SCHEMA IF EXISTS Sucos;
+```
+
+Dois detalhes importantes aparecem aí:
+
+- **`IF NOT EXISTS` / `IF EXISTS`** - evitam erro caso o banco já exista (ao criar) ou não exista (ao apagar). São uma proteção comum em scripts que rodam mais de uma vez;
+- **`DEFAULT CHARACTER SET utf8`** - define a **codificação** de caracteres do banco, garantindo que acentos e caracteres especiais (comuns em português) sejam armazenados corretamente.
+
+Depois de criar o banco, é preciso dizer ao MySQL **em qual banco** os próximos comandos vão operar, com o **`USE`**:
+
+```sql
+USE Sucos;
+```
+
+Sem o `USE`, cada tabela teria de ser referenciada com o nome completo (`Sucos.Cliente`). O `USE` fixa o banco atual e deixa escrever só `Cliente`.
+
+> **`DROP` é definitivo.** O `DROP DATABASE` apaga o banco **inteiro** com todas as suas tabelas e dados, sem confirmação e sem lixeira. É um comando poderoso e irreversível, daí o cuidado ao rodá-lo.
+
+### Os tipos de dados de uma coluna
+
+Ao criar uma tabela, cada **coluna** precisa de um **tipo de dado**, que define o que ela pode guardar e quanto espaço ocupa. Escolher o tipo certo economiza espaço e evita erros. O MySQL organiza os tipos em **quatro famílias**: numéricos, de data e hora, de texto e espaciais.
+
+#### Numéricos
+
+Os tipos numéricos se dividem em três grupos, conforme guardem inteiros, decimais ou bits:
+
+| Grupo | Tipos | Guarda |
+|---|---|---|
+| Inteiros | `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT`, `BIGINT` | números inteiros, do menor ao maior alcance (ver os prefixos abaixo) |
+| Decimais aproximados | `FLOAT`, `DOUBLE` | casas decimais em **ponto flutuante** (valores aproximados) |
+| Decimais exatos | `DECIMAL` / `NUMERIC` | casas decimais **exatas**, ideais para dinheiro |
+| Lógico | `BIT` | bits (`0` ou `1`), usado em campos verdadeiro/falso |
+
+Três **atributos** ajustam o comportamento desses tipos: **`SIGNED`/`UNSIGNED`** (permite ou não valores negativos), **`ZEROFILL`** (preenche com zeros à esquerda) e **`AUTO_INCREMENT`** (o banco gera sozinho um número crescente a cada linha, típico de chaves primárias).
+
+**Os prefixos de tamanho: `TINY`, `SMALL`, `MEDIUM`, `BIG` (e o `INT` sem prefixo).** Os cinco tipos inteiros guardam todos a mesma coisa, números inteiros; o que muda entre eles é **quanto espaço reservam** e, por consequência, a **faixa de valores** que cabe. O prefixo é justamente esse "tamanho": `TINY` é o menor, `BIG` o maior, e o `INT` **sem prefixo** é o meio-termo padrão, o mais usado no dia a dia.
+
+| Tipo | Prefixo | Espaço | Faixa com sinal (`SIGNED`) |
+|---|---|---|---|
+| `TINYINT` | `TINY` | 1 byte | −128 a 127 |
+| `SMALLINT` | `SMALL` | 2 bytes | −32.768 a 32.767 |
+| `MEDIUMINT` | `MEDIUM` | 3 bytes | ≈ ±8,3 milhões |
+| `INT` | *(nenhum)* | 4 bytes | ≈ ±2,1 bilhões |
+| `BIGINT` | `BIG` | 8 bytes | ≈ ±9,2 quintilhões |
+
+A regra prática é escolher o **menor tipo que caiba com folga**: quanto menor, menos espaço a coluna ocupa. Um valor que estoure a faixa gera erro, então vale deixar uma margem. Na base Sucos, `idade` é `SMALLINT`, que dá conta de sobra de qualquer idade (um `TINYINT` já bastaria). O atributo `UNSIGNED` desloca a faixa toda para o lado positivo: um `TINYINT UNSIGNED`, por exemplo, vai de 0 a 255 em vez de −128 a 127.
+
+Esse mesmo sistema de prefixos reaparece nos tipos de **texto** e **binários** (vistos abaixo): `TINYTEXT`, `TEXT`, `MEDIUMTEXT` e `LONGTEXT`, e os equivalentes `...BLOB`, seguem a mesma lógica de tamanho, só trocando o maior de `BIG` por `LONG`.
+
+#### Data e hora
+
+| Tipo | Guarda | Formato |
+|---|---|---|
+| `DATE` | só a data: dia, mês e ano | `AAAA-MM-DD` (ex.: `1989-10-05`) |
+| `DATETIME` | data e hora juntas | `AAAA-MM-DD HH:MM:SS` |
+| `TIMESTAMP` | data e hora, mas atreladas ao fuso e atualizadas sozinhas a cada alteração da linha | `AAAA-MM-DD HH:MM:SS` |
+| `TIME` | só a hora (ou uma duração de tempo) | `HH:MM:SS` |
+| `YEAR` | só o ano | `AAAA` |
+
+`DATETIME` e `TIMESTAMP` guardam a mesma informação; a diferença é que o `TIMESTAMP` leva o fuso horário em conta e costuma servir para registrar **quando** uma linha foi criada ou alterada. Na base Sucos, as colunas de data (`data_nascimento`, `data_admissao`) são `DATE`, já que só interessa o dia.
+
+#### Texto (string)
+
+| Tipo | Guarda |
+|---|---|
+| `CHAR` | texto de **tamanho fixo** (bom para dados de largura constante, como `CHAR(11)` para CPF) |
+| `VARCHAR` | texto de **tamanho variável** até um limite (`VARCHAR(100)`) |
+| `BINARY`, `VARBINARY` | dados binários de tamanho fixo/variável |
+| `BLOB` (`TINYBLOB`…`LONGBLOB`) | grandes blocos binários (imagens, arquivos) |
+| `TEXT` (`TINYTEXT`…`LONGTEXT`) | grandes blocos de texto |
+| `ENUM` | um valor de uma **lista fixa** de opções |
+
+Dois atributos acompanham essa família: **`SET`** (guarda um conjunto de valores de uma lista) e **`COLLATE`** (define as regras de comparação e ordenação do texto, por exemplo diferenciar ou não maiúsculas de minúsculas e acentos).
+
+> **`CHAR` x `VARCHAR`.** O `CHAR(11)` sempre reserva 11 caracteres, sobre ou falte; o `VARCHAR(100)` guarda só o que for necessário, até 100. Por isso o `CHAR` combina com campos de largura sempre igual (CPF, siglas de estado) e o `VARCHAR` com campos de tamanho imprevisível (nomes, endereços).
+
+#### Espaciais
+
+Para dados geográficos e geométricos: `GEOMETRY`, `POINT`, `LINESTRING` e `POLYGON`, usados em aplicações de mapas e localização.
+
+### Criando e apagando tabelas (DDL)
+
+Com o banco escolhido pelo `USE`, cria-se uma **tabela** com o `CREATE TABLE`, listando entre parênteses cada coluna com seu tipo. Foi assim que nasceu a tabela `Cliente` da base Sucos:
+
+```sql
+CREATE TABLE Cliente(
+    cpf CHAR(11) PRIMARY KEY,
+    nome VARCHAR(100),
+    logradouro VARCHAR(150),
+    bairro VARCHAR(50),
+    cidade VARCHAR(50),
+    estado VARCHAR(50),
+    cep VARCHAR(8),
+    data_nascimento DATE,
+    idade SMALLINT,
+    sigla_sexo CHAR(1),
+    limite_credito FLOAT,
+    volume_compra FLOAT,
+    primeira_compra BIT(1)
+);
+```
+
+Cada linha descreve **uma coluna**: o nome, o tipo e, opcionalmente, restrições como o `PRIMARY KEY`. Para **apagar** uma tabela inteira (estrutura e dados), usa-se o `DROP TABLE`:
+
+```sql
+DROP TABLE Produto;
+```
+
+E para **alterar** uma tabela já existente sem recriá-la, o `ALTER TABLE`, que adiciona colunas, define chaves e muda a estrutura:
+
+```sql
+ALTER TABLE Produto ADD PRIMARY KEY (codigo);
+ALTER TABLE Cliente ADD COLUMN (data_nascimento DATE);
+```
+
+### Chaves primárias
+
+A **chave primária** (*primary key*) é a coluna (ou combinação de colunas) que **identifica de forma única** cada linha da tabela, não pode se repetir nem ficar vazia. Na tabela `Cliente`, a chave é o `cpf`; na `Produto`, o `codigo`; na `Vendedor`, a `matricula`. Define-se junto da coluna, na hora de criar a tabela, ou depois com `ALTER TABLE`:
+
+```sql
+cpf CHAR(11) PRIMARY KEY            -- na criação da tabela
+ALTER TABLE tbproduto ADD PRIMARY KEY (PRODUTO);   -- depois
+```
+
+A escolha da chave primária exige cuidado: ela deve ser um valor **realmente único e estável** para cada registro. Um CPF serve porque não se repete entre pessoas; já um nome, não, duas pessoas podem se chamar igual. Uma chave mal escolhida (que possa repetir ou mudar) compromete a integridade da tabela inteira, por isso é uma decisão que vale pensar com calma na modelagem. Quando não há um identificador natural bom, é comum criar uma coluna de `id` numérica com `AUTO_INCREMENT` só para esse papel.
+
+### Inserindo dados: o INSERT
+
+Com as tabelas criadas (mas vazias), o `INSERT INTO` **inclui linhas** nelas. Informa-se a tabela, a lista de colunas que serão preenchidas e, depois do `VALUES`, os valores na mesma ordem:
+
+```sql
+INSERT INTO Cliente(cpf, nome, cidade, estado, data_nascimento, idade, sigla_sexo,
+                    limite_credito, volume_compra, primeira_compra)
+VALUES ('00388934505', 'João da Silva', 'CARATINGA', 'AMAZONAS',
+        '1989-10-05', 30, 'M', 10000.00, 2000, 0);
+```
+
+Vale reparar em como cada tipo é escrito: **textos e datas entre aspas simples** (`'João da Silva'`, a data sempre no formato **`AAAA-MM-DD`**), **números sem aspas** (`30`, `10000.00`) e os **campos lógicos `BIT`** como `0` (falso) ou `1` (verdadeiro), também sem aspas — é o caso de `primeira_compra` e `ferias` na base Sucos. Uma mesma instrução `INSERT` pode inserir **vários registros de uma vez**, separando cada conjunto de valores por vírgula, jeito bem mais prático de popular a tabela:
+
+```sql
+INSERT INTO Produto(codigo, nome, embalagem, tamanho, sabor, preco_lista) VALUES
+  ('1040107', 'Light - 350 ml - Melância', 'Lata', '350 ml', 'Melância', 4.56),
+  ('1037797', 'Clean - 2 Litros - Laranja', 'PET', '2 Litros', 'Laranja', 16.01),
+  ('1000889', 'Sabor da Montanha - 700 ml - Uva', 'Garrafa', '700 ml', 'Uva', 6.31);
+```
+
+Se uma coluna não for citada na lista, ela fica com o valor padrão (em geral `NULL`). É por isso que a lista de colunas no começo é importante: ela diz exatamente **quais** campos aquele `VALUES` está preenchendo.
+
+### Alterando e apagando: UPDATE e DELETE
+
+Depois de inserir, dois comandos mudam os dados existentes. O **`UPDATE`** altera valores de linhas já gravadas: informa-se a tabela, o que muda (`SET`) e, no `WHERE`, **quais** linhas devem mudar:
+
+```sql
+UPDATE Produto SET embalagem = 'Lata', preco_lista = 2.46 WHERE codigo = '544931';
+UPDATE Vendedor SET nome = 'José Geraldo da Fonseca Junior' WHERE matricula = '00233';
+```
+
+O **`DELETE`** apaga linhas inteiras, também selecionadas pelo `WHERE`:
+
+```sql
+DELETE FROM Produto WHERE codigo = '1078680';
+DELETE FROM Vendedor WHERE matricula = '00233';
+```
+
+O ponto crítico dos dois é o **`WHERE`**. Ele é quem restringe a operação às linhas certas, em geral pela chave primária, que atinge exatamente um registro. **Esquecer o `WHERE` é o erro clássico e perigoso do SQL:** um `UPDATE Produto SET preco_lista = 0` sem `WHERE` zera o preço de **todos** os produtos, e um `DELETE FROM Cliente` sem `WHERE` apaga **a tabela inteira**, e não há "desfazer".
+
+> **Teste o `WHERE` com um `SELECT` primeiro.** Antes de um `UPDATE` ou `DELETE` importante, rode um `SELECT * FROM tabela WHERE ...` com a mesma condição: as linhas que aparecerem são exatamente as que serão alteradas ou apagadas. Uma conferência barata que evita um estrago irreversível.
+
+### Consultando dados: o SELECT
+
+O **`SELECT`** é o comando de **consulta**, o que mais se usa no dia a dia. Ele lê dados da tabela sem alterá-los. A forma mais simples traz **todas as colunas** (o `*`) de todas as linhas:
+
+```sql
+SELECT * FROM tbcliente;
+```
+
+Para trazer **só as colunas que interessam**, basta listá-las no lugar do `*`, o que deixa o resultado mais enxuto e a consulta mais rápida:
+
+```sql
+SELECT cpf, nome, data_nascimento FROM tbcliente;
+```
+
+E para **renomear** as colunas no resultado (sem mudar a tabela), usa-se o **`AS`**, criando um **apelido** (*alias*) mais legível para quem lê:
+
+```sql
+SELECT cpf AS cpf_cliente, nome AS nome_cliente FROM tbcliente;
+```
+
+O `SELECT` é a porta de entrada para todo o resto: a partir dele se **ordena**, se **limita** e, principalmente, se **filtra** o que aparece, o assunto das próximas seções.
+
+### Ordenando e limitando: ORDER BY e LIMIT
+
+Por padrão, o banco devolve as linhas na ordem em que achar melhor. Para **ordenar** o resultado, usa-se o **`ORDER BY`** seguido da coluna, com **`ASC`** (crescente, o padrão) ou **`DESC`** (decrescente):
+
+```sql
+SELECT * FROM tbproduto ORDER BY preco_lista DESC;
+```
+
+Já o **`LIMIT`** corta o resultado em um número máximo de linhas, útil para ver só os primeiros registros. Combinado com o `ORDER BY`, é o jeito clássico de responder perguntas do tipo "os 10 mais caros":
+
+```sql
+SELECT * FROM tbproduto ORDER BY preco_lista DESC LIMIT 10;
+```
+
+O banco primeiro **ordena** do mais caro ao mais barato e só depois **corta** nos 10 primeiros, nessa ordem.
+
+### Filtrando com o WHERE
+
+O **`WHERE`** é a cláusula que **filtra** as linhas: só aparecem no resultado as que satisfazem a condição. É o coração das consultas específicas. A condição usa **operadores de comparação**:
+
+| Operador | Significado |
+|---|---|
+| `=` | igual a |
+| `<>` (ou `!=`) | diferente de |
+| `>` / `<` | maior que / menor que |
+| `>=` / `<=` | maior ou igual / menor ou igual |
+
+```sql
+SELECT * FROM tbcliente WHERE cidade = 'Rio de Janeiro';   -- igualdade de texto
+SELECT * FROM tbcliente WHERE idade <> 22;                 -- diferente de
+SELECT * FROM tbcliente WHERE limite_credito >= 100000;    -- maior ou igual
+```
+
+Um detalhe interessante é que os operadores de **maior/menor também funcionam com texto**, seguindo a **ordem alfabética**. A consulta abaixo traz os clientes cujo nome vem **depois** de "Fernando Cavalcante" na ordem alfabética:
+
+```sql
+SELECT * FROM tbcliente WHERE nome > 'Fernando Cavalcante';
+```
+
+### Buscando texto: LIKE e expressões regulares
+
+Comparar texto com `=` exige o valor **exato**. Para buscar por **parte** de um texto, usa-se o **`LIKE`** com o curinga **`%`**, que representa "qualquer sequência de caracteres". A consulta abaixo acha todo produto que tenha "FESTIVAL" em qualquer posição do nome:
+
+```sql
+SELECT * FROM tbproduto WHERE nome LIKE '%FESTIVAL%';
+```
+
+O `%` pode ir no começo (`'%Limão'`, termina em "Limão"), no fim (`'Festival%'`, começa com "Festival") ou dos dois lados (`'%Limão%'`, contém "Limão"). Existe ainda o curinga `_`, que representa **um único** caractere qualquer.
+
+Para buscas mais poderosas, o MySQL também aceita **expressões regulares** com o **`REGEXP_LIKE`**, que casa um padrão dentro do texto, próximo do que as `RegExp` fazem em JavaScript:
+
+```sql
+SELECT * FROM tbproduto WHERE REGEXP_LIKE(nome, 'FESTIVAL');
+```
+
+### Números de ponto flutuante e o BETWEEN
+
+Um cuidado importante aparece ao filtrar colunas do tipo **`FLOAT`** ou **`DOUBLE`**. Como esses tipos guardam números de forma **aproximada** (o valor "16.008" pode estar armazenado como 16.00800001…), comparações de **igualdade exata** (`=`, `<>`, `<=`, `>=`) podem **falhar de forma silenciosa**: a consulta não retorna a linha que deveria, porque o número procurado não bate bit a bit com o guardado.
+
+A saída é filtrar por uma **faixa**, com o **`BETWEEN`**, que pega tudo entre dois valores (inclusive):
+
+```sql
+-- ponto flutuante não é confiável com = exato; use uma faixa:
+SELECT * FROM tbproduto WHERE preco_lista BETWEEN 16.007 AND 16.009;
+-- equivale a:
+SELECT * FROM tbproduto WHERE preco_lista >= 16.007 AND preco_lista <= 16.009;
+```
+
+O `BETWEEN` é açúcar sintático para a combinação de `>=` e `<=`. Para valores decimais que precisam de **exatidão** (dinheiro, por exemplo), a recomendação continua sendo usar o tipo `DECIMAL` desde a criação da tabela, em vez de `FLOAT`.
+
+> **Por que isso acontece.** Ponto flutuante representa números em base 2, e muitos decimais "redondos" em base 10 não têm representação exata em binário, o mesmo motivo pelo qual `0.1 + 0.2` não dá exatamente `0.3` em várias linguagens. Filtrar por faixa contorna o problema sem depender da representação exata.
+
+### Filtrando por datas
+
+Colunas `DATE` também entram no `WHERE`, e por serem guardadas no formato padrão `AAAA-MM-DD` podem ser **comparadas e ordenadas** como se fossem valores em ordem. Dá para filtrar por uma data limite:
+
+```sql
+SELECT * FROM tbcliente WHERE data_nascimento <= '1995-01-13';
+```
+
+E, para filtrar por **parte** da data (só o ano, só o mês), o MySQL oferece **funções de data** que extraem um pedaço do valor. As mais usadas são **`YEAR()`** e **`MONTH()`**:
+
+```sql
+SELECT * FROM tbcliente WHERE YEAR(data_nascimento) = 1995;   -- nascidos em 1995
+SELECT * FROM tbcliente WHERE MONTH(data_nascimento) = 10;    -- nascidos em outubro
+```
+
+A função recebe a coluna de data e devolve só a parte pedida (o ano, o mês), que então é comparada normalmente. Existem outras no mesmo estilo (`DAY()`, `DAYOFWEEK()` etc.).
+
+### Filtros compostos: AND, OR e parênteses
+
+Uma condição só nem sempre basta. Os operadores lógicos **`AND`** e **`OR`** combinam várias condições em um mesmo `WHERE`:
+
+- **`AND`** - **todas** as condições precisam ser verdadeiras;
+- **`OR`** - **pelo menos uma** precisa ser verdadeira.
+
+```sql
+SELECT * FROM tbcliente WHERE idade >= 18 AND idade <= 22;   -- entre 18 e 22 anos
+```
+
+Quando `AND` e `OR` aparecem juntos, entram os **parênteses** para deixar claro o que se agrupa, exatamente como na matemática. Sem eles, o banco segue uma ordem de precedência (o `AND` vem antes do `OR`) que pode não ser a intenção. A consulta abaixo busca clientes que sejam **homens entre 18 e 22 anos**, **ou** que morem no Rio de Janeiro **ou** no bairro Jardins:
+
+```sql
+SELECT * FROM tbcliente
+WHERE (idade >= 18 AND idade <= 22 AND sexo = 'M')
+   OR (cidade = 'Rio de Janeiro' OR bairro = 'Jardins');
+```
+
+Os parênteses separam os dois grandes grupos de condição: quem cair em **qualquer um** deles entra no resultado. Combinar `AND`, `OR`, comparações, `LIKE`, `BETWEEN` e funções de data dentro do `WHERE` é o que permite montar consultas tão específicas quanto a pergunta que se quer responder, a base de tudo o que vem no próximo curso, de consultas SQL avançadas.
+
+Para fechar, um resumo dos comandos vistos no curso, organizados pela família à qual pertencem:
+
+| Comando | Família | O que faz |
+|---|---|---|
+| `CREATE DATABASE` / `CREATE SCHEMA` | DDL | cria um banco de dados |
+| `DROP DATABASE` / `DROP TABLE` | DDL | apaga um banco ou uma tabela |
+| `USE` | DDL | escolhe o banco atual |
+| `CREATE TABLE` | DDL | cria uma tabela e suas colunas |
+| `ALTER TABLE` | DDL | altera a estrutura de uma tabela |
+| `INSERT INTO` | DML | inclui linhas na tabela |
+| `UPDATE` | DML | altera dados de linhas existentes |
+| `DELETE` | DML | apaga linhas da tabela |
+| `SELECT` | DML | consulta e retorna dados |
+| `WHERE`, `ORDER BY`, `LIMIT`, `LIKE`, `BETWEEN` | — | cláusulas que filtram, ordenam e limitam o `SELECT` |

@@ -38,7 +38,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 7 | JavaScript: programando na linguagem da web | Curso | 20h | Concluído |
 | 8 | React: desenvolvendo com JavaScript | Curso | 14h | Concluído |
 | 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | Concluído |
-| 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | A fazer |
+| 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | Concluído |
 | 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | A fazer |
 | 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | A fazer |
 | 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | A fazer |
@@ -133,6 +133,14 @@ O projeto foi o **Bytebank**, a interface de um banco digital (cabeçalho, menu,
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-react-js-crie-testes-com-jest-e-testing-library-e-garanta-o-funcionamento-do-front-end)
 
+### 10. Curso: SQL com MySQL: manipule e consulte dados
+
+Depois de usar bancos de dados por baixo do Hibernate e do Spring Data JPA, aqui o trabalho foi escrever o **SQL puro** que o framework antes gerava sozinho. Sobre a base **Sucos** (uma distribuidora de sucos, com as tabelas `Cliente`, `Vendedor` e `Produto`), o curso passou por **criar o banco e as tabelas**, **incluir, alterar e apagar** registros e, principalmente, **consultar** os dados de formas cada vez mais específicas: filtrando por texto, por número, por data e combinando várias condições. A ferramenta central foi o **MySQL Workbench**, e tudo o que se faz por lá também dá para fazer por linha de comando.
+
+**Principais tópicos:** famílias do SQL (DDL, DML, DCL) · MySQL, Oracle e MariaDB · Workbench e linha de comando · `CREATE`/`DROP DATABASE` e `USE` · tipos de dados (numéricos, data, string, `BIT`) · `CREATE`/`ALTER`/`DROP TABLE` · chaves primárias · `INSERT`, `UPDATE` e `DELETE` · o cuidado com o `WHERE` · `SELECT` e apelidos com `AS` · `ORDER BY` e `LIMIT` · comparações e `LIKE`/`REGEXP_LIKE` · ponto flutuante e `BETWEEN` · datas com `YEAR()`/`MONTH()` · filtros compostos com `AND`, `OR` e parênteses
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-sql-com-mysql-manipule-e-consulte-dados)
+
 ---
 
 ## Projetos práticos
@@ -187,6 +195,16 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 | [`screenmatch`](./Java%20-%20Spring%20Boot/screenmatch) | Screen Match completo: a API (`api/`) serve o catálogo com top 5, lançamentos, filtro por categoria e detalhes de temporadas, e o front-end (`web/`) consome essas rotas | Spring Web, `@RestController`, `@PathVariable`, `@Service`, DTOs, CORS, DevTools, `fetch` |
 | [`screenmatch-frases`](./Java%20-%20Spring%20Boot/screenmatch-frases) | Frases clássicas de filmes e séries: a API sorteia uma frase no banco e o front-end a exibe com o pôster (desafio) | Spring Web, Spring Data JPA, `@Query` com `random()`, DTO, CORS |
 | [`testes-automatizados`](./Java%20-%20Spring%20Boot/testes-automatizados) | API **Adopet** de adoção de pets, usada como base para escrever testes automatizados de cada camada: cálculo de probabilidade de adoção, validações, serviço e controllers | JUnit 5, Mockito, MockMvc, `@SpringBootTest`, Spring Web, Spring Data JPA, MySQL, Flyway |
+
+### `MySQL/` (scripts SQL)
+
+Os scripts SQL escritos no curso sobre a base **Sucos**, uma distribuidora de sucos.
+
+| Script | Descrição | O que usei |
+|---------|-----------|------------|
+| [`suco.sql`](./MySQL/suco.sql) | Cria o banco `Sucos` e as tabelas `Cliente`, `Vendedor` e `Produto`, popula os registros e faz alterações e exclusões | `CREATE SCHEMA`/`TABLE`, tipos de dados, `PRIMARY KEY`, `INSERT`, `UPDATE`, `DELETE` |
+| [`base-para-consultas.sql`](./MySQL/base-para-consultas.sql) | Monta e popula as tabelas `tbcliente` e `tbproduto` usadas como base das consultas | `CREATE TABLE`, `ALTER TABLE`, `INSERT` em massa |
+| [`consultas.sql`](./MySQL/consultas.sql) | Coletânea de consultas praticadas na base, do `SELECT` simples aos filtros compostos | `SELECT`, `AS`, `ORDER BY`, `LIMIT`, `WHERE`, `LIKE`, `REGEXP_LIKE`, `BETWEEN`, `YEAR`/`MONTH`, `AND`/`OR` |
 
 ---
 
@@ -317,3 +335,16 @@ O projeto [`testes-automatizados`](./Java%20-%20Spring%20Boot/testes-automatizad
 3. Para rodar um único cenário, use o ▶ ao lado do método de teste.
 
 Os testes de unidade (calculadora de probabilidade, validações e serviços) rodam isolados com **mocks**, sem tocar em banco nem em servidor de e-mail. Já os testes de controller usam `@SpringBootTest`, que carrega o contexto inteiro da aplicação: para eles subirem, é preciso um **MySQL** rodando em `localhost` com usuário e senha `root` (o `application.properties` já cria o banco `adopet` na primeira execução, via `createDatabaseIfNotExist=true`).
+
+## Como executar os scripts MySQL
+
+Os scripts da pasta [`MySQL/`](./MySQL) são o que foi praticado no curso de SQL sobre a base **Sucos**.
+
+1. Tenha um **MySQL** rodando (o servidor instalado junto do **MySQL Workbench**).
+2. Abra o **Workbench** e crie uma conexão com o servidor (usuário `root` e a senha definida na instalação).
+3. Abra o script no Workbench (*File → Open SQL Script*) e rode com o botão de raio (⚡) ou `Ctrl+Enter`. Uma ordem que faz sentido:
+   - [`suco.sql`](./MySQL/suco.sql) cria o banco `Sucos` e as tabelas, popula e faz as alterações;
+   - [`base-para-consultas.sql`](./MySQL/base-para-consultas.sql) monta as tabelas `tbcliente` e `tbproduto` usadas nas consultas;
+   - [`consultas.sql`](./MySQL/consultas.sql) traz as consultas `SELECT` (as linhas estão comentadas com `--`, execute uma de cada vez).
+
+O mesmo pode ser feito por **linha de comando**, entrando no cliente com `mysql -h localhost -u root -p` e colando os comandos direto no prompt `mysql>`.

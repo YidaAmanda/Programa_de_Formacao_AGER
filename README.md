@@ -39,7 +39,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 8 | React: desenvolvendo com JavaScript | Curso | 14h | Concluído |
 | 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | Concluído |
 | 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | Concluído |
-| 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | A fazer |
+| 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | Concluído |
 | 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | A fazer |
 | 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | A fazer |
 | 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | A fazer |
@@ -135,11 +135,19 @@ O projeto foi o **Bytebank**, a interface de um banco digital (cabeçalho, menu,
 
 ### 10. Curso: SQL com MySQL: manipule e consulte dados
 
-Depois de usar bancos de dados por baixo do Hibernate e do Spring Data JPA, aqui o trabalho foi escrever o **SQL puro** que o framework antes gerava sozinho. Sobre a base **Sucos** (uma distribuidora de sucos, com as tabelas `Cliente`, `Vendedor` e `Produto`), o curso passou por **criar o banco e as tabelas**, **incluir, alterar e apagar** registros e, principalmente, **consultar** os dados de formas cada vez mais específicas: filtrando por texto, por número, por data e combinando várias condições. A ferramenta central foi o **MySQL Workbench**, e tudo o que se faz por lá também dá para fazer por linha de comando.
+Depois de usar bancos de dados por baixo do Hibernate e do Spring Data JPA, aqui o trabalho foi escrever o **SQL puro** que o framework antes gerava sozinho. Sobre a base **Sucos** (uma distribuidora de sucos, com as tabelas `Cliente`, `Vendedor` e `Produto`), o curso passou por **criar o banco e as tabelas**, **incluir, alterar e apagar** registros e dar os **primeiros passos na consulta** com o `SELECT`. A ferramenta central foi o **MySQL Workbench**, e tudo o que se faz por lá também dá para fazer por linha de comando. As consultas mais elaboradas ficaram para o curso seguinte.
 
-**Principais tópicos:** famílias do SQL (DDL, DML, DCL) · MySQL, Oracle e MariaDB · Workbench e linha de comando · `CREATE`/`DROP DATABASE` e `USE` · tipos de dados (numéricos, data, string, `BIT`) · `CREATE`/`ALTER`/`DROP TABLE` · chaves primárias · `INSERT`, `UPDATE` e `DELETE` · o cuidado com o `WHERE` · `SELECT` e apelidos com `AS` · `ORDER BY` e `LIMIT` · comparações e `LIKE`/`REGEXP_LIKE` · ponto flutuante e `BETWEEN` · datas com `YEAR()`/`MONTH()` · filtros compostos com `AND`, `OR` e parênteses
+**Principais tópicos:** famílias do SQL (DDL, DML, DCL) · MySQL, Oracle e MariaDB · Workbench e linha de comando · `CREATE`/`DROP DATABASE` e `USE` · tipos de dados (numéricos, data, string, `BIT`) · `CREATE`/`ALTER`/`DROP TABLE` · chaves primárias · `INSERT`, `UPDATE` e `DELETE` · o cuidado com o `WHERE` · `SELECT` e apelidos com `AS`
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-sql-com-mysql-manipule-e-consulte-dados)
+
+### 11. Curso: Consultas SQL: avançando no SQL com MySQL
+
+Sequência direta do curso anterior, agora focado só em **consultar**. Sobre a base **`sucos_vendas`**, uma versão mais completa da distribuidora, com **notas fiscais** e **itens de venda** além de clientes, produtos e vendedores; o trabalho foi **filtrar** com precisão (operadores, `LIKE`, `IN`, `BETWEEN`, datas), **agrupar e resumir** números com `GROUP BY` e funções de agregação, **cruzar** tabelas com `JOIN`, `UNION` e subconsultas, salvar consultas em **views** e aplicar funções de texto, data e cálculo. Fechou montando dois **relatórios** de negócio de verdade: vendas válidas (comparadas ao limite de compra) e a participação de cada sabor nas vendas.
+
+**Principais tópicos:** operadores de comparação e filtros compostos (`AND`/`OR`) · `LIKE` e `REGEXP_LIKE` · `IN`/`NOT IN`/`BETWEEN` · filtros por data (`YEAR`/`MONTH`) · `DISTINCT` · `ORDER BY` e `LIMIT` (com offset) · `GROUP BY` com `SUM`/`AVG`/`MAX`/`MIN`/`COUNT` · `HAVING` · `CASE` · `INNER`/`LEFT`/`RIGHT JOIN` · `UNION`/`UNION ALL` · subconsultas (*subqueries*) · views (`CREATE VIEW`) · funções de texto, matemáticas, data (`DATE_FORMAT`, `DATEDIFF`) e conversão · relatórios com `JOIN` + `GROUP BY` + `CASE`
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-consultas-sql-avançando-no-sql-com-mysql)
 
 ---
 
@@ -198,13 +206,22 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 
 ### `MySQL/` (scripts SQL)
 
-Os scripts SQL escritos no curso sobre a base **Sucos**, uma distribuidora de sucos.
+Os scripts SQL escritos nos dois cursos de SQL, sobre bases de uma distribuidora de sucos: o **introdutório** monta a base `Sucos` do zero; o de **consultas avançadas** usa a base `sucos_vendas`, mais completa (com notas fiscais e itens de venda).
+
+**Curso introdutório — base `Sucos`:**
 
 | Script | Descrição | O que usei |
 |---------|-----------|------------|
 | [`suco.sql`](./MySQL/suco.sql) | Cria o banco `Sucos` e as tabelas `Cliente`, `Vendedor` e `Produto`, popula os registros e faz alterações e exclusões | `CREATE SCHEMA`/`TABLE`, tipos de dados, `PRIMARY KEY`, `INSERT`, `UPDATE`, `DELETE` |
-| [`base-para-consultas.sql`](./MySQL/base-para-consultas.sql) | Monta e popula as tabelas `tbcliente` e `tbproduto` usadas como base das consultas | `CREATE TABLE`, `ALTER TABLE`, `INSERT` em massa |
-| [`consultas.sql`](./MySQL/consultas.sql) | Coletânea de consultas praticadas na base, do `SELECT` simples aos filtros compostos | `SELECT`, `AS`, `ORDER BY`, `LIMIT`, `WHERE`, `LIKE`, `REGEXP_LIKE`, `BETWEEN`, `YEAR`/`MONTH`, `AND`/`OR` |
+| [`base-para-consultas.sql`](./MySQL/base-para-consultas.sql) | Monta e popula as tabelas `tbcliente` e `tbproduto` usadas nas primeiras consultas | `CREATE TABLE`, `ALTER TABLE`, `INSERT` em massa |
+| [`consultas.sql`](./MySQL/consultas.sql) | Coletânea de consultas praticadas na base, do `SELECT` simples aos primeiros filtros | `SELECT`, `AS`, `WHERE`, `ORDER BY`, `LIMIT`, `LIKE`, `BETWEEN` |
+
+**Curso de consultas avançadas — base `sucos_vendas`:**
+
+| Script | Descrição | O que usei |
+|---------|-----------|------------|
+| [`base-para-consultas-sucos_vendas/`](./MySQL/base-para-consultas-sucos_vendas) | Criação do esquema `sucos_vendas` e carga em massa das cinco tabelas (clientes, produtos, vendedores, notas fiscais e itens) | `CREATE TABLE` com `FOREIGN KEY`, `INSERT` em massa |
+| [`consultas-sucos_vendas.sql`](./MySQL/consultas-sucos_vendas.sql) | Consultas do curso avançado: filtros, agrupamentos, junções, subconsultas, views, funções e os dois relatórios finais | `GROUP BY`, `HAVING`, `CASE`, `JOIN`s, `UNION`, subqueries, `VIEW`, funções, `DATE_FORMAT` |
 
 ---
 
@@ -338,13 +355,19 @@ Os testes de unidade (calculadora de probabilidade, validações e serviços) ro
 
 ## Como executar os scripts MySQL
 
-Os scripts da pasta [`MySQL/`](./MySQL) são o que foi praticado no curso de SQL sobre a base **Sucos**.
+Os scripts da pasta [`MySQL/`](./MySQL) são o que foi praticado nos dois cursos de SQL — o introdutório sobre a base **Sucos** e o de consultas avançadas sobre a base **`sucos_vendas`**.
 
 1. Tenha um **MySQL** rodando (o servidor instalado junto do **MySQL Workbench**).
 2. Abra o **Workbench** e crie uma conexão com o servidor (usuário `root` e a senha definida na instalação).
-3. Abra o script no Workbench (*File → Open SQL Script*) e rode com o botão de raio (⚡) ou `Ctrl+Enter`. Uma ordem que faz sentido:
+3. Abra o script no Workbench (*File → Open SQL Script*) e rode com o botão de raio (⚡) ou `Ctrl+Enter`.
+
+Curso introdutório (base `Sucos`):
    - [`suco.sql`](./MySQL/suco.sql) cria o banco `Sucos` e as tabelas, popula e faz as alterações;
    - [`base-para-consultas.sql`](./MySQL/base-para-consultas.sql) monta as tabelas `tbcliente` e `tbproduto` usadas nas consultas;
    - [`consultas.sql`](./MySQL/consultas.sql) traz as consultas `SELECT` (as linhas estão comentadas com `--`, execute uma de cada vez).
+
+Curso de consultas avançadas (base `sucos_vendas`):
+   - na pasta [`base-para-consultas-sucos_vendas/`](./MySQL/base-para-consultas-sucos_vendas), rode primeiro o `Criacao_Esquema.sql` e depois os `Carga_*.sql` para criar e popular as cinco tabelas;
+   - [`consultas-sucos_vendas.sql`](./MySQL/consultas-sucos_vendas.sql) traz as consultas do curso (execute uma de cada vez).
 
 O mesmo pode ser feito por **linha de comando**, entrando no cliente com `mysql -h localhost -u root -p` e colando os comandos direto no prompt `mysql>`.

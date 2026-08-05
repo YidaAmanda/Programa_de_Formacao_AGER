@@ -108,12 +108,24 @@
   - [Inserindo dados: o INSERT](#inserindo-dados-o-insert)
   - [Alterando e apagando: UPDATE e DELETE](#alterando-e-apagando-update-e-delete)
   - [Consultando dados: o SELECT](#consultando-dados-o-select)
-  - [Ordenando e limitando: ORDER BY e LIMIT](#ordenando-e-limitando-order-by-e-limit)
-  - [Filtrando com o WHERE](#filtrando-com-o-where)
-  - [Buscando texto: LIKE e expressões regulares](#buscando-texto-like-e-expressões-regulares)
-  - [Números de ponto flutuante e o BETWEEN](#números-de-ponto-flutuante-e-o-between)
-  - [Filtrando por datas](#filtrando-por-datas)
+- [Curso: Consultas SQL: avançando no SQL com MySQL](#curso-consultas-sql-avançando-no-sql-com-mysql)
+  - [Conhecendo a base antes de consultar](#conhecendo-a-base-antes-de-consultar)
+  - [Filtrando com o WHERE e os operadores de comparação](#filtrando-com-o-where-e-os-operadores-de-comparação)
   - [Filtros compostos: AND, OR e parênteses](#filtros-compostos-and-or-e-parênteses)
+  - [Buscando texto: LIKE e expressões regulares](#buscando-texto-like-e-expressões-regulares)
+  - [Listas e faixas: IN, NOT IN e BETWEEN](#listas-e-faixas-in-not-in-e-between)
+  - [Filtrando por datas](#filtrando-por-datas)
+  - [Linhas distintas: o DISTINCT](#linhas-distintas-o-distinct)
+  - [Ordenando e limitando: ORDER BY e LIMIT](#ordenando-e-limitando-order-by-e-limit)
+  - [Agrupando dados: GROUP BY e funções de agregação](#agrupando-dados-group-by-e-funções-de-agregação)
+  - [Filtrando grupos: o HAVING](#filtrando-grupos-o-having)
+  - [Classificando com o CASE](#classificando-com-o-case)
+  - [Juntando tabelas: os JOINs](#juntando-tabelas-os-joins)
+  - [Combinando seleções: UNION e UNION ALL](#combinando-seleções-union-e-union-all)
+  - [Subconsultas (subqueries)](#subconsultas-subqueries)
+  - [Visões (Views)](#visões-views)
+  - [Funções: texto, números, datas e conversão](#funções-texto-números-datas-e-conversão)
+  - [Colocando em prática: dois relatórios](#colocando-em-prática-dois-relatórios)
 
 ---
 
@@ -3164,7 +3176,7 @@ Para fechar, um resumo dos arquivos de teste do projeto e do que cada um exercit
 
 ## Curso: SQL com MySQL: manipule e consulte dados
 
-Depois de usar bancos de dados por baixo do Hibernate e do Spring Data JPA, este curso foi um mergulho no **SQL puro**: escrever à mão os comandos que até agora o framework gerava sozinho. O projeto foi a base **Sucos**, o banco de uma distribuidora de sucos com as tabelas `Cliente`, `Vendedor` e `Produto`. A partir dela, o trabalho foi **criar o banco e as tabelas**, **incluir, alterar e apagar** registros e, principalmente, **consultar** os dados de formas cada vez mais específicas: filtrando por texto, por número, por data e combinando várias condições. A ferramenta central foi o **MySQL Workbench**, e tudo o que foi feito por lá também dá para fazer por linha de comando.
+Depois de usar bancos de dados por baixo do Hibernate e do Spring Data JPA, este curso foi um mergulho no **SQL puro**: escrever à mão os comandos que até agora o framework gerava sozinho. O projeto foi a base **Sucos**, o banco de uma distribuidora de sucos com as tabelas `Cliente`, `Vendedor` e `Produto`. A partir dela, o trabalho foi **criar o banco e as tabelas**, **incluir, alterar e apagar** registros e dar os **primeiros passos na consulta** com o `SELECT`. A ferramenta central foi o **MySQL Workbench**, e tudo o que foi feito por lá também dá para fazer por linha de comando. As consultas mais elaboradas (filtrar, ordenar, agrupar e cruzar tabelas) ficaram para o curso seguinte, [Consultas SQL: avançando no SQL com MySQL](#curso-consultas-sql-avançando-no-sql-com-mysql).
 
 ### SQL e o MySQL: história e a família de comandos
 
@@ -3388,117 +3400,7 @@ E para **renomear** as colunas no resultado (sem mudar a tabela), usa-se o **`AS
 SELECT cpf AS cpf_cliente, nome AS nome_cliente FROM tbcliente;
 ```
 
-O `SELECT` é a porta de entrada para todo o resto: a partir dele se **ordena**, se **limita** e, principalmente, se **filtra** o que aparece, o assunto das próximas seções.
-
-### Ordenando e limitando: ORDER BY e LIMIT
-
-Por padrão, o banco devolve as linhas na ordem em que achar melhor. Para **ordenar** o resultado, usa-se o **`ORDER BY`** seguido da coluna, com **`ASC`** (crescente, o padrão) ou **`DESC`** (decrescente):
-
-```sql
-SELECT * FROM tbproduto ORDER BY preco_lista DESC;
-```
-
-Já o **`LIMIT`** corta o resultado em um número máximo de linhas, útil para ver só os primeiros registros. Combinado com o `ORDER BY`, é o jeito clássico de responder perguntas do tipo "os 10 mais caros":
-
-```sql
-SELECT * FROM tbproduto ORDER BY preco_lista DESC LIMIT 10;
-```
-
-O banco primeiro **ordena** do mais caro ao mais barato e só depois **corta** nos 10 primeiros, nessa ordem.
-
-### Filtrando com o WHERE
-
-O **`WHERE`** é a cláusula que **filtra** as linhas: só aparecem no resultado as que satisfazem a condição. É o coração das consultas específicas. A condição usa **operadores de comparação**:
-
-| Operador | Significado |
-|---|---|
-| `=` | igual a |
-| `<>` (ou `!=`) | diferente de |
-| `>` / `<` | maior que / menor que |
-| `>=` / `<=` | maior ou igual / menor ou igual |
-
-```sql
-SELECT * FROM tbcliente WHERE cidade = 'Rio de Janeiro';   -- igualdade de texto
-SELECT * FROM tbcliente WHERE idade <> 22;                 -- diferente de
-SELECT * FROM tbcliente WHERE limite_credito >= 100000;    -- maior ou igual
-```
-
-Um detalhe interessante é que os operadores de **maior/menor também funcionam com texto**, seguindo a **ordem alfabética**. A consulta abaixo traz os clientes cujo nome vem **depois** de "Fernando Cavalcante" na ordem alfabética:
-
-```sql
-SELECT * FROM tbcliente WHERE nome > 'Fernando Cavalcante';
-```
-
-### Buscando texto: LIKE e expressões regulares
-
-Comparar texto com `=` exige o valor **exato**. Para buscar por **parte** de um texto, usa-se o **`LIKE`** com o curinga **`%`**, que representa "qualquer sequência de caracteres". A consulta abaixo acha todo produto que tenha "FESTIVAL" em qualquer posição do nome:
-
-```sql
-SELECT * FROM tbproduto WHERE nome LIKE '%FESTIVAL%';
-```
-
-O `%` pode ir no começo (`'%Limão'`, termina em "Limão"), no fim (`'Festival%'`, começa com "Festival") ou dos dois lados (`'%Limão%'`, contém "Limão"). Existe ainda o curinga `_`, que representa **um único** caractere qualquer.
-
-Para buscas mais poderosas, o MySQL também aceita **expressões regulares** com o **`REGEXP_LIKE`**, que casa um padrão dentro do texto, próximo do que as `RegExp` fazem em JavaScript:
-
-```sql
-SELECT * FROM tbproduto WHERE REGEXP_LIKE(nome, 'FESTIVAL');
-```
-
-### Números de ponto flutuante e o BETWEEN
-
-Um cuidado importante aparece ao filtrar colunas do tipo **`FLOAT`** ou **`DOUBLE`**. Como esses tipos guardam números de forma **aproximada** (o valor "16.008" pode estar armazenado como 16.00800001…), comparações de **igualdade exata** (`=`, `<>`, `<=`, `>=`) podem **falhar de forma silenciosa**: a consulta não retorna a linha que deveria, porque o número procurado não bate bit a bit com o guardado.
-
-A saída é filtrar por uma **faixa**, com o **`BETWEEN`**, que pega tudo entre dois valores (inclusive):
-
-```sql
--- ponto flutuante não é confiável com = exato; use uma faixa:
-SELECT * FROM tbproduto WHERE preco_lista BETWEEN 16.007 AND 16.009;
--- equivale a:
-SELECT * FROM tbproduto WHERE preco_lista >= 16.007 AND preco_lista <= 16.009;
-```
-
-O `BETWEEN` é açúcar sintático para a combinação de `>=` e `<=`. Para valores decimais que precisam de **exatidão** (dinheiro, por exemplo), a recomendação continua sendo usar o tipo `DECIMAL` desde a criação da tabela, em vez de `FLOAT`.
-
-> **Por que isso acontece.** Ponto flutuante representa números em base 2, e muitos decimais "redondos" em base 10 não têm representação exata em binário, o mesmo motivo pelo qual `0.1 + 0.2` não dá exatamente `0.3` em várias linguagens. Filtrar por faixa contorna o problema sem depender da representação exata.
-
-### Filtrando por datas
-
-Colunas `DATE` também entram no `WHERE`, e por serem guardadas no formato padrão `AAAA-MM-DD` podem ser **comparadas e ordenadas** como se fossem valores em ordem. Dá para filtrar por uma data limite:
-
-```sql
-SELECT * FROM tbcliente WHERE data_nascimento <= '1995-01-13';
-```
-
-E, para filtrar por **parte** da data (só o ano, só o mês), o MySQL oferece **funções de data** que extraem um pedaço do valor. As mais usadas são **`YEAR()`** e **`MONTH()`**:
-
-```sql
-SELECT * FROM tbcliente WHERE YEAR(data_nascimento) = 1995;   -- nascidos em 1995
-SELECT * FROM tbcliente WHERE MONTH(data_nascimento) = 10;    -- nascidos em outubro
-```
-
-A função recebe a coluna de data e devolve só a parte pedida (o ano, o mês), que então é comparada normalmente. Existem outras no mesmo estilo (`DAY()`, `DAYOFWEEK()` etc.).
-
-### Filtros compostos: AND, OR e parênteses
-
-Uma condição só nem sempre basta. Os operadores lógicos **`AND`** e **`OR`** combinam várias condições em um mesmo `WHERE`:
-
-- **`AND`** - **todas** as condições precisam ser verdadeiras;
-- **`OR`** - **pelo menos uma** precisa ser verdadeira.
-
-```sql
-SELECT * FROM tbcliente WHERE idade >= 18 AND idade <= 22;   -- entre 18 e 22 anos
-```
-
-Quando `AND` e `OR` aparecem juntos, entram os **parênteses** para deixar claro o que se agrupa, exatamente como na matemática. Sem eles, o banco segue uma ordem de precedência (o `AND` vem antes do `OR`) que pode não ser a intenção. A consulta abaixo busca clientes que sejam **homens entre 18 e 22 anos**, **ou** que morem no Rio de Janeiro **ou** no bairro Jardins:
-
-```sql
-SELECT * FROM tbcliente
-WHERE (idade >= 18 AND idade <= 22 AND sexo = 'M')
-   OR (cidade = 'Rio de Janeiro' OR bairro = 'Jardins');
-```
-
-Os parênteses separam os dois grandes grupos de condição: quem cair em **qualquer um** deles entra no resultado. Combinar `AND`, `OR`, comparações, `LIKE`, `BETWEEN` e funções de data dentro do `WHERE` é o que permite montar consultas tão específicas quanto a pergunta que se quer responder, a base de tudo o que vem no próximo curso, de consultas SQL avançadas.
+O `SELECT` é a porta de entrada para todo o resto: a partir dele se **ordena**, se **limita** e, principalmente, se **filtra** o que aparece.
 
 Para fechar, um resumo dos comandos vistos no curso, organizados pela família à qual pertencem:
 
@@ -3513,4 +3415,431 @@ Para fechar, um resumo dos comandos vistos no curso, organizados pela família �
 | `UPDATE` | DML | altera dados de linhas existentes |
 | `DELETE` | DML | apaga linhas da tabela |
 | `SELECT` | DML | consulta e retorna dados |
-| `WHERE`, `ORDER BY`, `LIMIT`, `LIKE`, `BETWEEN` | — | cláusulas que filtram, ordenam e limitam o `SELECT` |
+
+Esse `SELECT` inicial (trazer todas as colunas ou só algumas, renomeá-las com `AS`) é só o começo. **Filtrar** com precisão, **ordenar**, **agrupar** e **cruzar** tabelas foi o tema do curso seguinte.
+
+## Curso: Consultas SQL: avançando no SQL com MySQL
+
+Se o curso anterior parou no `SELECT` simples, este foi inteiro dedicado a **consultar**. O ponto de partida foi outra montagem da mesma distribuidora de sucos, agora a base **`sucos_vendas`**, mais completa: além de clientes, produtos e vendedores, ela traz as **notas fiscais** e os **itens** de cada nota, ou seja, as vendas de verdade. Com esse volume de dados, o trabalho foi **filtrar** linhas com precisão, **agrupar** e **resumir** números, **cruzar** tabelas com `JOIN`, aplicar **funções** de texto, data e cálculo e, no fim, montar dois **relatórios** de negócio como uma empresa pediria. Vale notar que os nomes de coluna mudam um pouco em relação ao curso introdutório: aqui aparece o `_DE_` (`PRECO_DE_LISTA`, `LIMITE_DE_CREDITO`, `DATA_DE_NASCIMENTO`), detalhe que só se acerta conhecendo a base antes de escrever a consulta.
+
+### Conhecendo a base antes de consultar
+
+A primeira lição foi quase um conselho: **antes de consultar, conheça a base**. Escrever uma boa consulta depende de saber quais tabelas existem, quais colunas cada uma tem, quais são as **chaves** e como as tabelas se **relacionam**. A base `sucos_vendas` tem cinco tabelas:
+
+| Tabela | Guarda | Chave |
+|---|---|---|
+| `tabela_de_clientes` | dados dos clientes (CPF, nome, endereço, `LIMITE_DE_CREDITO`, `VOLUME_DE_COMPRA`…) | `CPF` |
+| `tabela_de_produtos` | catálogo de sucos (`CODIGO_DO_PRODUTO`, `NOME_DO_PRODUTO`, `SABOR`, `EMBALAGEM`, `PRECO_DE_LISTA`) | `CODIGO_DO_PRODUTO` |
+| `tabela_de_vendedores` | vendedores (matrícula, nome, comissão, `BAIRRO`, `DE_FERIAS`) | `MATRICULA` |
+| `notas_fiscais` | cada venda: quem comprou (`CPF`), quem vendeu (`MATRICULA`), a data e o `NUMERO` da nota | `NUMERO` |
+| `itens_notas_fiscais` | os produtos de cada nota: `NUMERO`, `CODIGO_DO_PRODUTO`, `QUANTIDADE` e `PRECO` | `NUMERO` + `CODIGO_DO_PRODUTO` |
+
+As duas últimas são o coração do modelo: uma **nota fiscal** liga um cliente a um vendedor numa data, e os **itens** dizem quais produtos e quantos entraram naquela nota. As ligações são feitas por **chaves estrangeiras**; `notas_fiscais.CPF` aponta para `tabela_de_clientes`, `notas_fiscais.MATRICULA` para `tabela_de_vendedores`, `itens_notas_fiscais.NUMERO` para `notas_fiscais` e `itens_notas_fiscais.CODIGO_DO_PRODUTO` para `tabela_de_produtos`. É esse desenho que torna possível, mais adiante, cruzar tudo com `JOIN` e perguntar coisas como "quanto cada cliente comprou por mês".
+
+> **Explorar antes de escrever.** No Workbench dá para inspecionar tabelas e colunas sem decorar nada, e a documentação oficial ([dev.mysql.com](https://dev.mysql.com/doc/)) junto do [w3schools](https://www.w3schools.com) foram a consulta constante durante o curso para lembrar a sintaxe de cada função.
+
+### Filtrando com o WHERE e os operadores de comparação
+
+O **`WHERE`** é a cláusula que **filtra** as linhas: só aparecem no resultado as que satisfazem a condição. É o coração de qualquer consulta específica. A condição usa **operadores de comparação**:
+
+| Operador | Significado |
+|---|---|
+| `=` | igual a |
+| `<>` (ou `!=`) | diferente de |
+| `>` / `<` | maior que / menor que |
+| `>=` / `<=` | maior ou igual / menor ou igual |
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE CIDADE = 'Rio de Janeiro';    -- igualdade de texto
+SELECT * FROM tabela_de_clientes WHERE IDADE <> 22;                  -- diferente de
+SELECT * FROM tabela_de_clientes WHERE LIMITE_DE_CREDITO >= 100000;  -- maior ou igual
+```
+
+Um detalhe interessante é que os operadores de **maior/menor também funcionam com texto**, seguindo a **ordem alfabética**. A consulta abaixo traz os clientes cujo nome vem **depois** de "Fernando Cavalcante" na ordem alfabética:
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE NOME > 'Fernando Cavalcante';
+```
+
+### Filtros compostos: AND, OR e parênteses
+
+Uma condição só nem sempre basta. Os operadores lógicos **`AND`** e **`OR`** combinam várias condições no mesmo `WHERE`:
+
+- **`AND`** - **todas** as condições precisam ser verdadeiras;
+- **`OR`** - **pelo menos uma** precisa ser verdadeira.
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE IDADE >= 18 AND IDADE <= 22;        -- entre 18 e 22 anos
+SELECT * FROM tabela_de_produtos WHERE SABOR = 'Manga' AND EMBALAGEM = 'PET';
+```
+
+Quando `AND` e `OR` aparecem juntos, entram os **parênteses** para deixar claro o que se agrupa, exatamente como na matemática. Sem eles, o banco segue uma ordem de precedência (o `AND` vem antes do `OR`) que pode não ser a intenção. A consulta abaixo busca clientes que sejam **homens entre 18 e 22 anos**, **ou** que morem no Rio de Janeiro **ou** no bairro Jardins:
+
+```sql
+SELECT * FROM tabela_de_clientes
+WHERE (IDADE >= 18 AND IDADE <= 22 AND SEXO = 'M')
+   OR (CIDADE = 'Rio de Janeiro' OR BAIRRO = 'Jardins');
+```
+
+Os parênteses separam os dois grandes grupos de condição: quem cair em **qualquer um** deles entra no resultado.
+
+### Buscando texto: LIKE e expressões regulares
+
+Comparar texto com `=` exige o valor **exato**. Para buscar por **parte** de um texto, usa-se o **`LIKE`** com o curinga **`%`**, que representa "qualquer sequência de caracteres". A consulta abaixo acha todo produto cujo sabor contenha "Maça" em qualquer posição:
+
+```sql
+SELECT * FROM tabela_de_produtos WHERE SABOR LIKE '%Maça%';
+```
+
+O `%` pode ir no começo (`'%Limão'`, termina em "Limão"), no fim (`'Festival%'`, começa com "Festival") ou dos dois lados (`'%Maça%'`, contém "Maça"). Existe ainda o curinga `_`, que representa **um único** caractere qualquer. O `LIKE` combina bem com o `AND` para estreitar a busca:
+
+```sql
+SELECT * FROM tabela_de_produtos WHERE SABOR LIKE '%Maça%' AND EMBALAGEM = 'PET';
+```
+
+Para buscas mais poderosas, o MySQL também aceita **expressões regulares** com o **`REGEXP_LIKE`**, que casa um padrão dentro do texto, próximo do que as `RegExp` fazem em JavaScript:
+
+```sql
+SELECT * FROM tabela_de_produtos WHERE REGEXP_LIKE(SABOR, 'Maça');
+```
+
+### Listas e faixas: IN, NOT IN e BETWEEN
+
+Quando o filtro é "a coluna é um destes vários valores", escrever um `OR` para cada um cansa. O **`IN`** recebe uma **lista** e casa quem estiver nela; o **`NOT IN`** casa quem **não** estiver:
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE BAIRRO IN ('Tijuca', 'Jardins', 'Copacabana', 'Santo Amaro');
+SELECT * FROM tabela_de_produtos WHERE SABOR NOT IN ('Laranja', 'Manga');
+```
+
+Já quando o filtro é uma **faixa** de valores, entra o **`BETWEEN`**, que pega tudo entre dois limites (inclusive). Ele é especialmente útil com colunas de **ponto flutuante** (`FLOAT`/`DOUBLE`), e aí mora um cuidado importante: como esses tipos guardam números de forma **aproximada** (o "19.51" pode estar armazenado como 19.5100001…), comparações de **igualdade exata** (`=`, `<>`) podem **falhar silenciosamente**, a consulta não retorna a linha que deveria porque o número procurado não bate bit a bit com o guardado. Filtrar por uma faixa curta contorna o problema:
+
+```sql
+-- ponto flutuante não é confiável com = exato; use uma faixa:
+SELECT * FROM tabela_de_produtos WHERE PRECO_DE_LISTA BETWEEN 19.50 AND 19.52;
+-- equivale a:
+SELECT * FROM tabela_de_produtos WHERE PRECO_DE_LISTA >= 19.50 AND PRECO_DE_LISTA <= 19.52;
+```
+
+O `BETWEEN` é apenas uma forma abreviada de escrever a combinação de `>=` e `<=`. Para valores decimais que precisam de **exatidão** (dinheiro, por exemplo), a recomendação continua sendo usar o tipo `DECIMAL` desde a criação da tabela, em vez de `FLOAT`.
+
+> **Por que isso acontece.** Ponto flutuante representa números em base 2, e muitos decimais "redondos" em base 10 não têm representação exata em binário, o mesmo motivo pelo qual `0.1 + 0.2` não dá exatamente `0.3` em várias linguagens. Filtrar por faixa contorna o problema sem depender da representação exata.
+
+O `IN` ainda tem um segundo uso poderoso: no lugar da lista fixa, colocar **outra consulta** que devolve os valores; assunto das [subconsultas](#subconsultas-subqueries).
+
+### Filtrando por datas
+
+Colunas `DATE` também entram no `WHERE`, e por serem guardadas no formato padrão `AAAA-MM-DD` podem ser **comparadas e ordenadas** como se fossem valores em ordem. Dá para filtrar por uma data limite:
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE DATA_DE_NASCIMENTO <= '1995-01-13';
+```
+
+E, para filtrar por **parte** da data (só o ano, só o mês), o MySQL oferece **funções de data** que extraem um pedaço do valor. Como nos seguintes casos:
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE YEAR(DATA_DE_NASCIMENTO) = 1995;   -- nascidos em 1995
+SELECT * FROM tabela_de_clientes WHERE MONTH(DATA_DE_NASCIMENTO) = 10;    -- nascidos em outubro
+```
+
+A função recebe a coluna de data e devolve só a parte pedida, que então é comparada normalmente. Há muitas outras funções de data (de diferença entre datas a formatação) reunidas mais adiante na seção de [funções](#funções-texto-números-datas-e-conversão).
+
+### Linhas distintas: o DISTINCT
+
+Às vezes a mesma combinação de valores se repete em muitas linhas e só interessa saber **quais combinações existem**, sem repetição. O **`DISTINCT`**, logo após o `SELECT`, elimina as linhas duplicadas do resultado:
+
+```sql
+SELECT DISTINCT EMBALAGEM, TAMANHO FROM tabela_de_produtos;
+```
+
+O `DISTINCT` considera a **linha inteira** selecionada: duas linhas só são "iguais" se **todas** as colunas listadas baterem. Acima, cada par `EMBALAGEM` + `TAMANHO` aparece uma única vez, mesmo que dezenas de produtos compartilhem a mesma combinação.
+
+### Ordenando e limitando: ORDER BY e LIMIT
+
+Por padrão, o banco devolve as linhas na ordem em que achar melhor. Para **ordenar** o resultado, usa-se o **`ORDER BY`** seguido da coluna, com **`ASC`** (crescente, o padrão) ou **`DESC`** (decrescente):
+
+```sql
+SELECT * FROM tabela_de_produtos ORDER BY NOME_DO_PRODUTO DESC;
+```
+
+Pode-se ordenar por **mais de uma coluna**: o banco ordena pela primeira e, nos empates, desempata pela segunda, e assim por diante. Cada coluna tem seu próprio `ASC`/`DESC`:
+
+```sql
+SELECT * FROM tabela_de_produtos ORDER BY EMBALAGEM DESC, NOME_DO_PRODUTO ASC;
+```
+
+Já o **`LIMIT`** corta o resultado num número máximo de linhas. Combinado com o `ORDER BY`, é o jeito clássico de responder perguntas do tipo "os 5 mais baratos":
+
+```sql
+SELECT * FROM tabela_de_produtos ORDER BY PRECO_DE_LISTA LIMIT 5;
+```
+
+O `LIMIT` aceita ainda **dois números**, `LIMIT início, quantidade`: o primeiro diz **quantas linhas pular** e o segundo **quantas trazer**, útil para paginar resultados. A consulta abaixo pula as 2 primeiras linhas e traz as 3 seguintes:
+
+```sql
+SELECT * FROM tabela_de_produtos LIMIT 2, 3;   -- pula 2, traz 3
+```
+
+### Agrupando dados: GROUP BY e funções de agregação
+
+Até aqui as consultas devolviam linha a linha. O **`GROUP BY`** muda o jogo: ele **agrupa** as linhas que compartilham um mesmo valor e permite aplicar **funções de agregação** sobre cada grupo, resumindo muitas linhas em uma. As mais usadas são:
+
+| Função | Resume o grupo em |
+|---|---|
+| `SUM(coluna)` | a **soma** dos valores |
+| `AVG(coluna)` | a **média** |
+| `MAX(coluna)` / `MIN(coluna)` | o **maior** / **menor** valor |
+| `COUNT(*)` | a **quantidade** de linhas |
+
+Escolhe-se a coluna que define o grupo, e as funções calculam o resumo de cada um. Por exemplo, o limite de crédito **somado por estado**, ou o preço **mais alto por embalagem**, ou **quantos** produtos há em cada embalagem:
+
+```sql
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL FROM tabela_de_clientes GROUP BY ESTADO;
+SELECT EMBALAGEM, MAX(PRECO_DE_LISTA) AS MAIOR_PRECO FROM tabela_de_produtos GROUP BY EMBALAGEM;
+SELECT EMBALAGEM, COUNT(*) AS CONTADOR FROM tabela_de_produtos GROUP BY EMBALAGEM;
+```
+
+Dá para agrupar por **mais de um campo**, o grupo passa a ser cada combinação. E o `WHERE` continua valendo: ele **filtra as linhas antes** de elas serem agrupadas.
+
+```sql
+-- soma do limite por bairro, só entre clientes do Rio:
+SELECT BAIRRO, SUM(LIMITE_DE_CREDITO) AS LIMITE FROM tabela_de_clientes
+WHERE CIDADE = 'Rio de Janeiro' GROUP BY BAIRRO;
+
+-- agrupando por estado e bairro ao mesmo tempo:
+SELECT ESTADO, BAIRRO, SUM(LIMITE_DE_CREDITO) AS LIMITE FROM tabela_de_clientes
+GROUP BY ESTADO, BAIRRO;
+```
+
+> **Regra de ouro do `GROUP BY`.** Toda coluna que aparece no `SELECT` fora de uma função de agregação precisa estar no `GROUP BY`. Faz sentido: se a linha do resultado representa um grupo, cada coluna "solta" tem de ser um dos critérios que definem esse grupo.
+
+### Filtrando grupos: o HAVING
+
+O `WHERE` filtra linhas **antes** do agrupamento, então ele não enxerga os totais calculados pelo `GROUP BY`. Para filtrar **pelos valores agregados** ("só os grupos cuja soma passa de X") existe o **`HAVING`**, que executa **depois** do agrupamento:
+
+```sql
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS SOMA_LIMITE FROM tabela_de_clientes
+GROUP BY ESTADO HAVING SUM(LIMITE_DE_CREDITO) > 900000;
+```
+
+A diferença entre os dois é a chave para não se confundir:
+
+| Cláusula | Quando roda | Filtra por |
+|---|---|---|
+| `WHERE` | **antes** de agrupar | valores de cada **linha** |
+| `HAVING` | **depois** de agrupar | valores **agregados** (`SUM`, `MAX`…) |
+
+Os dois podem conviver na mesma consulta: o `WHERE` enxuga as linhas que entram, o `GROUP BY` agrupa o que sobrou e o `HAVING` descarta os grupos que não interessam.
+
+### Classificando com o CASE
+
+O **`CASE`** cria uma coluna cujo valor depende de uma **condição**, funcionando como o `if`/`else` das linguagens de programação: testa cada `WHEN` na ordem, e o primeiro que for verdadeiro define o resultado; se nenhum casar, vale o `ELSE`. Serve para **classificar** um campo por um critério. Abaixo, cada produto ganha um rótulo conforme a faixa de preço:
+
+```sql
+SELECT NOME_DO_PRODUTO, PRECO_DE_LISTA,
+CASE
+    WHEN PRECO_DE_LISTA >= 12 THEN 'PRODUTO CARO'
+    WHEN PRECO_DE_LISTA >= 7 AND PRECO_DE_LISTA < 12 THEN 'PRODUTO EM CONTA'
+    ELSE 'PRODUTO BARATO'
+END AS STATUS_PRECO
+FROM tabela_de_produtos ORDER BY STATUS_PRECO;
+```
+
+Como o `CASE` gera um valor, ele pode entrar também no `GROUP BY`, dando para agrupar pela **categoria** que ele cria (produtos caros, em conta, baratos) e tirar a média de preço de cada faixa, por exemplo. É a peça que transforma um número cru numa **classificação** legível, e reaparece nos relatórios do fim do curso.
+
+### Juntando tabelas: os JOINs
+
+Os dados de negócio ficam **espalhados** em várias tabelas, o nome do cliente numa, a venda em outra, o produto numa terceira. O **`JOIN`** **cruza** tabelas relacionadas, casando as linhas por uma condição (o **`ON`**), quase sempre a igualdade entre uma chave e sua chave estrangeira. Para encurtar, dá-se um **apelido** a cada tabela (`A`, `B`) e as colunas são referenciadas como `A.coluna`:
+
+```sql
+SELECT * FROM tabela_de_vendedores A
+INNER JOIN notas_fiscais B ON A.MATRICULA = B.MATRICULA;
+```
+
+Existem tipos diferentes de `JOIN`, que mudam **o que fazer com as linhas sem par**:
+
+| Tipo | Traz |
+|---|---|
+| `INNER JOIN` | só as linhas que **casam** nas duas tabelas |
+| `LEFT JOIN` | **todas** as da tabela da esquerda, casem ou não (as sem par vêm com `NULL`) |
+| `RIGHT JOIN` | **todas** as da direita, casem ou não |
+
+O `INNER JOIN` é o mais comum: pega apenas quem tem correspondência dos dois lados (vendedores **com** notas, por exemplo). Já o `LEFT JOIN` é a ferramenta para achar **quem não tem par**: traz todo mundo da esquerda e, combinado com `WHERE ... IS NULL`, isola justamente as linhas sem correspondência, como os clientes que **nunca compraram**:
+
+```sql
+SELECT DISTINCT A.CPF, A.NOME FROM tabela_de_clientes A
+LEFT JOIN notas_fiscais B ON A.CPF = B.CPF
+WHERE B.CPF IS NULL;
+```
+
+> **O `FULL OUTER JOIN` não existe no MySQL.** Alguns bancos trazem, de uma vez, todas as linhas dos dois lados; o MySQL não. O jeito de simular é fazer um `LEFT JOIN` e um `RIGHT JOIN` e uni-los com `UNION` (a seguir). Vale lembrar também a sintaxe antiga, com as tabelas separadas por vírgula e a condição no `WHERE` (`FROM a, b WHERE a.x = b.x`), que equivale a um `INNER JOIN`.
+
+### Combinando seleções: UNION e UNION ALL
+
+Enquanto o `JOIN` junta tabelas **lado a lado** (mais colunas), o **`UNION`** **empilha** os resultados de duas seleções, um embaixo do outro (mais linhas). A única exigência é que as duas seleções tenham a **mesma quantidade e ordem de colunas**. O `UNION` **remove as duplicatas**; o **`UNION ALL`** mantém tudo, inclusive repetições (e por isso é mais rápido):
+
+```sql
+SELECT DISTINCT BAIRRO FROM tabela_de_clientes
+UNION
+SELECT DISTINCT BAIRRO FROM tabela_de_vendedores;
+```
+
+Um truque útil é acrescentar uma **coluna de texto fixo** em cada seleção para marcar a origem da linha:
+
+```sql
+SELECT BAIRRO, NOME, 'CLIENTE' AS TIPO FROM tabela_de_clientes
+UNION
+SELECT BAIRRO, NOME, 'VENDEDOR' AS TIPO FROM tabela_de_vendedores;
+```
+
+É também com `UNION` que se simula o `FULL OUTER JOIN` que falta no MySQL: basta unir um `LEFT JOIN` com um `RIGHT JOIN` das mesmas tabelas.
+
+### Subconsultas (subqueries)
+
+Uma **subconsulta** é uma consulta **dentro de outra**. Dois usos apareceram no curso. No primeiro, ela serve de **critério de filtro**: no lugar de uma lista fixa depois do `IN`, entra um `SELECT` que devolve os valores. A consulta abaixo traz os clientes que moram em algum bairro **onde também mora um vendedor**:
+
+```sql
+SELECT * FROM tabela_de_clientes WHERE BAIRRO
+IN (SELECT DISTINCT BAIRRO FROM tabela_de_vendedores);
+```
+
+No segundo, a subconsulta faz o papel de uma **tabela temporária** dentro do `FROM`: primeiro ela calcula um resultado (aqui, o maior preço por embalagem) e a consulta de fora trabalha em cima dele. Uma subconsulta no `FROM` **precisa de um apelido** (o `X`):
+
+```sql
+SELECT X.EMBALAGEM, X.PRECO_MAXIMO FROM
+    (SELECT EMBALAGEM, MAX(PRECO_DE_LISTA) AS PRECO_MAXIMO FROM tabela_de_produtos
+     GROUP BY EMBALAGEM) X
+WHERE X.PRECO_MAXIMO >= 10;
+```
+
+Esse padrão (agrupar numa subconsulta e filtrar ou ordenar o resultado por fora) é a espinha dorsal dos relatórios mais complexos do curso.
+
+### Visões (Views)
+
+Quando uma consulta é boa e vai ser reaproveitada, dá para **salvá-la** como uma **visão** (*view*): um `SELECT` guardado no banco com um nome, que passa a ser usado **como se fosse uma tabela**. Cria-se com `CREATE VIEW` (ou `CREATE OR REPLACE VIEW`, que sobrescreve se já existir):
+
+```sql
+CREATE OR REPLACE VIEW VW_MAIORES_EMBALAGENS AS
+SELECT EMBALAGEM, MAX(PRECO_DE_LISTA) AS MAIOR_PRECO FROM tabela_de_produtos
+GROUP BY EMBALAGEM;
+```
+
+A partir daí, consulta-se a view direto, sem repetir todo o agrupamento:
+
+```sql
+SELECT EMBALAGEM, MAIOR_PRECO FROM VW_MAIORES_EMBALAGENS WHERE MAIOR_PRECO >= 10;
+```
+
+A view **não guarda dados**, é virtual: cada vez que é consultada, o `SELECT` por trás roda de novo sobre os dados atuais. Sua força é **encapsular** consultas complexas atrás de um nome simples, e ela pode inclusive entrar num `JOIN` como qualquer tabela, o que deixa consultas grandes bem mais legíveis.
+
+### Funções: texto, números, datas e conversão
+
+Além de filtrar e agrupar, o SQL traz um arsenal de **funções** que **transformam valores** na saída da consulta. O curso passou por quatro famílias.
+
+#### Texto
+
+Para limpar, juntar e recortar strings: `TRIM` (e as variantes `LTRIM`/`RTRIM`) tira espaços das pontas, `CONCAT` junta pedaços, `UPPER`/`LOWER` trocam a caixa e `SUBSTRING` recorta a partir de uma posição.
+
+```sql
+SELECT TRIM('   OLÁ   ') AS RESULTADO;                       -- 'OLÁ'
+SELECT CONCAT('OLÁ', ' ', 'TUDO BEM', '?') AS RESULTADO;     -- 'OLÁ TUDO BEM?'
+SELECT SUBSTRING('OLÁ, TUDO BEM?', 6, 4) AS RESULTADO;       -- 'TUDO' (da posição 6, 4 caracteres)
+SELECT CONCAT(NOME, ' (', CPF, ')') AS RESULTADO FROM tabela_de_clientes;
+```
+
+#### Matemáticas
+
+Para arredondar e calcular: `ROUND` arredonda (opcionalmente a N casas), `CEILING` e `FLOOR` empurram para cima e para baixo, `RAND` sorteia. Operações aritméticas (`+ - * /`) também valem entre colunas:
+
+```sql
+SELECT CEILING(12.33), FLOOR(12.77), ROUND(12.777) AS RESULTADO;
+SELECT NUMERO, QUANTIDADE, PRECO, ROUND(QUANTIDADE * PRECO, 2) AS FATURAMENTO
+FROM itens_notas_fiscais;
+```
+
+#### Datas
+
+Além de `YEAR()` e `MONTH()` (usadas nos filtros), há funções para a data atual (`CURDATE`, `CURRENT_TIMESTAMP`), diferença entre datas (`DATEDIFF`, em dias), aritmética de datas (`DATE_SUB` com `INTERVAL`), nomes por extenso (`DAYNAME`, `MONTHNAME`) e **formatação** (`DATE_FORMAT`, com máscaras como `%Y` ano, `%m` mês, `%d` dia, `%W` dia da semana):
+
+```sql
+SELECT DATEDIFF(CURRENT_TIMESTAMP(), '2004-03-06') AS RESULTADO;      -- diferença em dias
+SELECT DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 5 DAY) AS RESULTADO;    -- 5 dias atrás
+SELECT DATE_FORMAT(CURRENT_TIMESTAMP(), '%W, %d/%m/%y') AS RESULTADO; -- monta a data com máscara
+```
+
+#### Conversão
+
+Para mudar o **tipo** de um valor, o `CONVERT`; por exemplo, transformar um número em texto para depois recortá-lo com `SUBSTRING`:
+
+```sql
+SELECT CONVERT(23.3, CHAR) AS RESULTADO;                     -- '23.3' (agora é texto)
+SELECT SUBSTRING(CONVERT(23.3, CHAR), 1, 1) AS RESULTADO;    -- '2'
+```
+
+### Colocando em prática: dois relatórios
+
+A última aula reuniu tudo em **dois relatórios** encomendados pela distribuidora, cada um cruzando várias tabelas com `JOIN`, resumindo com `GROUP BY` e classificando com `CASE`.
+
+**1. Relatório de vendas válidas.** A pergunta: em cada mês, a quantidade que um cliente comprou passou do seu **limite de compra**? Foi preciso cruzar `notas_fiscais` (a venda) com `itens_notas_fiscais` (as quantidades) e `tabela_de_clientes` (o limite), somar a quantidade por cliente e por mês (com `DATE_FORMAT(..., '%Y-%m')` transformando a data em "ano-mês") e, por fim, comparar o total com o limite num `CASE`. O agrupamento ficou numa subconsulta, e a classificação por fora:
+
+```sql
+SELECT X.CPF, X.NOME, X.MES_ANO, X.QUANTIDADE_VENDAS, X.QUANTIDADE_LIMITE,
+CASE
+    WHEN (X.QUANTIDADE_LIMITE - X.QUANTIDADE_VENDAS) < 0 THEN 'INVÁLIDA'
+    ELSE 'VÁLIDA'
+END AS STATUS_VENDA
+FROM (
+    SELECT NF.CPF, TC.NOME, DATE_FORMAT(NF.DATA_VENDA, '%Y-%m') AS MES_ANO,
+           SUM(INF.QUANTIDADE)      AS QUANTIDADE_VENDAS,
+           MAX(TC.VOLUME_DE_COMPRA) AS QUANTIDADE_LIMITE
+    FROM notas_fiscais NF
+    INNER JOIN itens_notas_fiscais INF ON NF.NUMERO = INF.NUMERO
+    INNER JOIN tabela_de_clientes  TC  ON TC.CPF = NF.CPF
+    GROUP BY NF.CPF, TC.NOME, DATE_FORMAT(NF.DATA_VENDA, '%Y-%m')
+) X
+ORDER BY STATUS_VENDA;
+```
+
+**2. Relatório de participação por sabor.** A pergunta: em 2016, quanto cada **sabor** representou do total vendido? Aqui foram cruzadas `tabela_de_produtos`, `itens_notas_fiscais` e `notas_fiscais`, com a quantidade somada **por sabor** de um lado e a quantidade **total do ano** de outro. As duas somas foram calculadas em subconsultas e cruzadas por `JOIN`, e a participação (%) saiu de uma divisão arredondada com `ROUND`:
+
+```sql
+SELECT VENDA_SABOR.SABOR, VENDA_SABOR.ANO, VENDA_SABOR.QUANTIDADE,
+       ROUND((VENDA_SABOR.QUANTIDADE / VENDA_TOTAL.QUANTIDADE) * 100, 2) AS PARTICIPACAO
+FROM
+    (SELECT TP.SABOR, YEAR(NF.DATA_VENDA) AS ANO, SUM(INF.QUANTIDADE) AS QUANTIDADE
+     FROM tabela_de_produtos TP
+     INNER JOIN itens_notas_fiscais INF ON TP.CODIGO_DO_PRODUTO = INF.CODIGO_DO_PRODUTO
+     INNER JOIN notas_fiscais NF ON NF.NUMERO = INF.NUMERO
+     WHERE YEAR(NF.DATA_VENDA) = 2016
+     GROUP BY TP.SABOR, YEAR(NF.DATA_VENDA)) AS VENDA_SABOR
+INNER JOIN
+    (SELECT YEAR(NF.DATA_VENDA) AS ANO, SUM(INF.QUANTIDADE) AS QUANTIDADE
+     FROM tabela_de_produtos TP
+     INNER JOIN itens_notas_fiscais INF ON TP.CODIGO_DO_PRODUTO = INF.CODIGO_DO_PRODUTO
+     INNER JOIN notas_fiscais NF ON NF.NUMERO = INF.NUMERO
+     WHERE YEAR(NF.DATA_VENDA) = 2016
+     GROUP BY YEAR(NF.DATA_VENDA)) AS VENDA_TOTAL
+ON VENDA_SABOR.ANO = VENDA_TOTAL.ANO
+ORDER BY VENDA_SABOR.QUANTIDADE DESC;
+```
+
+Os dois relatórios são a síntese do curso: sozinho, cada comando é simples; o valor aparece quando `JOIN`, `GROUP BY`, funções, subconsultas e `CASE` se combinam para responder a uma pergunta de negócio real.
+
+Para fechar, um resumo dos recursos de consulta vistos no curso:
+
+| Recurso | O que faz |
+|---|---|
+| `WHERE` + `=`, `<>`, `>`, `<`, `>=`, `<=` | filtra linhas por comparação |
+| `AND`, `OR`, `( )` | combina condições |
+| `LIKE`, `REGEXP_LIKE` | busca por padrão de texto |
+| `IN`, `NOT IN`, `BETWEEN` | filtra por lista ou faixa |
+| `DISTINCT` | remove linhas repetidas |
+| `ORDER BY`, `LIMIT` | ordena e limita a saída |
+| `GROUP BY` + `SUM`/`AVG`/`MAX`/`MIN`/`COUNT` | agrupa linhas e resume números |
+| `HAVING` | filtra grupos por valor agregado |
+| `CASE` | classifica um campo por um critério |
+| `INNER`/`LEFT`/`RIGHT JOIN` | cruza tabelas relacionadas |
+| `UNION`, `UNION ALL` | empilha duas seleções |
+| subconsulta (*subquery*) | usa uma consulta dentro de outra |
+| `VIEW` | salva uma consulta e a usa como tabela |
+| funções de texto, número, data e conversão | transformam valores na saída |

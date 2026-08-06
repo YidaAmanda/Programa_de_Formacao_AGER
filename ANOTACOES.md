@@ -126,6 +126,16 @@
   - [Visões (Views)](#visões-views)
   - [Funções: texto, números, datas e conversão](#funções-texto-números-datas-e-conversão)
   - [Colocando em prática: dois relatórios](#colocando-em-prática-dois-relatórios)
+- [Curso: Java e JDBC: trabalhando com um banco de dados](#curso-java-e-jdbc-trabalhando-com-um-banco-de-dados)
+  - [JDBC: a ponte entre o Java e o banco](#jdbc-a-ponte-entre-o-java-e-o-banco)
+  - [A ConnectionFactory e o Factory Method](#a-connectionfactory-e-o-factory-method)
+  - [Executando comandos: o Statement](#executando-comandos-o-statement)
+  - [SQL Injection e o PreparedStatement](#sql-injection-e-o-preparedstatement)
+  - [Transações: commit, rollback e o try-with-resources](#transações-commit-rollback-e-o-try-with-resources)
+  - [Pool de conexões e o DataSource](#pool-de-conexões-e-o-datasource)
+  - [Classes de domínio e o padrão DAO](#classes-de-domínio-e-o-padrão-dao)
+  - [O problema das queries N + 1](#o-problema-das-queries-n--1)
+  - [Uma aplicação em camadas](#uma-aplicação-em-camadas)
 
 ---
 
@@ -3843,3 +3853,281 @@ Para fechar, um resumo dos recursos de consulta vistos no curso:
 | subconsulta (*subquery*) | usa uma consulta dentro de outra |
 | `VIEW` | salva uma consulta e a usa como tabela |
 | funções de texto, número, data e conversão | transformam valores na saída |
+
+## Curso: Java e JDBC: trabalhando com um banco de dados
+
+Nos cursos de Spring Boot, o banco de dados era acessado por baixo do **Hibernate** e do **Spring Data JPA**, que geravam o SQL sozinhos; nos cursos de SQL, o trabalho foi escrever esse SQL à mão, direto no Workbench. Este curso juntou os dois lados: acessar um banco **MySQL a partir do próprio código Java**, sem framework de persistência, usando o **JDBC**, a API padrão do Java para bancos de dados. O projeto foi a **loja_virtual**, uma loja com as tabelas `Categoria` e `Produto` (uma categoria tem vários produtos), e o caminho foi do "abrir uma conexão" até uma pequena aplicação organizada em camadas, passando por `Statement`, `PreparedStatement`, transações, pool de conexões e o padrão DAO. Foram dois projetos: um de **console** (`loja-virtual-repository`), onde cada conceito foi testado numa classe `main`, e um com **tela** (`loja-virtual-view-repository`), que amarrou tudo numa interface gráfica em camadas.
+
+### JDBC: a ponte entre o Java e o banco
+
+Para o Java conversar com um banco de dados, é preciso um **driver**: uma biblioteca (um arquivo **JAR**) que sabe falar o "idioma" daquele banco específico. Cada banco tem o seu; para o MySQL, o driver é o `mysql-connector-java`, que basta adicionar ao **classpath** do projeto (na pasta de bibliotecas ou como dependência do módulo).
+
+O **JDBC** (*Java Database Connectivity*) é a peça que fica entre a aplicação e esse driver. Ele vive no pacote **`java.sql`** e define uma **camada de abstração**: um conjunto de **interfaces** (`Connection`, `Statement`, `ResultSet`…) que o código usa, e que cada driver **implementa** por baixo. A vantagem é o desacoplamento: o código é escrito contra as interfaces do JDBC, então trocar o MySQL por PostgreSQL ou Oracle é, em boa parte, trocar o JAR do driver e a string de conexão, sem reescrever a lógica.
+
+Para **abrir uma conexão**, usa-se o método estático `getConnection` da classe **`DriverManager`**, passando uma **string de conexão JDBC** que descreve a URL, o usuário e a senha:
+
+```java
+Connection con = DriverManager.getConnection(
+    "jdbc:mysql://localhost/loja_virtual?serverTimezone=UTC", "root", "root");
+```
+
+A URL segue o formato `jdbc:mysql://<host>/<banco>?<parâmetros>`: o `jdbc:mysql` diz qual driver usar, o `localhost/loja_virtual` aponta o servidor e o banco, e os parâmetros ajustam detalhes como o fuso horário (`serverTimezone=UTC`). O primeiro teste do curso foi só abrir e fechar essa conexão para confirmar que o driver estava no lugar:
+
+```java
+public class TestaConexao {
+    public static void main(String[] args) throws SQLException {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection con = connectionFactory.recuperarConexao();
+        System.out.println("Fechando conexão...");
+        con.close();
+    }
+}
+```
+
+### A ConnectionFactory e o Factory Method
+
+Repetir a string de conexão e a chamada ao `DriverManager` toda vez que a aplicação precisa do banco espalha o mesmo código por vários lugares e acopla tudo aos detalhes da conexão. A solução é **encapsular a criação da conexão** numa classe só, a **`ConnectionFactory`**:
+
+```java
+public class ConnectionFactory {
+
+    public Connection recuperarConexao() throws SQLException {
+        return DriverManager.getConnection(
+            "jdbc:mysql://localhost/loja_virtual?serverTimezone=UTC", "root", "root");
+    }
+}
+```
+
+Quem precisa de uma conexão chama `new ConnectionFactory().recuperarConexao()` e não sabe (nem precisa saber) como ela é criada. Esse é o padrão de projeto **Factory Method**: um método cuja única responsabilidade é **fabricar um objeto**, escondendo os detalhes da criação. Se amanhã a URL, o usuário ou até o mecanismo de criação mudar, a alteração fica num ponto só. Mais adiante foi exatamente esse método que trocou a conexão simples por um pool, sem que o resto do código percebesse.
+
+### Executando comandos: o Statement
+
+Com a conexão aberta, os comandos SQL são enviados pela interface **`java.sql.Statement`**, criada a partir da conexão. O método **`execute`** manda o comando para o banco:
+
+```java
+Connection con = new ConnectionFactory().recuperarConexao();
+Statement stm = con.createStatement();
+stm.execute("INSERT INTO Produto (nome, descricao) VALUES ('Mouse', 'Sem fio')",
+        Statement.RETURN_GENERATED_KEYS);
+```
+
+Dependendo do comando, dá para **recuperar informações de volta**. Num `INSERT` numa tabela com chave `AUTO_INCREMENT`, a constante `Statement.RETURN_GENERATED_KEYS` pede ao banco que devolva a **chave primária gerada**, lida depois num **`ResultSet`** com `getGeneratedKeys`:
+
+```java
+ResultSet rst = stm.getGeneratedKeys();
+while (rst.next()) {
+    Integer id = rst.getInt(1);
+    System.out.println("O id criado foi: " + id);
+}
+```
+
+O `ResultSet` é o resultado de uma consulta em forma de tabela: `rst.next()` avança para a próxima linha (e devolve `false` quando acabam), e `getInt(1)`, `getString(2)`… leem cada **coluna pela posição**. Num `SELECT`, o resultado das linhas vem do `getResultSet`; já num `UPDATE` ou `DELETE`, o `getUpdateCount` informa **quantas linhas** foram afetadas:
+
+```java
+PreparedStatement stm = con.prepareStatement("DELETE FROM Produto WHERE id > 4");
+stm.execute();
+Integer linhasModificadas = stm.getUpdateCount();
+System.out.println("Quantidade de linhas modificadas: " + linhasModificadas);
+```
+
+### SQL Injection e o PreparedStatement
+
+Montar o comando concatenando valores direto na string SQL (`"... VALUES ('" + nome + "')"`) abre uma brecha de segurança clássica: o **SQL Injection**. A ideia é simples e perigosa: se o valor vem de fora (um formulário, por exemplo), alguém pode escrever um texto que **fecha a string e emenda um novo comando SQL**, fazendo o banco executar algo que não estava previsto, como apagar uma tabela inteira.
+
+Para evitar isso, usa-se a interface **`PreparedStatement`**. Em vez de colar os valores na string, o comando fica com **marcadores `?`** no lugar de cada parâmetro, e os valores são informados depois pelos métodos `setString`, `setInt` e afins:
+
+```java
+String sql = "INSERT INTO Produto (nome, descricao) VALUES (?, ?)";
+try (PreparedStatement pstm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    pstm.setString(1, produto.getNome());
+    pstm.setString(2, produto.getDescricao());
+    pstm.execute();
+}
+```
+
+A diferença essencial é que, ao contrário do `Statement`, o `PreparedStatement` **trata (sanitiza) cada parâmetro**: o driver garante que o valor entre como *dado*, nunca como *comando*, fechando a porta do SQL Injection. Como efeito colateral, o código também fica mais limpo (sem concatenação) e o comando pode ser reaproveitado com valores diferentes. Por segurança e clareza, o `PreparedStatement` passou a ser o padrão do curso, deixando o `Statement` só para a demonstração inicial.
+
+### Transações: commit, rollback e o try-with-resources
+
+Uma **transação** é o recurso do banco para tratar **várias alterações como uma única unidade de trabalho**: ou todas são aplicadas, ou nenhuma é. É o que garante, por exemplo, que ao gravar dois produtos que precisam entrar juntos, um não fique salvo sem o outro. Por padrão o JDBC opera em *autocommit* (cada comando é confirmado sozinho); para controlar a transação na mão, desliga-se esse modo com `setAutoCommit(false)` e usam-se as duas operações clássicas:
+
+- **`commit`** - **confirma** todas as alterações da transação de uma vez;
+- **`rollback`** - **desfaz** tudo, voltando ao estado anterior, quando algo dá errado.
+
+```java
+try (Connection con = new ConnectionFactory().recuperarConexao()) {
+    con.setAutoCommit(false);
+    try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        adicionarVariavel("SmartTV", "45 polegadas", stm);
+        adicionarVariavel("Radio", "Sem antena", stm);
+        con.commit();
+    } catch (Exception e) {
+        e.printStackTrace();
+        con.rollback();
+        System.out.println("rollback executado");
+    }
+}
+```
+
+Se qualquer uma das inserções falhar, o `catch` chama o `rollback` e nenhuma das duas é gravada; só quando ambas dão certo o `commit` grava as duas juntas.
+
+Repare no **`try (...)`** com a conexão declarada dentro dos parênteses: é o **try-with-resources**, uma cláusula do Java que **fecha os recursos automaticamente** ao final do bloco, mesmo que ocorra uma exceção. Ele funciona com qualquer objeto que implemente a interface **`AutoCloseable`**, e as peças do JDBC (`Connection`, `PreparedStatement`, `ResultSet`) implementam. Fechar esses recursos é obrigatório: uma conexão que fica aberta é um vazamento de recurso que, acumulado, esgota o banco. O try-with-resources garante esse fechamento sem precisar de um `finally` manual para cada recurso.
+
+> **Feche sempre, e deixe o Java fechar por você.** Antes do try-with-resources, era comum esquecer um `close` ou fechá-lo no lugar errado. Declarar o recurso no `try (...)` resolve isso de uma vez: o Java chama o `close` na ordem inversa da abertura, aconteça o que acontecer dentro do bloco.
+
+### Pool de conexões e o DataSource
+
+Abrir uma conexão é uma operação **cara**: tem custo de rede, autenticação e alocação no banco. Fazer isso a cada operação desperdiça tempo e recursos. A boa prática é usar um **pool de conexões**: um componente que **mantém um conjunto de conexões já abertas** e as **empresta** para a aplicação, recolhendo-as de volta quando terminam. O pool **administra a quantidade** de conexões abertas, normalmente com um **mínimo** e um **máximo** definidos, o que também protege o banco de um número descontrolado de conexões simultâneas.
+
+Assim como o JDBC tem uma interface para a conexão (`java.sql.Connection`), ele tem uma interface para o pool: a **`javax.sql.DataSource`**. E, do mesmo jeito que o driver do MySQL implementa `Connection`, existem implementações prontas de pool. O curso usou o **C3P0**, uma implementação Java de pool, cuja classe `ComboPooledDataSource` é configurada dentro da própria `ConnectionFactory`:
+
+```java
+public class ConnectionFactory {
+    public DataSource dataSource;
+
+    public ConnectionFactory() {
+        ComboPooledDataSource pool = new ComboPooledDataSource();
+        pool.setJdbcUrl("jdbc:mysql://localhost/loja_virtual?serverTimezone=UTC");
+        pool.setUser("root");
+        pool.setPassword("root");
+        pool.setMaxPoolSize(15);
+        this.dataSource = pool;
+    }
+
+    public Connection recuperarConexao() throws SQLException {
+        return this.dataSource.getConnection();
+    }
+}
+```
+
+Como o `getConnection` continua devolvendo um `Connection`, **o resto do código não muda**: só a `ConnectionFactory` sabe que agora há um pool por trás. Detalhe importante: quando se chama `close()` numa conexão vinda do pool, ela **não é de fato fechada**, apenas **devolvida** ao pool para ser reaproveitada. Um teste ilustrou o limite configurado pedindo 20 conexões seguidas com um `setMaxPoolSize(15)`; a partir da décima sexta, o pool faz a aplicação esperar por uma conexão livre. O C3P0 exige dois JARs no classpath: o `c3p0` em si e o `mchange-commons-java`, do qual ele depende.
+
+### Classes de domínio e o padrão DAO
+
+Até aqui o SQL estava misturado com o teste. Para organizar, o curso adotou duas ideias que andam juntas. A primeira: para **cada tabela de domínio, uma classe de domínio**. A tabela `Produto` ganha a classe `Produto`, e **cada objeto dessa classe representa uma linha** da tabela:
+
+```java
+public class Produto {
+    private Integer id;
+    private String nome;
+    private String descricao;
+    // construtores, getters e setters...
+}
+```
+
+A segunda é o padrão **DAO** (*Data Access Object*): para cada classe de domínio, existe um DAO que **concentra todo o acesso àquela tabela**. A classe `Produto` tem o seu `ProdutoDAO`; a `Categoria`, o `CategoriaDAO`. Todo o JDBC relacionado ao produto (inserir, listar, alterar, apagar) fica **encapsulado no `ProdutoDAO`**, que recebe a `Connection` no construtor:
+
+```java
+public class ProdutoDAO {
+    private Connection connection;
+
+    public ProdutoDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public void salvar(Produto produto) throws SQLException {
+        try (PreparedStatement pstm = connection.prepareStatement(
+                "INSERT INTO Produto (nome, descricao) VALUES (?, ?)",
+                Statement.RETURN_GENERATED_KEYS)) {
+            pstm.setString(1, produto.getNome());
+            pstm.setString(2, produto.getDescricao());
+            pstm.execute();
+            try (ResultSet rst = pstm.getGeneratedKeys()) {
+                while (rst.next()) {
+                    produto.setId(rst.getInt(1));
+                }
+            }
+        }
+    }
+
+    public List<Produto> listar() throws SQLException { /* SELECT que devolve List<Produto> */ }
+}
+```
+
+O ganho é a **separação de responsabilidades**: quem usa o `ProdutoDAO` pensa em objetos `Produto` (o "o quê"), sem lidar com SQL, `ResultSet` nem colunas (o "como"). O DAO vira a única porta de entrada para aquela tabela, e o SQL para de vazar pelo resto da aplicação.
+
+### O problema das queries N + 1
+
+Ao listar as categorias e, para cada uma, buscar os seus produtos, aparece uma armadilha de desempenho: executa-se **uma** query para trazer as categorias e, em seguida, **mais uma nova query para cada** categoria, para buscar seus produtos. É o problema das **queries N + 1**: 1 consulta inicial mais N consultas (uma por relacionamento). Com poucas categorias passa despercebido; com muitas, são centenas de idas ao banco e a performance despenca.
+
+A saída é **evitar as N consultas com um `JOIN`**: uma única query traz categorias e produtos já cruzados, e o código monta os objetos em memória, agrupando os produtos sob a categoria certa:
+
+```java
+public List<Categoria> listarComProdutos() throws SQLException {
+    Categoria ultima = null;
+    List<Categoria> categorias = new ArrayList<>();
+
+    String sql = "SELECT c.id, c.nome, p.id, p.nome, p.descricao FROM Categoria c "
+               + "INNER JOIN Produto p ON c.id = p.categoria_id";
+    try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+        pstm.execute();
+        try (ResultSet rst = pstm.getResultSet()) {
+            while (rst.next()) {
+                if (ultima == null || !ultima.getNome().equals(rst.getString(2))) {
+                    ultima = new Categoria(rst.getInt(1), rst.getString(2));
+                    categorias.add(ultima);
+                }
+                Produto produto = new Produto(rst.getInt(3), rst.getString(4), rst.getString(5));
+                ultima.adicionar(produto);
+            }
+        }
+    }
+    return categorias;
+}
+```
+
+A variável `ultima` guarda a categoria da linha anterior: como o resultado vem ordenado pela categoria, só se cria uma nova `Categoria` quando o nome muda; os produtos seguintes são adicionados à mesma. Uma consulta só, os objetos montados na mão. É, no fundo, um primeiro passo na construção de uma **camada de persistência própria**, o mesmo tipo de trabalho que o Hibernate faz por baixo dos panos.
+
+### Uma aplicação em camadas
+
+O curso fechou amarrando tudo numa aplicação organizada em **camadas**, um jeito clássico de estruturar um sistema separando responsabilidades. As camadas clássicas são **view** (a interface), **controller** (a coordenação), **modelo** (as classes de domínio) e **persistência** (o acesso ao banco), e o fluxo entre elas segue uma ordem:
+
+```text
+view <--> controller <--> persistência
+```
+
+O foco deste curso foi a **camada de persistência** (a `ConnectionFactory` e os DAOs). Por cima dela, o segundo projeto (`loja-virtual-view-repository`) acrescentou uma **view** simples, uma tela feita com **Swing** (`JFrame` com formulário, tabela e botões de salvar, editar, limpar e apagar), e uma camada de **controller** que fica entre a tela e o DAO:
+
+```java
+public class ProdutoController {
+    private ProdutoDAO produtoDAO;
+
+    public ProdutoController() {
+        Connection connection = new ConnectionFactory().recuperarConexao();
+        this.produtoDAO = new ProdutoDAO(connection);
+    }
+
+    public List<Produto> listar() { return this.produtoDAO.listar(); }
+    public void salvar(Produto produto) { this.produtoDAO.salvar(produto); }
+    public void alterar(String nome, String descricao, Integer id) {
+        this.produtoDAO.alterar(nome, descricao, id);
+    }
+    public void deletar(Integer id) { this.produtoDAO.deletar(id); }
+}
+```
+
+A tela conversa só com o `ProdutoController`, e o controller conversa só com o `ProdutoDAO`, cada camada falando apenas com a vizinha. O princípio central é que **uma camada não deve deixar "vazar" detalhes da sua implementação** para as outras. Um exemplo concreto: a `SQLException` é uma exceção específica do JDBC; deixá-la subir até a view acoplaria a tela ao banco. Por isso, no projeto com tela, os DAOs **tratam a `SQLException` e a envolvem numa `RuntimeException`**, escondendo o detalhe de persistência de quem está acima:
+
+```java
+public List<Produto> listar() {
+    try (PreparedStatement pstm = connection.prepareStatement("SELECT ID, NOME, DESCRICAO FROM PRODUTO")) {
+        // ...
+    } catch (SQLException e) {
+        throw new RuntimeException(e);   // não vaza SQLException para o controller/view
+    }
+    return produtos;
+}
+```
+
+Esse foi o encerramento da trilha de persistência: das trilhas anteriores, já se conhecia o SQL puro e o acesso ao banco por frameworks (JPA/Hibernate); aqui se viu **o que existe no meio do caminho**, o JDBC, sobre o qual esses frameworks são construídos.
+
+Para fechar, um resumo das principais peças do JDBC vistas no curso:
+
+| Recurso | Pacote | Papel |
+|---|---|---|
+| `DriverManager` | `java.sql` | abre conexões com `getConnection` |
+| `Connection` | `java.sql` | representa a conexão; controla `commit`, `rollback` e `setAutoCommit` |
+| `Statement` | `java.sql` | executa um comando SQL fixo |
+| `PreparedStatement` | `java.sql` | executa SQL com parâmetros `?` tratados (evita SQL Injection) |
+| `ResultSet` | `java.sql` | percorre, linha a linha, o resultado de uma consulta |
+| `DataSource` | `javax.sql` | representa o pool de conexões (implementado pelo C3P0) |

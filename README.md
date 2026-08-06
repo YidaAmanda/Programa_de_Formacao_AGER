@@ -40,7 +40,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 9 | React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end | Curso | 8h | Concluído |
 | 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | Concluído |
 | 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | Concluído |
-| 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | A fazer |
+| 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | Concluído |
 | 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | A fazer |
 | 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | A fazer |
 
@@ -149,6 +149,14 @@ Sequência direta do curso anterior, agora focado só em **consultar**. Sobre a 
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-consultas-sql-avançando-no-sql-com-mysql)
 
+### 12. Curso: Java e JDBC: trabalhando com um banco de dados
+
+Depois de acessar bancos por baixo do Hibernate (nos cursos de Spring Boot) e de escrever **SQL puro** (nos cursos de MySQL), aqui o trabalho foi ligar os dois: acessar um banco **MySQL a partir do código Java**, sem framework de persistência, usando o **JDBC**. O projeto foi a **loja_virtual** (tabelas `Categoria` e `Produto`), construída em dois passos: primeiro um projeto de **console**, onde cada conceito virou uma classe de teste (abrir conexão, inserir, consultar, remover), e depois um projeto com **tela** (Swing) organizado em **camadas**. Pelo caminho, a proteção contra **SQL Injection** com `PreparedStatement`, o controle de **transações** com `commit`/`rollback`, o **pool de conexões** com C3P0, o padrão **DAO** e o cuidado de não deixar a `SQLException` vazar de uma camada para a outra.
+
+**Principais tópicos:** driver JDBC (JAR) e `java.sql` · `DriverManager.getConnection` e string de conexão · `ConnectionFactory` e o padrão Factory Method · `Statement` e `execute` · `RETURN_GENERATED_KEYS`, `ResultSet` e `getUpdateCount` · SQL Injection e `PreparedStatement` · transações (`setAutoCommit`, `commit`, `rollback`) · try-with-resources e `AutoCloseable` · pool de conexões, `javax.sql.DataSource` e C3P0 · classes de domínio e o padrão DAO · queries N + 1 e `JOIN` · aplicação em camadas (view, controller, modelo, persistência)
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-java-e-jdbc-trabalhando-com-um-banco-de-dados)
+
 ---
 
 ## Projetos práticos
@@ -185,6 +193,8 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 | [`compras`](./Java/compras) | Sistema de compras com cartão de crédito e lista ordenada (desafio de listas) | `ArrayList`, `Collections.sort`, `Comparable`, `toString()` |
 | [`buscador`](./Java/buscador) | Busca CEP integrada à API do ViaCEP, gerando arquivo JSON | `HttpClient`, Gson, `record`, `FileWriter` |
 | [`buscacep`](./Java/buscacep) | Busca CEP com validações e exceções personalizadas (desafio) | `try/catch`, exceções personalizadas, `java.net.http`, Gson |
+| [`loja-virtual-repository`](./Java/loja-virtual-repository) | Loja virtual (console): acesso ao MySQL via JDBC, com uma classe de teste para cada conceito (conexão, `INSERT`, transação, listagem, remoção e pool) | JDBC (`java.sql`), `ConnectionFactory`, `Statement`/`PreparedStatement`, transações, C3P0, DAO, `JOIN` |
+| [`loja-virtual-view-repository`](./Java/loja-virtual-view-repository) | A mesma loja virtual com tela: um cadastro de produtos em Swing, organizado em camadas (view, controller, DAO e modelo) | JDBC, Swing (`JFrame`, `JTable`), padrão em camadas, DAO, C3P0 |
 
 ### `Java - Spring Boot sem web/` (aplicações de console)
 
@@ -206,9 +216,9 @@ Os projetos estão organizados em quatro pastas, por tecnologia.
 
 ### `MySQL/` (scripts SQL)
 
-Os scripts SQL escritos nos dois cursos de SQL, sobre bases de uma distribuidora de sucos: o **introdutório** monta a base `Sucos` do zero; o de **consultas avançadas** usa a base `sucos_vendas`, mais completa (com notas fiscais e itens de venda).
+Os scripts SQL escritos nos cursos de banco de dados. Os dois cursos de SQL usam bases de uma distribuidora de sucos: o **introdutório** monta a base `Sucos` do zero e o de **consultas avançadas** usa a base `sucos_vendas`, mais completa (com notas fiscais e itens de venda). O curso de **Java e JDBC** traz a base `loja_virtual`, usada pelos projetos Java que acessam o banco pelo código.
 
-**Curso introdutório — base `Sucos`:**
+**Curso introdutório - base `Sucos`:**
 
 | Script | Descrição | O que usei |
 |---------|-----------|------------|
@@ -216,12 +226,18 @@ Os scripts SQL escritos nos dois cursos de SQL, sobre bases de uma distribuidora
 | [`base-para-consultas.sql`](./MySQL/base-para-consultas.sql) | Monta e popula as tabelas `tbcliente` e `tbproduto` usadas nas primeiras consultas | `CREATE TABLE`, `ALTER TABLE`, `INSERT` em massa |
 | [`consultas.sql`](./MySQL/consultas.sql) | Coletânea de consultas praticadas na base, do `SELECT` simples aos primeiros filtros | `SELECT`, `AS`, `WHERE`, `ORDER BY`, `LIMIT`, `LIKE`, `BETWEEN` |
 
-**Curso de consultas avançadas — base `sucos_vendas`:**
+**Curso de consultas avançadas - base `sucos_vendas`:**
 
 | Script | Descrição | O que usei |
 |---------|-----------|------------|
 | [`base-para-consultas-sucos_vendas/`](./MySQL/base-para-consultas-sucos_vendas) | Criação do esquema `sucos_vendas` e carga em massa das cinco tabelas (clientes, produtos, vendedores, notas fiscais e itens) | `CREATE TABLE` com `FOREIGN KEY`, `INSERT` em massa |
 | [`consultas-sucos_vendas.sql`](./MySQL/consultas-sucos_vendas.sql) | Consultas do curso avançado: filtros, agrupamentos, junções, subconsultas, views, funções e os dois relatórios finais | `GROUP BY`, `HAVING`, `CASE`, `JOIN`s, `UNION`, subqueries, `VIEW`, funções, `DATE_FORMAT` |
+
+**Curso de Java e JDBC - base `loja_virtual`:**
+
+| Script | Descrição | O que usei |
+|---------|-----------|------------|
+| [`loja_virtual.sql`](./MySQL/loja_virtual.sql) | Cria o banco `loja_virtual` e as tabelas `Categoria` e `Produto` (com chave estrangeira), popula os registros e traz o `JOIN` que os projetos Java usam | `CREATE SCHEMA`/`TABLE`, `AUTO_INCREMENT`, `PRIMARY KEY`, `FOREIGN KEY`, `INSERT`, `INNER JOIN` |
 
 ---
 
@@ -245,6 +261,7 @@ Os scripts SQL escritos nos dois cursos de SQL, sobre bases de uma distribuidora
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat&logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=prettier&logoColor=black)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)
+![Eclipse IDE](https://img.shields.io/badge/Eclipse_IDE-2C2255?style=flat&logo=eclipseide&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
@@ -298,7 +315,7 @@ O comando sobe o **Jest** em modo interativo, rodando os arquivos `*.test.js` ao
    ```
 2. Tenha a **JDK 17** (ou superior) instalada.
 3. Abra a pasta do projeto que quer testar (ex.: `Java/screenmatch`) no **IntelliJ IDEA**.
-4. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão ▶ da IDE.
+4. Rode a classe que contém o método `main` (ex.: `Principal` / `Main`) pelo botão run da IDE.
 5. Nos projetos de console da pasta `Java - Spring Boot sem web`, a classe a rodar é a `...Application` (ex.: `ScreenmatchApplication`) - o Spring sobe e executa o método `run` no console.
 
 ### Projetos que usam banco de dados
@@ -316,6 +333,15 @@ Os projetos `screenmatch-jpa`, `screensounds`, `gerenciador-pedidos` e os dois d
    | `DB_PASSWORD` | *sua senha* |
 
 3. Rode a classe `...Application` com `spring.jpa.hibernate.ddl-auto=update`, o Hibernate cria as tabelas automaticamente na primeira execução.
+
+### Projetos JDBC (loja virtual)
+
+Os projetos [`loja-virtual-repository`](./Java/loja-virtual-repository) e [`loja-virtual-view-repository`](./Java/loja-virtual-view-repository) acessam um **MySQL** direto pelo código, sem Spring. Antes de rodá-los:
+
+1. Tenha um **MySQL** rodando em `localhost` com usuário e senha `root` (é o que a `ConnectionFactory` espera; ajuste no código se a sua senha for outra).
+2. Crie o banco rodando o script [`MySQL/loja_virtual.sql`](./MySQL/loja_virtual.sql), que monta as tabelas `Categoria` e `Produto` e já as popula.
+3. Adicione ao **classpath** do projeto os JARs da pasta [`Java/dependencias`](./Java/dependencias): `mysql-connector-java` (o driver JDBC), `c3p0` e `mchange-commons-java` (o pool de conexões).
+4. Rode a classe desejada pelo botão run da IDE: no projeto de console, cada `Testa...` demonstra um conceito (ex.: `TestaConexao`, `TestaPoolConexoes`); no projeto com tela, a classe é a `TestaOperacaoComView`, que abre a janela de cadastro.
 
 ## Como executar os projetos web em Java (API + front-end)
 
@@ -345,11 +371,11 @@ Os projetos da pasta `Java - Spring Boot` têm duas partes que rodam ao mesmo te
 O projeto [`testes-automatizados`](./Java%20-%20Spring%20Boot/testes-automatizados) (a API **Adopet**) concentra os testes escritos no curso de boas práticas.
 
 1. Abra a pasta no **IntelliJ IDEA**.
-2. Rode a suíte inteira pela IDE (▶ na pasta `src/test/java`) ou pelo Maven, na raiz do projeto:
+2. Rode a suíte inteira pela IDE (run na pasta `src/test/java`) ou pelo Maven, na raiz do projeto:
    ```bash
    ./mvnw test
    ```
-3. Para rodar um único cenário, use o ▶ ao lado do método de teste.
+3. Para rodar um único cenário, use o botão run ao lado do método de teste.
 
 Os testes de unidade (calculadora de probabilidade, validações e serviços) rodam isolados com **mocks**, sem tocar em banco nem em servidor de e-mail. Já os testes de controller usam `@SpringBootTest`, que carrega o contexto inteiro da aplicação: para eles subirem, é preciso um **MySQL** rodando em `localhost` com usuário e senha `root` (o `application.properties` já cria o banco `adopet` na primeira execução, via `createDatabaseIfNotExist=true`).
 
@@ -369,5 +395,8 @@ Curso introdutório (base `Sucos`):
 Curso de consultas avançadas (base `sucos_vendas`):
    - na pasta [`base-para-consultas-sucos_vendas/`](./MySQL/base-para-consultas-sucos_vendas), rode primeiro o `Criacao_Esquema.sql` e depois os `Carga_*.sql` para criar e popular as cinco tabelas;
    - [`consultas-sucos_vendas.sql`](./MySQL/consultas-sucos_vendas.sql) traz as consultas do curso (execute uma de cada vez).
+
+Curso de Java e JDBC (base `loja_virtual`):
+   - [`loja_virtual.sql`](./MySQL/loja_virtual.sql) cria o banco `loja_virtual` e as tabelas `Categoria` e `Produto`, popula os registros e é o banco que os projetos JDBC acessam.
 
 O mesmo pode ser feito por **linha de comando**, entrando no cliente com `mysql -h localhost -u root -p` e colando os comandos direto no prompt `mysql>`.

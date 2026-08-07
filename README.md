@@ -41,7 +41,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 10 | SQL com MySQL: manipule e consulte dados | Curso | 12h | Concluído |
 | 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | Concluído |
 | 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | Concluído |
-| 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | A fazer |
+| 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | Concluído |
 | 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | A fazer |
 
 ### Sub-trilha: Iniciante em programação
@@ -157,11 +157,19 @@ Depois de acessar bancos por baixo do Hibernate (nos cursos de Spring Boot) e de
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-java-e-jdbc-trabalhando-com-um-banco-de-dados)
 
+### 13. Curso: Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento
+
+Diferente dos cursos anteriores, o objeto de estudo aqui não foi uma linguagem, e sim o **fluxo de trabalho com um agente de IA**. A ferramenta foi o **Claude Code** (um agente que roda no terminal) e o projeto de apoio foi o **CodeConnect**, uma rede social para pessoas desenvolvedoras montada como um **monorepo** com front-end em **React (Vite)** e back-end em **NestJS**, ambos em TypeScript. O curso passou por escolher o modelo certo para cada tarefa (critérios de janela de contexto, custo, latência e qualidade), montar o contexto do projeto no `CLAUDE.md`, planejar antes de executar, integrar o agente ao GitHub e ao Figma via **MCP**, construir a autenticação (JWT, Swagger, Bruno) e a persistência (PostgreSQL, TypeORM e Docker Compose), implementar o feed de posts e automatizar o code review com uma GitHub Action. O foco foi o **senso crítico**: a IA acelera, mas a responsabilidade pela revisão é de quem faz o commit.
+
+**Principais tópicos:** escolha de modelos (Claude, GPT, Gemini) · janela de contexto, custo por token, latência e qualidade · Claude Code no terminal e o `/model` · context engineering e o `CLAUDE.md` · `/init` · monorepo com pnpm workspaces · planejamento com modo plano (Opus) e execução (Sonnet) · MCP (host, client, server; tools, resources e prompts) · MCP do GitHub com PAT · MCP do Figma e Atomic Design · spec-driven development · acessibilidade (WCAG, Lighthouse, WAI-ARIA) · endpoints REST com JWT e Swagger · Bruno · PostgreSQL, TypeORM e Docker Compose · axios · feed com seed, placeholder e busca full-text · GitHub Action de code review · segredos e riscos (prompt injection, dados sensíveis, overreliance) · os 3 Os (Operar, Orquestrar, Observar)
+
+➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-engenharia-de-software-na-era-da-ia-como-usar-ia-no-fluxo-real-de-desenvolvimento)
+
 ---
 
 ## Projetos práticos
 
-Os projetos estão organizados em quatro pastas, por tecnologia.
+Os projetos estão organizados por tecnologia.
 
 ### `JavaScript/`
 
@@ -239,6 +247,17 @@ Os scripts SQL escritos nos cursos de banco de dados. Os dois cursos de SQL usam
 |---------|-----------|------------|
 | [`loja_virtual.sql`](./MySQL/loja_virtual.sql) | Cria o banco `loja_virtual` e as tabelas `Categoria` e `Produto` (com chave estrangeira), popula os registros e traz o `JOIN` que os projetos Java usam | `CREATE SCHEMA`/`TABLE`, `AUTO_INCREMENT`, `PRIMARY KEY`, `FOREIGN KEY`, `INSERT`, `INNER JOIN` |
 
+### `code-connect-aula-5/` (monorepo React + NestJS)
+
+Diferente dos demais, este projeto foi construído com o apoio de um **agente de IA** (o Claude Code) no curso de engenharia de software na era da IA. É o **CodeConnect**, uma rede social para pessoas desenvolvedoras, montada como um **monorepo** com **pnpm workspaces**: um front-end e um back-end na mesma raiz, com atalhos no `package.json` para rodar cada app.
+
+| Pasta | Descrição | O que usei |
+|---------|-----------|------------|
+| [`apps/web`](./code-connect-aula-5/apps/web) | Front-end do CodeConnect: páginas de login, cadastro e feed de posts, com componentes organizados em Atomic Design, autenticação por contexto e rotas protegidas | React 19, Vite, TypeScript, Tailwind CSS, Atomic Design, axios, Vitest + Testing Library |
+| [`apps/api`](./code-connect-aula-5/apps/api) | Back-end do CodeConnect: endpoints REST de cadastro, login (JWT) e dados do usuário logado, além do CRUD de posts com curtidas, comentários e busca full-text | NestJS 11, TypeScript, TypeORM, PostgreSQL, JWT (Passport), bcrypt, Swagger, Jest |
+
+O projeto ainda traz o `CLAUDE.md` (contexto e guidelines para o agente), uma pasta [`plans/`](./code-connect-aula-5/plans) com os planos salvos antes da execução, um `docker-compose.yml` para o PostgreSQL e uma GitHub Action de code review automático em [`.github/workflows`](./code-connect-aula-5/.github/workflows).
+
 ---
 
 ## Tecnologias
@@ -266,6 +285,7 @@ Os scripts SQL escritos nos cursos de banco de dados. Os dois cursos de SQL usam
 ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
+![Claude Code](https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=anthropic&logoColor=white)
 
 ---
 
@@ -306,6 +326,31 @@ npm test
 ```
 
 O comando sobe o **Jest** em modo interativo, rodando os arquivos `*.test.js` ao lado de cada componente e reexecutando a cada alteração salva. O projeto também tem os scripts `npm run lint` (ESLint) e `npm run format` (Prettier) para a análise estática do código.
+
+## Como executar o CodeConnect (monorepo React + NestJS)
+
+O projeto [`code-connect-aula-5`](./code-connect-aula-5) é um monorepo com **pnpm workspaces**, então os comandos rodam da raiz e usam filtros para atingir cada app.
+
+1. Tenha o **Node.js** (versão 22 ou superior), o **pnpm** e o **Docker** instalados.
+2. Entre na pasta do projeto e instale as dependências dos dois apps de uma vez:
+   ```bash
+   cd code-connect-aula-5
+   pnpm install
+   ```
+3. Suba o **PostgreSQL** com o Docker Compose (o volume mantém os dados entre execuções):
+   ```bash
+   pnpm db:up
+   ```
+4. Configure as variáveis de ambiente do back-end: copie o `apps/api/.env.example` para `apps/api/.env` e ajuste os valores (dados de conexão do banco e segredo do JWT). O arquivo `.env` não vai versionado.
+5. Suba os dois apps ao mesmo tempo (ou cada um por vez):
+   ```bash
+   pnpm dev        # front-end e back-end em paralelo
+   pnpm web:dev    # só o front-end (Vite)
+   pnpm api:dev    # só o back-end (NestJS)
+   ```
+6. Acesse o front-end no endereço indicado pelo Vite (por padrão `http://localhost:5173`). A documentação **Swagger** da API fica em `http://localhost:3000/api/docs` com o back-end no ar.
+
+Para popular o feed com posts fictícios, rode o **seed** do back-end com o banco no ar (`pnpm --filter api seed`). Os testes de cada app rodam com `pnpm web:test` (Vitest) e `pnpm api:test` (Jest), e o `pnpm db:down` derruba o banco.
 
 ## Como executar os projetos Java
 

@@ -136,6 +136,26 @@
   - [Classes de domínio e o padrão DAO](#classes-de-domínio-e-o-padrão-dao)
   - [O problema das queries N + 1](#o-problema-das-queries-n--1)
   - [Uma aplicação em camadas](#uma-aplicação-em-camadas)
+- [Curso: Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento](#curso-engenharia-de-software-na-era-da-ia-como-usar-ia-no-fluxo-real-de-desenvolvimento)
+  - [A IA mudou o que significa programar](#a-ia-mudou-o-que-significa-programar)
+  - [O que a IA faz bem e o que faz mal hoje](#o-que-a-ia-faz-bem-e-o-que-faz-mal-hoje)
+  - [Tendências: o que ganha e o que perde fama](#tendências-o-que-ganha-e-o-que-perde-fama)
+  - [Os riscos de colocar a IA no fluxo](#os-riscos-de-colocar-a-ia-no-fluxo)
+  - [Escolhendo o modelo: os quatro critérios](#escolhendo-o-modelo-os-quatro-critérios)
+  - [As famílias de modelos: Claude, GPT e Gemini](#as-famílias-de-modelos-claude-gpt-e-gemini)
+  - [As ferramentas: do editor ao terminal](#as-ferramentas-do-editor-ao-terminal)
+  - [Context engineering: o contexto vale mais que o prompt](#context-engineering-o-contexto-vale-mais-que-o-prompt)
+  - [Preparando o ambiente e criando o monorepo](#preparando-o-ambiente-e-criando-o-monorepo)
+  - [O CLAUDE.md e as guidelines do projeto](#o-claudemd-e-as-guidelines-do-projeto)
+  - [Planejar antes de executar: modos e modelos](#planejar-antes-de-executar-modos-e-modelos)
+  - [MCP: o protocolo que conecta o agente a serviços](#mcp-o-protocolo-que-conecta-o-agente-a-serviços)
+  - [O MCP do GitHub na prática](#o-mcp-do-github-na-prática)
+  - [O MCP do Figma: do design ao código](#o-mcp-do-figma-do-design-ao-código)
+  - [Spec-driven development: a especificação como contrato](#spec-driven-development-a-especificação-como-contrato)
+  - [Do front ao back: acessibilidade, API e persistência](#do-front-ao-back-acessibilidade-api-e-persistência)
+  - [O "slop dev" e a dívida técnica na velocidade da IA](#o-slop-dev-e-a-dívida-técnica-na-velocidade-da-ia)
+  - [O agente fora do terminal: CI/CD, Slack e agendamento](#o-agente-fora-do-terminal-cicd-slack-e-agendamento)
+  - [O dev à prova de futuro: os 3 Os](#o-dev-à-prova-de-futuro-os-3-os)
 
 ---
 
@@ -4131,3 +4151,268 @@ Para fechar, um resumo das principais peças do JDBC vistas no curso:
 | `PreparedStatement` | `java.sql` | executa SQL com parâmetros `?` tratados (evita SQL Injection) |
 | `ResultSet` | `java.sql` | percorre, linha a linha, o resultado de uma consulta |
 | `DataSource` | `javax.sql` | representa o pool de conexões (implementado pelo C3P0) |
+
+---
+
+## Curso: Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento
+
+Todos os cursos anteriores construíram uma aplicação em uma linguagem ou framework; este curso muda o objeto de estudo. Em vez de aprender uma tecnologia nova, o foco é o **fluxo de trabalho**: como usar um **agente de IA** no desenvolvimento real, com critério. A ferramenta usada foi o **Claude Code**, um agente que roda no terminal, e o projeto de apoio foi o **CodeConnect**, uma rede social para pessoas desenvolvedoras montada como um **monorepo** com front-end em React e back-end em NestJS. O que se aprende aqui não é uma ferramenta específica (ela muda em poucos meses), e sim os critérios para trabalhar com qualquer agente: escolher o modelo certo, dar o contexto certo, planejar antes de executar, integrar o agente a serviços externos e, acima de tudo, revisar o que ele produz. A ideia central que atravessa o curso é que a IA não substitui a pessoa desenvolvedora; ela muda o que essa pessoa faz.
+
+### A IA mudou o que significa programar
+
+A pergunta que abre o curso ("a IA vai substituir o programador?") tem uma resposta curta, não, e uma mais honesta: a pergunta está errada. A IA não substituiu ninguém; ela mudou o que significa programar. Quando a ferramenta gera o código, saber **ler**, **questionar** e **decidir se aquele código presta** passa a ser a habilidade principal. Quem não entende o que o agente gerou não consegue revisar, e quem não consegue revisar está confiando às cegas, o que não é produtividade.
+
+Esse movimento não é novo, apenas mais rápido. A carreira de quem desenvolve sempre evoluiu de escrever muito código para revisar mais, pensar em arquitetura e em produto. A IA acelerou esse caminho para todo mundo: a pessoa iniciante precisa desenvolver **senso crítico** mais cedo, porque o agente entrega um código que compila e parece certo, mas que pode não estar.
+
+Há uma distinção que orienta o uso saudável da ferramenta: usar a IA para **aprender** e usar a IA para **produzir**. Usar para aprender é pedir que ela explique um código desconhecido, apresente uma biblioteca nova ou esclareça um padrão. Usar para produzir é pedir que ela implemente uma funcionalidade, gere testes ou refatore. O problema aparece quando alguém usa a IA para produzir sem ter passado pela etapa de aprender, e acaba entregando algo que não compreende. A execução ficou barata, mas execução sem revisão não tem valor.
+
+### O que a IA faz bem e o que faz mal hoje
+
+Saber o que esperar do agente evita frustração e retrabalho. Hoje a IA se sai bem em tarefas onde o padrão é conhecido e o contexto cabe na conversa:
+
+- **Boilerplate e scaffolding**: gerar a estrutura repetitiva de um projeto ou de um módulo.
+- **Refatoração**: reorganizar um código existente mantendo o comportamento.
+- **Testes**: escrever casos de teste a partir de um código pronto.
+- **Explicar código**: descrever o que um trecho faz.
+- **Documentação**: gerar textos a partir do código.
+
+Um ponto importante sobre a documentação, e sobre qualquer pedido, é a necessidade de **direcionar** o que se quer. Uma documentação para uma pessoa técnica é diferente de uma para quem não é da área; um texto para outra equipe pede outro recorte; e é preciso dizer qual parte deve ser documentada. Quanto mais claro o direcionamento, melhor o resultado.
+
+Do outro lado, a IA ainda tropeça em:
+
+- **Bases de código grandes**, como um monolito ou um conjunto de vários microsserviços, onde o contexto não cabe de uma vez.
+- **Consistência** ao longo de um trabalho extenso.
+- **Casos de borda** (edge cases) que fogem do caminho comum.
+- **Admitir que não sabe**: em vez de dizer "não sei", o modelo tende a responder com confiança mesmo quando erra.
+
+Esse último ponto é o que mais exige atenção de quem revisa: uma resposta segura não é garantia de resposta correta.
+
+### Tendências: o que ganha e o que perde fama
+
+O curso situa o momento do mercado (início de 2026) listando o que está em alta e o que está em baixa, não como moda, mas para orientar onde investir tempo de estudo.
+
+Ganhando espaço:
+
+- **Context engineering**: cuidar de todo o contexto entregue ao agente, e não só do texto do prompt.
+- **Spec-driven development**: escrever uma especificação antes de pedir a implementação.
+- **Agentes no CI/CD**: o agente rodando de forma automática na esteira de integração.
+- **Prompt como código**: tratar as instruções do agente como artefatos versionados do projeto.
+
+Perdendo espaço:
+
+- **Vibe coding puro**: enviar um prompt e aceitar o que sai, sem revisão.
+- **Prompt engineering isolado**: a ideia de que só o texto do prompt determina a qualidade.
+- **A tese de que "a IA vai substituir os devs"**.
+
+E, na prática do dia a dia, algumas promessas ainda não se sustentam: **sistemas multiagentes** em produção (com questões legais e de confiabilidade), **a geração de aplicações completas do zero** e o **desenvolvimento autônomo sem supervisão**. Tudo isso pode mudar; o que não muda são o conhecimento, a experiência e o senso crítico de quem conduz.
+
+### Os riscos de colocar a IA no fluxo
+
+Trabalhar com um agente traz riscos que precisam ser conhecidos antes de dar acesso a ele:
+
+- **Prompt injection**: instruções maliciosas escondidas em um conteúdo que o agente lê (uma página, um arquivo, um comentário) e que tentam fazer o agente agir contra o interesse de quem o usa.
+- **Dados sensíveis**: chaves de API e tokens, dados de pessoas usuárias, variáveis de ambiente e dados de produção nunca devem vazar para o modelo nem para um repositório.
+- **Wallet attack**: consumo descontrolado que gera custo, seja por um uso mal calibrado, seja por um ataque que force chamadas em excesso.
+- **Overreliance**: a dependência excessiva, aceitar o resultado sem entender, que corrói o próprio senso crítico que deveria proteger o trabalho.
+
+Esses riscos reaparecem ao longo do curso e são a razão de várias das boas práticas adotadas, como usar variáveis de ambiente para segredos e revisar todo código antes de integrá-lo.
+
+### Escolhendo o modelo: os quatro critérios
+
+Antes de escolher entre marcas, o curso ensina a olhar para quatro critérios que valem para qualquer modelo, hoje ou daqui a alguns meses:
+
+- **Janela de contexto** (context window): quanto de informação o modelo consegue considerar de uma vez. Bases grandes pedem janelas maiores.
+- **Custo por token**: cada modelo cobra por volume de entrada (input) e de saída (output). Tarefas de grande volume pesam no custo.
+- **Latência**: quanto tempo o modelo leva para responder. Em tarefas rápidas e repetitivas, a latência importa mais que a profundidade.
+- **Qualidade de output**: quão bom é o resultado para o tipo de tarefa em questão.
+
+O princípio prático é **ajustar a escolha à complexidade da tarefa**: uma tarefa simples pede um modelo rápido e barato; uma decisão de arquitetura pede um modelo mais capaz, ainda que mais caro. Entender os critérios é o que permite avaliar qualquer modelo novo sem depender de propaganda.
+
+### As famílias de modelos: Claude, GPT e Gemini
+
+Três famílias disputam o mercado, cada uma com camadas de preço e capacidade. A escolha do modelo e a da ferramenta são independentes, e boa parte das ferramentas deixa trocar o modelo por baixo.
+
+**Claude** (Anthropic), a família usada no curso, tem três camadas: o **Haiku** é o mais barato e serve para tarefas rápidas, como classificação e extração de dados; o **Sonnet** é o do dia a dia, tão próximo do topo em tarefas de código que, na maioria dos casos, a diferença não justifica pagar mais; e o **Opus** é o topo de linha, para quando é preciso raciocínio profundo, decisão de arquitetura, análise de base grande ou planejamento de uma funcionalidade complexa. A regra prática apresentada: Sonnet para a maior parte do trabalho, Opus quando o Sonnet se mostra insuficiente para a tarefa, e Haiku para tarefas de volume em que a latência pesa mais.
+
+**GPT** (OpenAI) tem uma janela de contexto ampla, um destaque em *computer use* (o modelo operando a tela como uma pessoa faria) e um parâmetro que controla quanto o modelo raciocina, e gasta, por requisição. Em código puro, fica próximo do topo do Claude; a diferença está mais em como cada um lida com instruções complexas e contexto longo.
+
+**Gemini** (Google) tem um modelo principal para desenvolvimento e um dos mais baratos do mercado, é nativo em multimodalidade (texto, imagem, áudio e vídeo) e integra bem com o ecossistema do Google.
+
+Nenhum é "o melhor" em tudo: o Claude tende a ser consistente em seguir instruções complexas e trabalhar em bases grandes, o GPT é forte em raciocínio e tem o ecossistema mais amplo, e o Gemini é competitivo em preço. A escolha depende da tarefa, não da marca.
+
+### As ferramentas: do editor ao terminal
+
+Modelo e ferramenta são decisões independentes: o modelo é o motor, a ferramenta é o carro. As principais opções no momento do curso:
+
+- **Claude Code** é a ferramenta usada no curso. Roda no **terminal**, sem interface gráfica: recebe um objetivo, lê a base de código, planeja, implementa, roda os testes e devolve o resultado. Depois de acostumar, a ausência de IDE vira vantagem, com contexto limpo e integração direta com o git e o terminal. Suporta MCP, hooks, skills e subagents.
+- **Cursor** é um editor (um fork do VS Code) com uma camada de IA por cima: autocomplete preditivo, um agente que edita vários arquivos e um modo de planejamento. Deixa escolher o modelo por baixo.
+- **Antigravity** é a IDE do Google, com a filosofia de agentes autônomos trabalhando em paralelo enquanto a pessoa orquestra. É promissora, mas ainda instável para o dia a dia de produção.
+- **Lovable** é um gerador de aplicações a partir de uma descrição: serve bem para prototipar uma ideia ou montar um MVP, e tem dificuldade com código de produção mais complexo. Sincroniza com o GitHub, o que permite gerar ali e continuar em outra ferramenta.
+
+Nenhuma dessas é definitiva; o mapa muda a cada poucos meses. Por isso o curso foca em critérios, e não em catálogo: quem entende os critérios avalia qualquer ferramenta nova que aparecer.
+
+### Context engineering: o contexto vale mais que o prompt
+
+Quando se usa a IA de verdade no fluxo de trabalho, o trabalho deixa de ser escrever um prompt bonito. Passa a ser cuidar de **todo o contexto** que o agente recebe: as instruções do projeto, as convenções da equipe, as ferramentas a que ele tem acesso e o histórico da conversa. A ideia central do **context engineering** é que a qualidade do resultado depende menos do prompt e mais de tudo o que está ao redor dele.
+
+Na prática, é isso que separa o uso amador do profissional. Um prompt vago gera um resultado vago; um contexto bem montado gera um resultado que encaixa no projeto. As seções seguintes são, em boa parte, formas concretas de fazer context engineering: o arquivo de regras do projeto, o planejamento antes da execução e a conexão do agente a serviços externos.
+
+### Preparando o ambiente e criando o monorepo
+
+O primeiro passo prático foi instalar as ferramentas de linha de comando. Com o **nvm** (gerenciador de versões do Node), instala-se o Node; com o npm, instalam-se o **pnpm** (o gerenciador de pacotes usado no projeto) e o próprio **Claude Code**:
+
+```bash
+nvm install 22
+npm install -g pnpm
+npm install -g @anthropic-ai/claude-code
+```
+
+Com o Claude Code instalado, ele é iniciado digitando `claude` no terminal, dentro da pasta do projeto. O modelo de trabalho é escolhido com o comando `/model` (por exemplo, `/model opusplan`, que usa o Opus para planejar e um modelo mais leve para executar).
+
+A estrutura escolhida para o projeto CodeConnect foi um **monorepo**: um único repositório com mais de uma aplicação dentro. Usando **pnpm workspaces**, ele reúne dois apps, um front-end em **React com Vite** e um back-end em **NestJS**, ambos em TypeScript, cada um gerado com o `npx` a partir do zero. Na raiz, o `package.json` recebe atalhos para rodar comandos em cada app sem precisar trocar de pasta:
+
+```bash
+pnpm web:dev    # sobe o front-end
+pnpm api:dev    # sobe o back-end
+```
+
+O git foi inicializado uma vez na raiz, com um `.gitignore` em cada app e o cuidado de garantir que nenhum app tivesse um repositório git próprio dentro dele. Todo esse trabalho pode ser pedido ao agente em linguagem natural, descrevendo a estrutura desejada; o papel de quem conduz é revisar o que foi gerado.
+
+### O CLAUDE.md e as guidelines do projeto
+
+O comando **`/init`** do Claude Code lê a base de código e gera um arquivo **`CLAUDE.md`** na raiz. Esse arquivo é onde ficam o **contexto e as regras globais do projeto**: o agente o lê a cada sessão, então tudo que estiver ali passa a orientar o que ele gera. É a peça central do context engineering dentro do projeto.
+
+Depois de gerado, o `CLAUDE.md` foi incrementado com as convenções da equipe. No front-end: usar **Atomic Design** (organizar os componentes em atoms, molecules, organisms, templates e pages), **Tailwind** para estilo e a regra de que todo componente precisa de um teste cobrindo o seu uso essencial. No back-end: seguir os princípios **REST** (recursos como substantivos, verbos HTTP corretos, códigos de status semânticos, nomes de coleção no plural). E, para os dois, o padrão de **Conventional Commits** nas mensagens de commit.
+
+Mais adiante, duas guidelines foram acrescentadas ao arquivo para manter a consistência visual:
+
+- **Tamanhos de fonte**: usar sempre o token de tamanho do Tailwind mais próximo ao valor do design, em vez de valores arbitrários como `text-[31px]`.
+- **Cores**: em vez de hexadecimais soltos nas classes, estender o tema do Tailwind e configurar a paleta do projeto em tokens nomeados (por exemplo, `bg-grafite`, `text-offwhite`, `bg-verde-destaque`).
+
+Registrar essas regras no `CLAUDE.md` evita repeti-las em cada pedido: o agente passa a segui-las por padrão.
+
+### Planejar antes de executar: modos e modelos
+
+Um hábito que atravessou todo o curso foi **separar o planejamento da execução**, aproveitando os pontos fortes de cada modelo. O fluxo é:
+
+1. Colocar o agente em **modo de planejamento** com um modelo mais capaz (o Opus), descrever a tarefa com todos os detalhes (imagens de referência, pontos de atenção, oportunidades de reuso) e pedir que ele **salve o plano** em um arquivo, por exemplo em uma pasta `/plans`, sem implementar nada ainda.
+2. Revisar o plano com calma.
+3. Trocar para um modelo de execução (o Sonnet, mais barato) e pedir que ele **execute o plano** salvo.
+
+Esse padrão traz dois ganhos. O primeiro é de **custo e desempenho**: o modelo caro é usado só onde ele faz diferença, o raciocínio, e o barato faz o trabalho repetitivo da implementação. O segundo é de **qualidade**: revisar um plano em texto é muito mais fácil do que revisar um conjunto de arquivos já alterados, e um plano ruim é corrigido antes de virar código.
+
+### MCP: o protocolo que conecta o agente a serviços
+
+Um agente fica muito mais útil quando consegue conversar com serviços externos, como o GitHub, o Figma ou um banco de dados. O problema é que, antes, cada ferramenta de IA precisava de uma integração feita sob medida para cada serviço. Com muitos modelos e muitos serviços, o número de integrações a construir e manter explode.
+
+O **MCP** (Model Context Protocol) resolve isso do mesmo jeito que o padrão USB-C resolveu a confusão de cabos: em vez de um conector diferente para cada fabricante, um único padrão serve para todos. Cada serviço implementa o protocolo uma vez, e qualquer modelo que fale MCP consegue usá-lo. O MCP foi lançado como padrão aberto pela Anthropic em novembro de 2024, foi adotado pelos demais e, em dezembro de 2025, foi doado para a Linux Foundation, o que o torna infraestrutura aberta da indústria.
+
+Vale entender as peças envolvidas em uma chamada. Quando se pede "faça o code review deste PR", acontece uma cadeia:
+
+- O **host** (o Claude Code) recebe o pedido e o envia ao modelo junto com a lista de ferramentas disponíveis.
+- O **modelo** decide qual ferramenta usar (por exemplo, "ler o diff deste PR"), mas não chama o serviço diretamente: ele pede ao host.
+- O host encaminha o pedido a um **client**, que está ligado ao **server** MCP do serviço.
+- O **server** chama a API do serviço, pega o resultado e o devolve pelo mesmo caminho de volta.
+
+O detalhe importante é que o modelo **nunca fala direto com o serviço**: há sempre o host e o client no meio, e é ali que ficam as permissões e os controles de segurança.
+
+Um server MCP pode expor três tipos de coisa:
+
+- **Tools** (ferramentas): ações, como listar PRs ou fazer merge. Podem ter efeito colateral, por isso o host costuma pedir confirmação antes de executar.
+- **Resources** (recursos): dados para leitura, como o esquema de um banco ou um arquivo de configuração. O modelo lê, não altera.
+- **Prompts**: modelos de interação prontos que o server sugere, como um roteiro de code review.
+
+### O MCP do GitHub na prática
+
+O primeiro MCP configurado no curso foi o do **GitHub**, que dá ao agente acesso a repositórios, PRs e issues. São necessários o Claude Code instalado e um **token de acesso pessoal** (PAT, personal access token) do GitHub.
+
+O token é gerado nas configurações do GitHub, com um nome, um prazo de expiração e as permissões desejadas. Em um ambiente de estudo é aceitável liberar acesso amplo; em um projeto real, o correto é conceder **apenas as permissões necessárias**. O token aparece **uma única vez**, então precisa ser guardado com cuidado em uma **variável de ambiente**, nunca colado direto no código versionado.
+
+> **Atenção com segredos.** Um token dá acesso à conta e é um dado sensível, exatamente o tipo de coisa que o curso alerta para não vazar. Ele deve ficar em uma variável de ambiente ou em um arquivo `.env` incluído no `.gitignore`, e nunca ser escrito em arquivos que vão para o repositório. Nos exemplos abaixo, o valor real do token está substituído por um espaço reservado.
+
+O server é registrado no Claude Code com um comando que informa o tipo de conexão, a URL do server e o cabeçalho de autorização com o token:
+
+```bash
+claude mcp add-json github '{"type":"http","url":"https://api.githubcopilot.com/mcp","headers":{"Authorization":"Bearer <SEU_GITHUB_PAT>"}}'
+```
+
+Depois, dá para conferir se a conexão está de pé e ver os detalhes do server:
+
+```bash
+claude mcp list
+claude mcp get github
+```
+
+Com o MCP conectado, o fluxo de trabalho no terminal passou a incluir pedidos como "liste os PRs em aberto deste repositório" e "faça o code review e, estando tudo certo, faça o merge", tudo sem abrir o navegador. Vale reforçar que o merge é uma ação com efeito, então a revisão do que o agente propõe continua sendo responsabilidade de quem conduz.
+
+### O MCP do Figma: do design ao código
+
+O segundo MCP foi o do **Figma**, usado para transformar um design em código. Ele é mais trabalhoso de configurar que o do GitHub, e a razão está no tipo de problema que resolve. O GitHub expõe uma API REST aberta e simples; um arquivo do Figma, ao contrário, é uma estrutura proprietária com layers, componentes, variáveis, auto layout e estilos. Para gerar código fiel, o agente não precisa da imagem, e sim desses **dados estruturados**: qual componente é qual, quais tokens de cor e espaçamento ele usa e como está a hierarquia.
+
+Há dois caminhos para acessar esses dados: um **server local**, que roda dentro do Figma Desktop com o Dev Mode ativo, e um **server remoto**, hospedado pelo próprio Figma. Os dois exigem autenticação e um plano com o acesso adequado. A configuração no Claude Code, no caso do server remoto, segue o mesmo formato dos demais MCPs:
+
+```bash
+claude mcp add --transport http figma https://mcp.figma.com/mcp
+```
+
+Um ponto de atenção prático é o **consumo de cota**: cada ferramenta do Figma MCP que lê dados conta contra um limite, que varia conforme o plano. Pedir muitos frames em sequência pode esgotar a cota rápido.
+
+A lição mais importante desta parte é que **a qualidade do código gerado depende de como o Figma está organizado**. Um arquivo bem estruturado (com componentes bem definidos, variáveis de cor e tipografia, layers nomeados de forma clara e auto layout configurado) entrega dados que o agente interpreta bem, e o resultado chega perto do design. Um arquivo desorganizado entrega dados desorganizados, e o agente faz o que pode com o que recebe. Por isso, a abordagem que funciona é ir **do menor para o maior**: gerar primeiro os componentes atômicos (botão, input, badge), validar cada um e depois compor os maiores a partir deles. E, mesmo com tudo bem organizado, o resultado raramente sai perfeito de primeira: ajustes finos, comparando o implementado com o layout, continuam necessários.
+
+### Spec-driven development: a especificação como contrato
+
+O que mais influenciou a qualidade dos resultados no curso não foi o texto do prompt, e sim o quanto se deixava claro **o que se queria antes de pedir**: critérios de aceite, contrato da API, regras de negócio e a stack. Esse hábito tem um nome que vem ganhando espaço no mercado: **spec-driven development** (desenvolvimento guiado por especificação).
+
+A ideia é escrever, antes de qualquer pedido, uma **especificação**, um documento curto que descreve o que será construído, por quê, quais são as restrições e como saber que está pronto. O agente implementa a partir desse documento, não de um prompt solto. É a diferença entre dois fluxos: sem spec (prompt direto, aceitar, descobrir o problema depois) e com spec (definir a intenção, desenhar a solução, implementar contra a spec, validar).
+
+Existe até ferramenta para estruturar esse fluxo, como o **Spec Kit**, do GitHub, que separa o trabalho em fases (o que e por que, depois como, depois a quebra em tarefas e só então a implementação) e traz o conceito de um arquivo de regras inegociáveis do projeto, a mesma ideia do `CLAUDE.md`. O curso não adota uma ferramenta formal de spec, mas o que se faz ao planejar antes de pedir, definir critérios de aceite e revisar antes de aceitar já é spec-driven na essência.
+
+### Do front ao back: acessibilidade, API e persistência
+
+A parte final do projeto integrou front-end e back-end, e cada etapa reforçou o mesmo método de planejar, pedir, revisar e ajustar.
+
+**Acessibilidade.** Antes de avançar, o projeto precisou garantir o segundo nível do **WCAG** (o padrão de acessibilidade da web). O caminho foi começar pelos **testes automatizados** para levantar os problemas (com ferramentas como o Lighthouse), analisar o relatório, planejar as correções e então executá-las. Ajustes típicos foram o idioma da página, a semântica do HTML e os atributos WAI-ARIA.
+
+**Os endpoints.** O back-end em NestJS recebeu três endpoints: um para **cadastrar** uma pessoa usuária (nome, e-mail e senha), um para **efetuar login** com **JWT** (JSON Web Token) e um para **obter os dados da pessoa logada**, protegido por um **auth guard** seguindo o padrão da documentação do NestJS. A documentação da API foi gerada com o **Swagger** (entradas e saídas de cada rota). No começo, os dados ficaram apenas em memória, em um array, para só depois migrarem para um banco.
+
+**Testes da API.** Os endpoints e a autenticação foram validados com uma ferramenta de cliente HTTP (o **Bruno**), que permite disparar requisições e conferir as respostas sem depender do front-end.
+
+**Persistência.** O array em memória foi substituído por um banco **PostgreSQL**. A escolha do ORM foi pedida ao agente com uma exigência importante: **justificar a escolha e apontar as alternativas consideradas**. O ORM adotado foi o **TypeORM**. Para o banco, foi criado um **Docker Compose** na raiz do projeto, já montando um **volume** para manter os dados persistidos entre as execuções.
+
+**Integração.** No front-end, a comunicação com a API passou a usar o **axios** (cliente HTTP para JavaScript), consumindo os endpoints de autenticação documentados no Swagger.
+
+**O feed.** A última funcionalidade foi a página de **feed de posts**: modelos e migrations no back-end, um **seed** gerando posts fictícios, um **placeholder** para quando um post não tem imagem, o reuso dos componentes já criados no front-end e uma regra de negócio clara (quem não está logado pode ver o feed, mas não comentar nem curtir; quem está logado pode criar, comentar e curtir). O filtro do feed foi implementado como uma **busca full-text** no lado do back-end.
+
+Um recurso de apoio que apareceu aqui foi o **Git worktree**, que permite ter várias branches em pastas separadas ao mesmo tempo, útil para rodar sessões paralelas do agente sem que uma atrapalhe a outra.
+
+### O "slop dev" e a dívida técnica na velocidade da IA
+
+O curso dá nome ao mau uso da ferramenta: o **slop dev**, aquele que escreve prompts vagos, não revisa nada e deixa passar até um segredo em um PR. O ponto é que a IA não cria um problema novo; ela **acelera** um problema antigo. Código ruim, sem revisão, sem teste e sem pensar em manutenção, existe desde antes da IA. A diferença é a velocidade: a dívida técnica que antes se acumulava no ritmo humano agora se acumula no ritmo da máquina.
+
+O mercado sente esse efeito. Pesquisas recentes com pessoas desenvolvedoras mostram um padrão curioso: o uso de ferramentas de IA cresceu, mas a confiança na precisão do resultado caiu, e a maior frustração é lidar com código gerado que está "quase certo, mas não exatamente", que acaba tomando mais tempo para depurar do que se tivesse sido escrito à mão. A maioria também diz que o vibe coding não faz parte do trabalho profissional e que o motivo mais comum para ainda recorrer a uma pessoa é justamente **não confiar na resposta da IA**.
+
+A conclusão prática é direta: a **responsabilidade é de quem faz o commit**. A IA não responde quando o sistema cai de madrugada; quem assina o commit responde. Usar IA para desenvolver mais rápido é inteligente; usar IA para desenvolver sem pensar é acumular dívida técnica com juros. As ferramentas mudam, os princípios não.
+
+### O agente fora do terminal: CI/CD, Slack e agendamento
+
+O último passo foi tirar o agente do uso manual no terminal e colocá-lo para trabalhar de forma **automática**. O exemplo central foi configurar o Claude Code como uma **GitHub Action** que faz **code review automático** sempre que alguém abre um PR para a branch principal. Para isso é preciso instalar o app do Claude Code no GitHub, configurar uma chave de API da Anthropic com créditos (é ela que paga a execução) e adicionar o arquivo YAML da action ao repositório, com o prompt que orienta a revisão. Um detalhe que evita falhas: o arquivo da action na branch de trabalho precisa estar igual ao da branch principal.
+
+A partir daí, o mesmo padrão se estende para além do CI/CD:
+
+- **Slack como gatilho**: marcar o agente em uma thread onde um bug foi reportado; ele lê o contexto da conversa, investiga a base de código, implementa a correção e abre um PR, enviando atualizações na própria thread.
+- **Tarefas agendadas**: o agente roda tarefas recorrentes na infraestrutura da Anthropic, mesmo com a máquina desligada, como revisar os PRs abertos toda manhã, auditar dependências toda semana ou gerar um changelog a cada merge.
+- **Remote control**: acompanhar e controlar as sessões do agente de qualquer lugar, inclusive pelo celular.
+
+O que muda com isso não é a habilidade essencial (montar o contexto, revisar, saber quando confiar e quando desconfiar), e sim a **escala**: o agente passa a trabalhar em paralelo, de forma assíncrona, enquanto a pessoa foca no que exige julgamento humano.
+
+### O dev à prova de futuro: os 3 Os
+
+O curso encerra com um enquadramento sobre a carreira, apoiado no material "Dev à prova de futuro". A mudança trazida pela IA não elimina a pessoa desenvolvedora; ela desloca onde essa pessoa gasta o tempo, de escrever código para garantir que o código (venha de onde vier) funciona, é seguro e é sustentável.
+
+Um resumo útil desse novo papel são os **3 Os**:
+
+- **Operar**: usar as ferramentas de IA com fluência no trabalho.
+- **Orquestrar**: coordenar agentes e sistemas, dividindo e conduzindo o trabalho em vez de digitar cada linha.
+- **Observar**: revisar, validar e responsabilizar-se pelo resultado, mantendo o senso crítico.
+
+É por isso que o curso não gira em torno de uma ferramenta específica, que pode mudar em seis meses, e sim do repertório para trabalhar com qualquer agente, em qualquer cenário, com critério para não aceitar um resultado ruim como se fosse bom. As ferramentas mudam; o conhecimento, a experiência e o senso crítico permanecem.

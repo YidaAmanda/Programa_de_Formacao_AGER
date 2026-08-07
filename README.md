@@ -42,7 +42,7 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 | 11 | Consultas SQL: avançando no SQL com MySQL | Curso | 14h | Concluído |
 | 12 | Java e JDBC: trabalhando com um banco de dados | Curso | 12h | Concluído |
 | 13 | Engenharia de software na era da IA: como usar IA no fluxo real de desenvolvimento | Curso | 10h | Concluído |
-| 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | A fazer |
+| 14 | O que é Metodologia Ágil? Entenda Metodologias Ágeis no desenvolvimento de software e projetos | Artigo | - | Concluído |
 
 ### Sub-trilha: Iniciante em programação
 
@@ -164,6 +164,14 @@ Diferente dos cursos anteriores, o objeto de estudo aqui não foi uma linguagem,
 **Principais tópicos:** escolha de modelos (Claude, GPT, Gemini) · janela de contexto, custo por token, latência e qualidade · Claude Code no terminal e o `/model` · context engineering e o `CLAUDE.md` · `/init` · monorepo com pnpm workspaces · planejamento com modo plano (Opus) e execução (Sonnet) · MCP (host, client, server; tools, resources e prompts) · MCP do GitHub com PAT · MCP do Figma e Atomic Design · spec-driven development · acessibilidade (WCAG, Lighthouse, WAI-ARIA) · endpoints REST com JWT e Swagger · Bruno · PostgreSQL, TypeORM e Docker Compose · axios · feed com seed, placeholder e busca full-text · GitHub Action de code review · segredos e riscos (prompt injection, dados sensíveis, overreliance) · os 3 Os (Operar, Orquestrar, Observar)
 
 ➡️ [Anotações completas deste curso](./ANOTACOES.md#curso-engenharia-de-software-na-era-da-ia-como-usar-ia-no-fluxo-real-de-desenvolvimento)
+
+### 14. Artigo: O que é metodologia ágil?
+
+O item que fecha a trilha é um artigo sobre a forma de organizar o trabalho, tema que acompanha qualquer tecnologia. Metodologia ágil é o nome de um conjunto de abordagens que trocam o plano rígido por **ciclos curtos de entrega e ajuste contínuo**: em vez de planejar tudo no início, a equipe entrega partes funcionais com frequência, ouve quem usa o resultado e corrige o rumo a cada ciclo. O artigo passa pela origem da ideia no **Manifesto Ágil** (2001) e seus quatro valores, pelos principais frameworks que a colocam em prática (**Scrum**, **Kanban**, **XP**, **Lean** e outros), pela diferença em relação ao modelo **cascata** e pelo uso do modelo **Cynefin** para decidir quando o ágil é a escolha certa.
+
+**Principais tópicos:** metodologia ágil e seus quatro pilares (iteratividade, colaboração, autonomia, entrega de valor) · Manifesto Ágil e seus quatro valores · os doze princípios · Scrum, sprints e papéis (Product Owner, Scrum Master, equipe) · Kanban e o quadro de tarefas · Extreme Programming (XP) e TDD · Lean · Crystal · SAFe · LeSS · ágil x cascata (waterfall) · o modelo Cynefin e os domínios complexos · vantagens da abordagem ágil
+
+➡️ [Anotações completas deste artigo](./ANOTACOES.md#artigo-o-que-é-metodologia-ágil)
 
 ---
 

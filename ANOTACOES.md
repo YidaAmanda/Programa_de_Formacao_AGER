@@ -156,6 +156,13 @@
   - [O "slop dev" e a dívida técnica na velocidade da IA](#o-slop-dev-e-a-dívida-técnica-na-velocidade-da-ia)
   - [O agente fora do terminal: CI/CD, Slack e agendamento](#o-agente-fora-do-terminal-cicd-slack-e-agendamento)
   - [O dev à prova de futuro: os 3 Os](#o-dev-à-prova-de-futuro-os-3-os)
+- [Artigo: O que é metodologia ágil?](#artigo-o-que-é-metodologia-ágil)
+  - [O que é metodologia ágil](#o-que-é-metodologia-ágil)
+  - [O Manifesto Ágil e seus valores](#o-manifesto-ágil-e-seus-valores)
+  - [Os principais frameworks e metodologias](#os-principais-frameworks-e-metodologias)
+  - [Ágil ou cascata: duas formas de conduzir um projeto](#ágil-ou-cascata-duas-formas-de-conduzir-um-projeto)
+  - [Quando faz sentido ser ágil: o modelo Cynefin](#quando-faz-sentido-ser-ágil-o-modelo-cynefin)
+  - [Papéis e prática: quem faz o quê e o que se ganha](#papéis-e-prática-quem-faz-o-quê-e-o-que-se-ganha)
 
 ---
 
@@ -4416,3 +4423,59 @@ Um resumo útil desse novo papel são os **3 Os**:
 - **Observar**: revisar, validar e responsabilizar-se pelo resultado, mantendo o senso crítico.
 
 É por isso que o curso não gira em torno de uma ferramenta específica, que pode mudar em seis meses, e sim do repertório para trabalhar com qualquer agente, em qualquer cenário, com critério para não aceitar um resultado ruim como se fosse bom. As ferramentas mudam; o conhecimento, a experiência e o senso crítico permanecem.
+
+---
+
+## Artigo: O que é metodologia ágil?
+
+O último item da trilha não é um curso, e sim um artigo que fecha o programa com um tema que atravessa todas as tecnologias vistas até aqui: a forma de organizar o trabalho. Metodologia ágil é o nome dado a um conjunto de abordagens de gestão de projetos que trocam o plano rígido e fechado por ciclos curtos de entrega e ajuste contínuo. Em vez de definir tudo no início e seguir o roteiro até o fim, a equipe entrega partes funcionais com frequência, ouve quem vai usar o resultado e corrige o rumo a cada ciclo. O artigo apresenta a origem dessa ideia, os principais frameworks que a colocam em prática e os critérios para decidir quando ela faz sentido.
+
+### O que é metodologia ágil
+
+Uma metodologia ágil prioriza a **flexibilidade** e a **adaptação** em vez de planos fixos. A premissa é simples: em projetos com incerteza, tentar prever tudo no começo custa caro e erra muito, então é melhor entregar em pequenas partes, verificar o que funcionou e ajustar. O artigo organiza essa forma de trabalhar em quatro pilares:
+
+- **Iteratividade**: o desenvolvimento acontece em ciclos curtos, cada um entregando uma parte funcional do produto em vez de esperar o projeto inteiro ficar pronto.
+- **Colaboração**: a comunicação entre a equipe e as pessoas interessadas (stakeholders) é constante, e o conhecimento circula entre áreas diferentes.
+- **Autonomia e empoderamento**: as equipes se auto-organizam e têm espaço para tomar decisões, em vez de depender de ordens vindas de cima.
+- **Entrega de valor**: o foco é gerar benefício real e contínuo para quem recebe o resultado, não apenas cumprir etapas.
+
+### O Manifesto Ágil e seus valores
+
+A referência que deu nome ao movimento é o **Manifesto Ágil**, escrito em 2001 por dezessete profissionais de desenvolvimento de software que buscavam uma alternativa aos processos pesados da época. O manifesto se apoia em quatro valores, e cada um coloca uma coisa **acima** de outra sem descartar a segunda:
+
+1. **Indivíduos e interações** acima de processos e ferramentas.
+2. **Software funcionando** acima de documentação abrangente.
+3. **Colaboração com o cliente** acima de negociação de contratos.
+4. **Resposta a mudanças** acima de seguir um plano.
+
+O ponto que costuma passar despercebido é que os itens da direita continuam tendo valor; o manifesto apenas diz que, quando houver conflito, os da esquerda pesam mais. Além dos valores, o documento traz **doze princípios** que os detalham, como satisfazer o cliente com entregas contínuas, aceitar mudanças de requisito mesmo em fases avançadas e manter um ritmo de trabalho sustentável.
+
+### Os principais frameworks e metodologias
+
+"Ágil" é a filosofia; os frameworks são as formas concretas de aplicá-la. O artigo apresenta os mais usados:
+
+- **Scrum**: framework iterativo apoiado em três pilares (transparência, inspeção e adaptação). O trabalho acontece em **sprints**, ciclos de duas a quatro semanas, com artefatos como o Product Backlog e papéis bem definidos.
+- **Kanban**: foca em **visualizar o trabalho** e limitar quantas tarefas ficam em andamento ao mesmo tempo. Usa um quadro com cartões que avançam pelas etapas do fluxo.
+- **Extreme Programming (XP)**: criado por Kent Beck, valoriza práticas de engenharia como programação em par (pair programming), desenvolvimento orientado a testes (TDD) e integração contínua.
+- **Lean**: nascido do sistema de produção da Toyota, busca eliminar desperdícios e cultivar a melhoria contínua.
+- **Crystal**: uma família de metodologias que se ajustam ao tamanho e ao contexto de cada projeto e equipe.
+- **SAFe (Scaled Agile Framework)**: pensado para aplicar o ágil em larga escala, reunindo Lean, Scrum e Kanban em grandes organizações.
+- **LeSS (Large-Scale Scrum)**: adapta o Scrum para várias equipes trabalhando juntas, mantendo seus valores essenciais.
+
+### Ágil ou cascata: duas formas de conduzir um projeto
+
+A abordagem tradicional é a **cascata** (waterfall): o projeto avança por fases sequenciais (planejamento, análise, design, desenvolvimento, testes e implementação), e cada fase só começa quando a anterior termina. Funciona bem quando o problema é conhecido e os requisitos não mudam, mas cobra caro quando algo precisa ser revisto, já que voltar atrás significa refazer etapas inteiras. A metodologia ágil faz o contrário: trabalha em ciclos que permitem revisar e ajustar o tempo todo, entregando valor aos poucos em vez de tudo no fim. Uma não é melhor que a outra em abstrato; cada uma serve a um tipo de projeto.
+
+### Quando faz sentido ser ágil: o modelo Cynefin
+
+Nem todo projeto pede uma abordagem ágil. O artigo usa o modelo **Cynefin** para ajudar nessa escolha, separando os problemas pela sua natureza. Em domínios **complexos**, onde há incerteza, muitos fatores que se influenciam e nenhuma solução pronta, o ágil se destaca, porque experimentar e ajustar é o caminho mais seguro. Já em problemas **simples** ou **complicados**, com solução conhecida e previsível, abordagens estruturadas como a cascata podem ser mais adequadas. O recado é evitar tratar o ágil como resposta única: a primeira pergunta é qual o tipo de problema em mãos.
+
+### Papéis e prática: quem faz o quê e o que se ganha
+
+No vocabulário do Scrum, três papéis se destacam:
+
+- **Product Owner**: define as prioridades e representa as necessidades do cliente.
+- **Scrum Master**: facilita o processo e remove os obstáculos que travam a equipe.
+- **Equipe de desenvolvimento**: auto-organizada, é quem executa o trabalho.
+
+Para funcionar na prática, o artigo resume seis atitudes que sustentam o dia a dia ágil: adaptar-se continuamente, buscar feedback constante das pessoas interessadas, manter o progresso transparente, entregar valor tangível, experimentar para aprender e colaborar com engajamento. Quando isso acontece, os ganhos aparecem em pontos concretos: cliente mais satisfeito, prioridades mais bem geridas, mais visibilidade sobre o andamento do projeto, equipe mais produtiva e motivada e capacidade de responder rápido a mudanças de requisito. O sucesso depende menos de seguir um ritual à risca e mais de comunicação fluida, conhecimento compartilhado do trabalho de cada pessoa e alinhamento frequente com quem recebe o resultado.

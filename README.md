@@ -274,7 +274,7 @@ Diferente dos demais, este projeto foi construído com o apoio de um **agente de
 | Pasta | Descrição | O que usei |
 |---------|-----------|------------|
 | [`apps/web`](./code-connect-aula-5/apps/web) | Front-end do CodeConnect: páginas de login, cadastro e feed de posts, com componentes organizados em Atomic Design, autenticação por contexto e rotas protegidas | React 19, Vite, TypeScript, Tailwind CSS, Atomic Design, axios, Vitest + Testing Library |
-| [`apps/api`](./code-connect-aula-5/apps/api) | Back-end do CodeConnect: endpoints REST de cadastro, login (JWT) e dados do usuário logado, além do CRUD de posts com curtidas, comentários e busca full-text | NestJS 11, TypeScript, TypeORM, PostgreSQL, JWT (Passport), bcrypt, Swagger, Jest |
+| [`apps/api`](./code-connect-aula-5/apps/api) | Back-end do CodeConnect: endpoints REST de cadastro, login (JWT) e dados de quem está logado, além do CRUD de posts com curtidas, comentários e busca full-text | NestJS 11, TypeScript, TypeORM, PostgreSQL, JWT (Passport), bcrypt, Swagger, Jest |
 
 O projeto ainda traz o `CLAUDE.md` (contexto e guidelines para o agente), uma pasta [`plans/`](./code-connect-aula-5/plans) com os planos salvos antes da execução, um `docker-compose.yml` para o PostgreSQL e uma GitHub Action de code review automático em [`.github/workflows`](./code-connect-aula-5/.github/workflows).
 
@@ -446,7 +446,7 @@ Os testes de unidade (calculadora de probabilidade, validações e serviços) ro
 
 ## Como executar os scripts MySQL
 
-Os scripts da pasta [`MySQL/`](./MySQL) são o que foi praticado nos dois cursos de SQL — o introdutório sobre a base **Sucos** e o de consultas avançadas sobre a base **`sucos_vendas`**.
+Os scripts da pasta [`MySQL/`](./MySQL) são o que foi praticado nos dois cursos de SQL: o introdutório sobre a base **Sucos** e o de consultas avançadas sobre a base **`sucos_vendas`**.
 
 1. Tenha um **MySQL** rodando (o servidor instalado junto do **MySQL Workbench**).
 2. Abra o **Workbench** e crie uma conexão com o servidor (usuário `root` e a senha definida na instalação).

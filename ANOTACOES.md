@@ -19,17 +19,61 @@
   - [5. Crie um projeto seu e compartilhe](#5-crie-um-projeto-seu-e-compartilhe)
 - [Trilha: Iniciante em programação](#trilha-iniciante-em-programação)
   - [O que é programação?](#o-que-é-programação)
-  - [Lógica de programação com JavaScript](#lógica-de-programação-com-javascript)
+  - [Variáveis e tipos de dados](#variáveis-e-tipos-de-dados)
+  - [Entrada e saída](#entrada-e-saída)
+  - [Operadores e condicionais](#operadores-e-condicionais)
+  - [Laços de repetição](#laços-de-repetição)
+  - [Funções](#funções)
+  - [Listas (arrays)](#listas-arrays)
+  - [Números aleatórios](#números-aleatórios)
+  - [Template strings](#template-strings)
   - [JavaScript no navegador: o DOM](#javascript-no-navegador-o-dom)
+  - [Selecionando e alterando elementos](#selecionando-e-alterando-elementos)
+  - [Estilo com classList](#estilo-com-classlist)
+  - [Web Speech API](#web-speech-api)
   - [Git e GitHub](#git-e-github)
+  - [As três áreas do Git](#as-três-áreas-do-git)
+  - [Configuração e primeiros passos](#configuração-e-primeiros-passos)
+  - [O fluxo do dia a dia](#o-fluxo-do-dia-a-dia)
+  - [Colaboração](#colaboração)
+  - [Desfazendo alterações](#desfazendo-alterações)
+  - [.gitignore e README](#gitignore-e-readme)
+  - [Gist](#gist)
 - [Trilha: Aprenda a programar em Java com orientação a objetos](#trilha-aprenda-a-programar-em-java-com-orientação-a-objetos)
   - [A plataforma Java](#a-plataforma-java)
-  - [Fundamentos da linguagem](#fundamentos-da-linguagem)
+  - [Tipagem estática](#tipagem-estática)
+  - [Entrada, saída e formatação](#entrada-saída-e-formatação)
+  - [Casting: conversão entre tipos numéricos](#casting-conversão-entre-tipos-numéricos)
+  - [Condicionais e comparações](#condicionais-e-comparações)
+  - [Laços de repetição](#laços-de-repetição-1)
+  - [Text blocks](#text-blocks)
+  - [Convenções de código](#convenções-de-código)
   - [Orientação a objetos](#orientação-a-objetos)
-  - [Listas e coleções](#listas-e-coleções)
+  - [Classes e objetos](#classes-e-objetos)
+  - [Construtores](#construtores)
+  - [Encapsulamento](#encapsulamento)
+  - [Pacotes e import](#pacotes-e-import)
+  - [Herança](#herança)
+  - [Interfaces](#interfaces)
+  - [Polimorfismo](#polimorfismo)
+  - [ArrayList: a lista que cresce](#arraylist-a-lista-que-cresce)
+  - [toString, Object e instanceof](#tostring-object-e-instanceof)
+  - [Ordenação: Comparable e Comparator](#ordenação-comparable-e-comparator)
+  - [A interface List e suas implementações](#a-interface-list-e-suas-implementações)
+  - [Map e HashMap](#map-e-hashmap)
+  - [Padrões de projeto (design patterns)](#padrões-de-projeto-design-patterns)
   - [APIs, HTTP e JSON](#apis-http-e-json)
+  - [HTTP e códigos de status](#http-e-códigos-de-status)
+  - [JSON](#json)
+  - [Consumindo uma API em Java](#consumindo-uma-api-em-java)
   - [Bibliotecas, Gson e records](#bibliotecas-gson-e-records)
+  - [Serialização e desserialização](#serialização-e-desserialização)
+  - [Records](#records)
+  - [Imutabilidade](#imutabilidade)
   - [Exceções](#exceções)
+  - [A hierarquia](#a-hierarquia)
+  - [Ordem dos catch](#ordem-dos-catch)
+  - [Exceções personalizadas](#exceções-personalizadas)
   - [Arquivos (java.io)](#arquivos-javaio)
 - [Trilha: Java Web: crie aplicações usando Spring Boot](#trilha-java-web-crie-aplicações-usando-spring-boot)
   - [Spring e Spring Boot](#spring-e-spring-boot)
@@ -103,7 +147,7 @@
   - [Jest e o primeiro teste](#jest-e-o-primeiro-teste)
   - [Renderizando e consultando: render, screen e as queries](#renderizando-e-consultando-render-screen-e-as-queries)
   - [Asserções e testes de snapshot](#asserções-e-testes-de-snapshot)
-  - [Simulando o usuário com o userEvent](#simulando-o-usuário-com-o-userevent)
+  - [Simulando a pessoa usuária com o userEvent](#simulando-a-pessoa-usuária-com-o-userevent)
   - [Organizando testes e testando props](#organizando-testes-e-testando-props)
   - [Mock de funções com jest.fn()](#mock-de-funções-com-jestfn)
   - [TDD: desenvolvimento orientado a testes](#tdd-desenvolvimento-orientado-a-testes)
@@ -237,17 +281,17 @@ O último passo é transformar o estudo em algo concreto: criar um projeto próp
 
 **Cursos:** Começando em Programação: carreira e primeiros passos · Lógica de programação: mergulhe em programação com JavaScript · Lógica de programação: explore funções e listas · Git e GitHub: compartilhando e colaborando em projetos · Lógica de programação: praticando com desafios
 
+A primeira trilha parte do zero: o que é programar e como pensar de forma lógica, usando o JavaScript por ele rodar direto no navegador. A partir daí, o caminho passa pela lógica de programação (variáveis, condicionais, laços, funções e listas), pela manipulação da página com o DOM e fecha com o versionamento de código usando Git e GitHub. Os projetos foram o Jogo do Número Secreto e uma série de mini-aplicações web.
+
 ### O que é programação?
 
-Programar é **escrever instruções que o computador consegue executar**. O computador não interpreta ambiguidade: cada passo precisa estar descrito de forma exata e na ordem certa, e é isso que chamamos de **lógica de programação**. A linguagem de programação (JavaScript, Java, Python...) é a ponte entre o que queremos dizer e o que a máquina entende.
+Programar é **escrever instruções que o computador consegue executar**. O computador não interpreta ambiguidade: cada passo precisa estar descrito de forma exata e na ordem certa, e é isso que se chama de **lógica de programação**. A linguagem de programação (JavaScript, Java, Python...) é a ponte entre o que se quer dizer e o que a máquina entende.
 
 A trilha começou com JavaScript por um motivo prático: ele roda direto no navegador, então dá para programar sem instalar quase nada e **ver o resultado na tela imediatamente**.
 
-### Lógica de programação com JavaScript
+### Variáveis e tipos de dados
 
-#### Variáveis e tipos de dados
-
-Uma **variável** é um espaço na memória com um nome, onde guardamos um valor para usar depois. Em JavaScript, declaramos com `let`:
+Uma **variável** é um espaço na memória com um nome, onde se guarda um valor para usar depois. Em JavaScript, declara-se com `let`:
 
 ```javascript
 let numeroSecreto = 42;        // número
@@ -257,7 +301,7 @@ let acertou = false;           // booleano (true/false)
 
 O JavaScript é **dinamicamente tipado**: a variável não tem tipo fixo, o valor que tem. Por isso é importante dar **nomes descritivos** (`numeroLimite` em vez de `n`), o código é lido muito mais vezes do que é escrito.
 
-#### Entrada e saída
+### Entrada e saída
 
 No navegador, as formas mais simples de conversar com quem usa o programa são:
 
@@ -266,11 +310,9 @@ No navegador, as formas mais simples de conversar com quem usa o programa são:
 
 Detalhe que pega muita gente: o `prompt` **sempre devolve string**, mesmo que a pessoa digite um número. Para fazer contas, é preciso converter com `parseInt(texto)` (inteiro) ou `parseFloat(texto)` (decimal).
 
-#### Operadores e condicionais
+### Operadores e condicionais
 
-Condicionais permitem que o programa **tome decisões**: execute um bloco se uma condição for verdadeira e outro se não for.
-
-##### `if` / `else if` / `else`
+Condicionais permitem que o programa **tome decisões**: execute um bloco se uma condição for verdadeira e outro se não for. A forma básica é o `if` / `else if` / `else`:
 
 ```javascript
 if (chute == numeroSecreto) {
@@ -282,22 +324,15 @@ if (chute == numeroSecreto) {
 }
 ```
 
-##### Operadores usados nas condições
+Nas condições entram dois grupos de operadores: os de **comparação** (`>`, `<`, `>=`, `<=`, `==`, `!=`) e os **lógicos** (`&&`, `||`).
 
-- **Comparação:** `>`, `<`, `>=`, `<=`, `==`, `!=`
-- **Lógicos:** `&&`, `||`
-
-##### Operador ternário
-
-Um `if / else` de uma linha só, útil para escolher entre **dois valores**:
+O **operador ternário** é um `if / else` de uma linha só, útil para escolher entre **dois valores**:
 
 ```javascript
 let palavra = tentativas == 1 ? 'tentativa' : 'tentativas';
 ```
 
-##### `switch` / `case`
-
-Quando a decisão é comparar **um mesmo valor** com várias possibilidades, uma escada de `if / else if / else if...` funciona, mas fica repetitiva e difícil de ler. O `switch` expressa esse caso específico de forma mais direta: ele avalia o valor entre parênteses e pula direto para o `case` correspondente.
+Quando a decisão é comparar **um mesmo valor** com várias possibilidades, uma escada de `if / else if / else if...` funciona, mas fica repetitiva e difícil de ler. O **`switch` / `case`** expressa esse caso específico de forma mais direta: ele avalia o valor entre parênteses e pula direto para o `case` correspondente.
 
 ```javascript
 switch (tipoIngresso) {
@@ -317,18 +352,13 @@ Dois detalhes que costumam pegar quem está começando:
 - **`break`** - obrigatório ao final de cada caso. Sem ele, o JavaScript continua executando os `case` seguintes (o chamado *fall-through*), mesmo os que não batem com o valor.
 - **`default`** - opcional; faz o papel do `else`, cobrindo qualquer valor que não tenha um `case` próprio.
 
-O `switch` também combina bem com **uma função para cada caso**: ele só decide *qual* função chamar, e cada função cuida do seu próprio trabalho.
+O `switch` também combina bem com **uma função para cada caso**: ele só decide *qual* função chamar, e cada função cuida do seu próprio trabalho. Sobre quando usar cada um: o **`switch`** compara uma variável com **valores fixos e exatos** (um número de menu, um tipo, um estado), enquanto o **`if / else if`** cobre **faixas ou condições compostas**, como `nota >= 7 && presente`.
 
-##### Quando usar cada um
-
-- **`switch`** - comparar uma variável com **valores fixos e exatos** (um número de menu, um tipo, um estado).
-- **`if / else if`** - **faixas ou condições compostas**, como `nota >= 7 && presente`.
-
-#### Laços de repetição
+### Laços de repetição
 
 Um **laço (loop)** repete um bloco de código enquanto uma condição for verdadeira. É o que evita copiar e colar a mesma linha várias vezes.
 
-- **`while`** - repete *enquanto* a condição valer. Bom quando **não sabemos quantas vezes** vai repetir (ex.: repetir até o usuário acertar):
+- **`while`** - repete *enquanto* a condição valer. Bom quando **não se sabe quantas vezes** vai repetir (ex.: repetir até a pessoa acertar):
 
 ```javascript
 while (chute != numeroSecreto) {
@@ -336,7 +366,7 @@ while (chute != numeroSecreto) {
 }
 ```
 
-- **`do while`** - parente do `while`, com uma diferença que muda tudo: ele **testa a condição no final**, e não no começo. Por isso o bloco **executa pelo menos uma vez**, mesmo que a condição já nasça falsa. É o formato natural para menus e para pedir uma entrada ao usuário: a pergunta precisa acontecer antes de haver o que validar.
+- **`do while`** - parente do `while`, com uma diferença que muda tudo: ele **testa a condição no final**, e não no começo. Por isso o bloco **executa pelo menos uma vez**, mesmo que a condição já nasça falsa. É o formato natural para menus e para pedir uma entrada à pessoa usuária: a pergunta precisa acontecer antes de haver o que validar.
 
 ```javascript
 let chute;
@@ -355,9 +385,9 @@ for (let i = 1; i <= 10; i++) {
 
 Comparando os três: use **`for`** quando souber a quantidade de repetições, **`while`** quando a repetição depender de uma condição que pode nem ser verdadeira no início, e **`do while`** quando o bloco precisar rodar ao menos uma vez antes do primeiro teste.
 
-#### Funções
+### Funções
 
-Uma **função** é um bloco de código com nome, que pode ser executado quantas vezes quisermos. Elas existem para **organizar** o programa em partes com propósito claro e **reaproveitar** lógica sem duplicar código.
+Uma **função** é um bloco de código com nome, que pode ser executado quantas vezes for preciso. Elas existem para **organizar** o programa em partes com propósito claro e **reaproveitar** lógica sem duplicar código.
 
 ```javascript
 function exibirMensagem(texto) {   // "texto" é um parâmetro
@@ -374,10 +404,10 @@ let total = somar(2, 3);           // total = 5
 
 Dois detalhes importantes:
 
-- **`return` encerra a função na hora**. Isso é muito usado em validações: se a entrada é inválida, mostramos o erro e saímos com `return`, sem executar o resto (padrão conhecido como *early return*).
+- **`return` encerra a função na hora**. Isso é muito usado em validações: se a entrada é inválida, exibe-se o erro e encerra-se com `return`, sem executar o resto (padrão conhecido como *early return*).
 - Uma função pode **receber dados** (parâmetros) e **devolver dados** (retorno), ou nenhum dos dois.
 
-#### Listas (arrays)
+### Listas (arrays)
 
 Um **array** guarda vários valores em uma única variável, em ordem, cada um com um **índice que começa em 0**.
 
@@ -390,18 +420,18 @@ sorteados.length;                // 2 (quantidade de elementos)
 sorteados.includes(7);           // true (existe na lista?)
 ```
 
-A dupla `push` + `includes` resolve um problema clássico: **evitar valores repetidos**, antes de adicionar verificamos se o valor já está na lista.
+A dupla `push` + `includes` resolve um problema clássico: **evitar valores repetidos**, antes de adicionar verifica-se se o valor já está na lista.
 
-#### Números aleatórios
+### Números aleatórios
 
-`Math.random()` devolve um decimal entre 0 e 1 (exclusivo). Para transformar isso em um inteiro dentro de um intervalo, multiplicamos e truncamos:
+`Math.random()` devolve um decimal entre 0 e 1 (exclusivo). Para transformar isso em um inteiro dentro de um intervalo, multiplica-se e trunca-se:
 
 ```javascript
 // inteiro de 1 a 10:
 let sorteado = parseInt(Math.random() * 10) + 1;
 ```
 
-#### Template strings
+### Template strings
 
 Em vez de concatenar com `+`, dá para **interpolar variáveis dentro do texto** usando crases e `${}`:
 
@@ -413,13 +443,11 @@ Mais legível, principalmente quando há várias variáveis no meio da frase.
 
 ### JavaScript no navegador: o DOM
 
-#### O que é o DOM
-
 Quando o navegador carrega uma página, ele monta uma representação dela em memória: o **DOM** (*Document Object Model*), uma árvore de objetos onde cada tag do HTML vira um nó. O JavaScript não altera o arquivo HTML; ele altera o DOM, e **o navegador redesenha a tela na hora**. É assim que uma página "reage" sem recarregar.
 
 Por isso, o primeiro passo de qualquer funcionalidade é **ler o HTML da página** e entender a estrutura: quais elementos existem, quais ids e classes eles têm.
 
-#### Selecionando e alterando elementos
+### Selecionando e alterando elementos
 
 ```javascript
 // selecionar
@@ -439,7 +467,7 @@ botao.disabled = true;                                         // desabilita o b
 
 A diferença entre **`innerHTML`** e **`textContent`**: o primeiro interpreta as tags que estiverem no texto (serve para montar pedaços de página); o segundo trata tudo como texto literal (mais seguro quando é só texto).
 
-#### Estilo com classList
+### Estilo com classList
 
 A forma organizada de mudar a aparência de um elemento é **trocar suas classes CSS** em vez de mexer no estilo direto. A propriedade `classList` tem os métodos:
 
@@ -451,7 +479,7 @@ elemento.classList.remove('dashboard__item--rented');   // remove
 
 Combinando com `if/else`, dá para alternar estados visuais (disponível/indisponível, ativo/inativo), o CSS define como cada estado aparece, e o JavaScript só troca a etiqueta.
 
-#### Web Speech API
+### Web Speech API
 
 O navegador tem APIs prontas além do DOM. A **Web Speech API**, por exemplo, sintetiza voz, fazendo a página "falar" um texto, o que deixa a aplicação mais acessível:
 
@@ -463,13 +491,11 @@ window.speechSynthesis.speak(utterance);
 
 ### Git e GitHub
 
-#### Por que versionar código?
-
 Sem controle de versão, "versionar" vira `projeto-final-v2-AGORA-VAI.zip`. O **Git** resolve isso registrando **fotografias do projeto ao longo do tempo** (os *commits*): dá para ver o que mudou, quando, por quem; e voltar atrás com segurança. O **GitHub** é um serviço que hospeda repositórios Git na nuvem, servindo de backup e de ponto de encontro para trabalho em equipe.
 
 Vale separar os papéis: **Git** é a ferramenta (roda na sua máquina); **GitHub** é a plataforma (remoto).
 
-#### As três áreas do Git
+### As três áreas do Git
 
 O fluxo do Git passa por três "lugares", e entender isso explica quase todos os comandos:
 
@@ -479,7 +505,7 @@ O fluxo do Git passa por três "lugares", e entender isso explica quase todos os
 
 Ou seja: editar → `add` (escolher o que entra) → `commit` (fotografar).
 
-#### Configuração e primeiros passos
+### Configuração e primeiros passos
 
 Antes do primeiro commit, o Git precisa saber **quem você é**. Cada commit carrega autor e e-mail:
 
@@ -498,7 +524,7 @@ git push -u origin main                   # envia os commits para o GitHub
 
 E para trabalhar em um projeto que já existe no GitHub: `git clone <url>` baixa o repositório inteiro, já configurado e com todo o histórico.
 
-#### O fluxo do dia a dia
+### O fluxo do dia a dia
 
 ```bash
 git status                                            # o que mudou? o que está no stage?
@@ -510,9 +536,9 @@ git pull                                              # traz os commits novos do
 
 Para inspecionar o histórico, `git log` mostra autor, data e mensagem de cada commit. Variações úteis: `git log --oneline` (uma linha por commit), `git log --graph` (desenha as ramificações) e `git log -p` (mostra o diff de cada commit). Já `git remote -v` lista os remotos configurados.
 
-> Commits pequenos e com mensagens claras são um presente para o seu "eu" do futuro: o histórico vira uma narrativa legível do projeto.
+> **Um presente para o "eu" do futuro.** Commits pequenos e com mensagens claras tornam o histórico uma narrativa legível do projeto.
 
-#### Colaboração
+### Colaboração
 
 Em repositórios privados, é preciso **adicionar colaboradores** (que recebem e aceitam um convite) para que outras pessoas possam contribuir.
 
@@ -525,7 +551,7 @@ git commit -m "texto do commit
 Co-authored-by: Nome <email@exemplo.com>"
 ```
 
-#### Desfazendo alterações
+### Desfazendo alterações
 
 Errar faz parte, e o Git tem uma ferramenta para cada tipo de "voltar atrás". A pergunta-chave antes de escolher: **isso reescreve o histórico?** Reescrever histórico já publicado exige `push --force` e pode quebrar o trabalho de outras pessoas.
 
@@ -544,15 +570,15 @@ Na prática:
 - **`reset --hard` é destrutivo**: tudo que não estava commitado é perdido, sem lixeira.
 - **`--amend`** serve para o clássico "commitei e esqueci um arquivo" (ou errei a mensagem), desde que o commit ainda não tenha sido enviado.
 
-#### .gitignore e README
+### .gitignore e README
 
 Nem tudo deve ir para o repositório: dependências baixadas, arquivos de build, segredos (`.env`), configurações da IDE. O arquivo oculto **`.gitignore`** lista o que o Git deve fingir que não existe.
 
-> ⚠️ O `.gitignore` só vale para arquivos **ainda não rastreados**. Se o arquivo já foi commitado antes, é preciso tirá-lo do índice com `git rm --cached <arquivo>`, senão o Git continua acompanhando as mudanças dele.
+> **O `.gitignore` não afeta o que já foi rastreado.** Ele só vale para arquivos **ainda não rastreados**. Se o arquivo já foi commitado antes, é preciso tirá-lo do índice com `git rm --cached <arquivo>`, senão o Git continua acompanhando as mudanças dele.
 
 Já o **`README.md`** é o cartão de visitas do repositório: o GitHub o exibe na página inicial, e é ali que se explica o que o projeto é, como executar e o que ele demonstra.
 
-#### Gist
+### Gist
 
 Para compartilhar um **trecho isolado** de código (um snippet, uma configuração), não precisa criar um repositório inteiro: o **Gist** do GitHub hospeda arquivos avulsos, públicos ou secretos, e também mantém histórico de versões.
 
@@ -561,6 +587,8 @@ Para compartilhar um **trecho isolado** de código (um snippet, uma configuraç�
 ## Trilha: Aprenda a programar em Java com orientação a objetos
 
 **Cursos:** Java: criando a sua primeira aplicação · Java: aplicando a Orientação a Objetos · Java: trabalhando com listas e coleções de dados · Java: consumindo API, gravando arquivos e lidando com erros
+
+A segunda trilha faz a transição para o Java e a orientação a objetos. Partindo do primeiro "Alô, mundo!", o projeto central é o **Screen Match**, um catálogo de filmes e séries que cresce de classes simples até consumir uma API real e gravar arquivos. O caminho passa pelos fundamentos da linguagem (tipagem estática e controle de fluxo), pelos pilares da orientação a objetos (classes, encapsulamento, herança, interfaces e polimorfismo), pelas coleções (`List` e `Map`), pelo consumo de APIs com HTTP e JSON e pelo tratamento de exceções.
 
 ### A plataforma Java
 
@@ -572,9 +600,7 @@ O Java tem uma proposta famosa: *"escreva uma vez, rode em qualquer lugar"*. Iss
 
 O ambiente usado nos cursos: **JDK 17** com a IDE **IntelliJ IDEA**, que compila e executa o programa pelo botão run.
 
-### Fundamentos da linguagem
-
-#### Tipagem estática
+### Tipagem estática
 
 A diferença mais visível em relação ao JavaScript: em Java, **toda variável tem um tipo fixo, declarado no código**, e o compilador barra qualquer mistura inválida antes mesmo de o programa rodar.
 
@@ -587,7 +613,7 @@ boolean aprovada = true;
 
 Isso muda a experiência de programar: muitos erros que em JS só apareceriam em execução, em Java aparecem na hora.
 
-#### Entrada, saída e formatação
+### Entrada, saída e formatação
 
 ```java
 System.out.println("Olá, mundo!");                            // imprime com quebra de linha
@@ -602,7 +628,7 @@ String frase2 = "Nota: %.2f".formatted(nota);                 // 2 casas decimai
 
 Os marcadores de formatação: `%s` para texto, `%d` para inteiros, `%f` para decimais (`%.2f` limita as casas).
 
-#### Casting: conversão entre tipos numéricos
+### Casting: conversão entre tipos numéricos
 
 - **Implícito** (automático): do tipo menor para o maior, sem perda, `int` cabe dentro de `double`.
 - **Explícito**: do maior para o menor, com risco de perda, é preciso "assinar o termo de responsabilidade" indicando o tipo entre parênteses:
@@ -615,7 +641,7 @@ double preco = 9.99;
 int arredondado = (int) preco;   // explícito: 9 (a parte decimal é descartada!)
 ```
 
-#### Condicionais e comparações
+### Condicionais e comparações
 
 `if / else if / else`, `switch case` e o operador ternário funcionam como no JavaScript. A pegadinha específica do Java é a **comparação de Strings**:
 
@@ -628,7 +654,7 @@ resposta.equals("sim");      // O compara o CONTEÚDO
 
 `==` em objetos verifica se as duas variáveis apontam para o mesmo lugar da memória; para saber se dois textos são iguais, sempre `.equals()` (ou `.equalsIgnoreCase()` para ignorar maiúsculas).
 
-#### Laços de repetição
+### Laços de repetição
 
 Os três formatos, e quando cada um faz sentido:
 
@@ -636,7 +662,7 @@ Os três formatos, e quando cada um faz sentido:
 - **`while`** - repetir enquanto uma condição vale (pode nem executar, se a condição já nasce falsa);
 - **`do while`** - igual ao `while`, mas **executa pelo menos uma vez** (testa a condição no final), útil para menus que devem aparecer ao menos uma vez.
 
-#### Text blocks
+### Text blocks
 
 Para textos de várias linhas (menus, mensagens grandes), o Java 15+ tem os **text blocks**, delimitados por aspas triplas, sem precisar concatenar `\n`:
 
@@ -649,7 +675,7 @@ String menu = """
         """;
 ```
 
-#### Convenções de código
+### Convenções de código
 
 O Java é rigoroso com convenções de nomenclatura, seguir isso faz o código "parecer Java":
 
@@ -659,13 +685,11 @@ O Java é rigoroso com convenções de nomenclatura, seguir isso faz o código "
 
 ### Orientação a objetos
 
-#### A ideia do paradigma
-
-Em programas pequenos, dá para pensar só em "passos" (lógica procedural). Conforme o programa cresce, isso vira um emaranhado: dados soltos de um lado, funções soltas do outro. A **orientação a objetos** organiza o código em **objetos que juntam dados (atributos) e comportamentos (métodos)**, do mesmo jeito que pensamos no mundo real: um filme *tem* nome e duração, e *sabe* exibir sua ficha técnica.
+Em programas pequenos, dá para pensar só em "passos" (lógica procedural). Conforme o programa cresce, isso vira um emaranhado: dados soltos de um lado, funções soltas do outro. A **orientação a objetos** organiza o código em **objetos que juntam dados (atributos) e comportamentos (métodos)**, do mesmo jeito que se pensa no mundo real: um filme *tem* nome e duração, e *sabe* exibir sua ficha técnica.
 
 Os ganhos: código mais fácil de **entender** (cada coisa no seu lugar), de **manter** (mudanças ficam localizadas) e de **reaproveitar** (herança, polimorfismo).
 
-#### Classes e objetos
+### Classes e objetos
 
 A **classe** é o molde; o **objeto** é uma instância criada a partir dele com a palavra-chave `new`:
 
@@ -682,7 +706,7 @@ public class Filme {
 Filme meuFilme = new Filme();   // objeto criado a partir do molde
 ```
 
-#### Construtores
+### Construtores
 
 Um **construtor** é um método especial, com o nome da classe, executado no momento do `new`. Ele serve para **garantir que o objeto já nasça com os dados necessários**, em vez de nascer vazio e ser preenchido aos poucos:
 
@@ -698,7 +722,7 @@ public class Filme {
 Filme filme = new Filme("Matrix");  // já nasce com nome
 ```
 
-#### Encapsulamento
+### Encapsulamento
 
 **Encapsular** é proteger o estado interno do objeto: os atributos ficam `private` (só a própria classe acessa) e o acesso externo passa por métodos públicos; **getters** (ler) e **setters** (alterar).
 
@@ -722,13 +746,13 @@ public class Filme {
 
 O **`this`** que aparece resolve uma ambiguidade: dentro do método, `avaliacao` é o parâmetro; `this.avaliacao` é o atributo do objeto.
 
-#### Pacotes e import
+### Pacotes e import
 
 Classes são organizadas em **pacotes**, pastas com nomes hierárquicos, pela convenção do domínio invertido: `br.com.amanda.screenmatch`. Para usar uma classe de outro pacote, é preciso importá-la com **`import`**. Além de organizar, os pacotes evitam conflito entre classes com o mesmo nome.
 
-#### Herança
+### Herança
 
-Quando duas classes compartilham atributos e comportamentos (um filme e uma série têm nome, ano, avaliação...), a duplicação pode ser eliminada com **herança**: extraímos o que é comum para uma superclasse, e as subclasses herdam tudo com `extends`:
+Quando duas classes compartilham atributos e comportamentos (um filme e uma série têm nome, ano, avaliação...), a duplicação pode ser eliminada com **herança**: extrai-se o que é comum para uma superclasse, e as subclasses herdam tudo com `extends`:
 
 ```java
 public class Titulo {              // superclasse: o que é comum
@@ -743,9 +767,9 @@ public class Serie extends Titulo { // subclasse: herda e acrescenta
 
 Uma subclasse também pode **redefinir** um comportamento herdado, usando a anotação **`@Override`**, por exemplo, uma série calcula a duração total de forma diferente de um filme (episódios × temporadas × minutos). A anotação pede ao compilador que confira se o método realmente existe na superclasse, evitando erros silenciosos de digitação.
 
-> ⚠️ Java só permite herdar de **uma** classe. Quando é preciso "assinar vários contratos", a resposta são as interfaces.
+> **Java tem herança única.** Java só permite herdar de **uma** classe. Quando é preciso "assinar vários contratos", a resposta são as interfaces.
 
-#### Interfaces
+### Interfaces
 
 Uma **interface** define um **contrato**: um conjunto de métodos que quem implementá-la se compromete a ter. Ela não diz *como* fazer, só *o que* deve existir; e os métodos são públicos por padrão.
 
@@ -764,7 +788,7 @@ public class Filme extends Titulo implements Classificavel {
 
 Diferente da herança, uma classe pode implementar **várias** interfaces ao mesmo tempo.
 
-#### Polimorfismo
+### Polimorfismo
 
 **Polimorfismo** ("muitas formas") é a consequência poderosa de herança e interfaces: um método pode trabalhar com **qualquer objeto que cumpra o contrato**, sem conhecer a classe concreta.
 
@@ -780,24 +804,22 @@ public class FiltroRecomendacao {
 
 Esse método funciona para filmes, séries, episódios; e para qualquer classe futura que implemente `Classificavel`, **sem mudar uma linha do filtro**. É o que torna o código extensível.
 
-### Listas e coleções
-
-#### ArrayList: a lista que cresce
+### ArrayList: a lista que cresce
 
 Arrays em Java têm tamanho fixo. Para coleções que crescem e encolhem, a classe do dia a dia é a **`ArrayList`**:
 
 ```java
 ArrayList<String> nomes = new ArrayList<>();
 nomes.add("Ana");                             // adiciona
-nomes.get(0);                                 // "Ana" — acessa pelo índice
-nomes.size();                                 // 1 — quantidade
+nomes.get(0);                                 // "Ana" - acessa pelo índice
+nomes.size();                                 // 1 - quantidade
 ```
 
 O `<String>` entre colchetes angulares é o **tipo dos elementos**, a lista só aceita Strings, e o compilador garante isso (é o mesmo mecanismo de Generics que aparece mais adiante).
 
-#### toString, Object e instanceof
+### toString, Object e instanceof
 
-Ao imprimir um objeto (ou uma lista de objetos), o Java chama o método **`toString()`** dele. O padrão, herdado da classe **`Object`** (a mãe de todas as classes em Java), é pouco útil, algo como `Filme@6f75e721`. Sobrescrevendo `toString()`, definimos a representação em texto:
+Ao imprimir um objeto (ou uma lista de objetos), o Java chama o método **`toString()`** dele. O padrão, herdado da classe **`Object`** (a mãe de todas as classes em Java), é pouco útil, algo como `Filme@6f75e721`. Sobrescrevendo `toString()`, define-se a representação em texto:
 
 ```java
 @Override
@@ -806,11 +828,11 @@ public String toString() {
 }
 ```
 
-Já o operador **`instanceof`** pergunta se um objeto é de determinado tipo, útil quando uma lista de `Titulo` mistura filmes e séries e precisamos saber com qual estamos lidando.
+Já o operador **`instanceof`** pergunta se um objeto é de determinado tipo, útil quando uma lista de `Titulo` mistura filmes e séries e é preciso saber com qual se está lidando.
 
-#### Ordenação: Comparable e Comparator
+### Ordenação: Comparable e Comparator
 
-`Collections.sort(lista)` ordena a lista, mas para isso o Java precisa saber **o que significa "vir antes"** para aquele tipo. Números e Strings já sabem; classes nossas, não. A solução é implementar a interface **`Comparable`** e definir o critério natural no método `compareTo`:
+`Collections.sort(lista)` ordena a lista, mas para isso o Java precisa saber **o que significa "vir antes"** para aquele tipo. Números e Strings já sabem; classes próprias, não. A solução é implementar a interface **`Comparable`** e definir o critério natural no método `compareTo`:
 
 ```java
 public class Titulo implements Comparable<Titulo> {
@@ -821,7 +843,7 @@ public class Titulo implements Comparable<Titulo> {
 }
 ```
 
-Quando o critério varia (às vezes por nome, às vezes por ano), em vez de fixar um único `compareTo`, passamos o critério na hora com um **`Comparator`**, usando o `sort` da própria interface `List`:
+Quando o critério varia (às vezes por nome, às vezes por ano), em vez de fixar um único `compareTo`, passa-se o critério na hora com um **`Comparator`**, usando o `sort` da própria interface `List`:
 
 ```java
 lista.sort(Comparator.comparing(Titulo::getAnoDeLancamento));
@@ -829,7 +851,7 @@ lista.sort(Comparator.comparing(Titulo::getAnoDeLancamento));
 
 Resumindo: **`Comparable`** = a classe tem *um* jeito natural de se ordenar; **`Comparator`** = o critério é definido por fora, e pode haver vários.
 
-#### A interface List e suas implementações
+### A interface List e suas implementações
 
 A `ArrayList` implementa a interface **`List`**. Declarar a variável pelo tipo da interface é aplicar polimorfismo às coleções: o resto do código só conhece o contrato, e a implementação pode ser trocada sem quebrar nada.
 
@@ -844,17 +866,17 @@ List<Titulo> lista = new ArrayList<>();  // amanhã pode virar LinkedList sem af
 | `Vector` | Semelhante à `ArrayList`, mas **sincronizada** (segura entre threads, com custo de desempenho) |
 | `Stack` | **Pilha LIFO** (*last-in, first-out*): o último elemento adicionado é o primeiro a ser removido |
 
-#### Map e HashMap
+### Map e HashMap
 
 Enquanto a `List` guarda elementos em sequência, o **`Map`** associa **chaves a valores**, como um dicionário. A implementação mais comum é a **`HashMap`**, baseada em tabela hash: inserção, busca e remoção em tempo praticamente constante, **O(1)**, com o porém de **não garantir a ordem** dos elementos.
 
 ```java
 Map<String, Double> precos = new HashMap<>();
 precos.put("café", 8.50);                       // associa chave → valor
-precos.get("café");                             // 8.50 — busca direta pela chave
+precos.get("café");                             // 8.50 - busca direta pela chave
 ```
 
-#### Padrões de projeto (design patterns)
+### Padrões de projeto (design patterns)
 
 Com o tempo, a comunidade percebeu que certos problemas de organização de código se repetem e catalogou **soluções reutilizáveis** para eles. São os *design patterns*, divididos em três categorias:
 
@@ -866,11 +888,9 @@ Não é preciso decorar todos: o valor está em reconhecer o problema e saber qu
 
 ### APIs, HTTP e JSON
 
-#### O que é uma API
-
 **API** (*Application Programming Interface*) é um contrato que permite que **programas conversem entre si**. Uma API web expõe endereços (URLs) que, ao serem consultados, devolvem dados; geralmente em JSON. Antes de escrever qualquer código, dá para explorar uma API com o **Postman**, montando as requisições e vendo as respostas.
 
-#### HTTP e códigos de status
+### HTTP e códigos de status
 
 Toda conversa na web segue o protocolo **HTTP**: o cliente envia uma **requisição** para uma URL e o servidor devolve uma **resposta**, que sempre carrega um **código de status** de três dígitos dizendo como foi:
 
@@ -882,7 +902,7 @@ Toda conversa na web segue o protocolo **HTTP**: o cliente envia uma **requisiç
 | `4xx` | **Erro do cliente** (ex.: `404`, não encontrado; a URL ou os parâmetros estão errados) |
 | `5xx` | **Erro do servidor** (o problema é do outro lado) |
 
-#### JSON
+### JSON
 
 **JSON** (*JavaScript Object Notation*) é o formato de texto padrão para trocar dados entre sistemas. Toda a estrutura se resume a duas peças:
 
@@ -899,7 +919,7 @@ Os valores podem ser strings, números, booleanos, objetos ou arrays, e a combin
 }
 ```
 
-#### Consumindo uma API em Java
+### Consumindo uma API em Java
 
 O pacote `java.net.http` traz o trio que faz a consulta, cada um com um papel:
 
@@ -916,11 +936,9 @@ String json = response.body();                                // o corpo da resp
 
 ### Bibliotecas, Gson e records
 
-#### Bibliotecas
-
 **Biblioteca** é código pronto, escrito por outras pessoas, que resolve um problema comum. Neste módulo a instalação ainda foi manual: baixar o arquivo **`.jar`** e configurá-lo no projeto pela IDE. (Mais adiante, o Maven automatiza exatamente isso.)
 
-#### Serialização e desserialização
+### Serialização e desserialização
 
 Dois nomes para os dois sentidos da conversão:
 
@@ -929,7 +947,7 @@ Dois nomes para os dois sentidos da conversão:
 
 A biblioteca **Gson** (do Google) faz os dois caminhos, com conversão flexível configurável conforme a documentação.
 
-#### Records
+### Records
 
 Um **record** (Java 16+) é uma estrutura pensada para uma coisa só: **carregar dados imutáveis**. Em uma linha, o compilador gera construtor, getters, `equals`, `hashCode` e `toString`:
 
@@ -939,7 +957,7 @@ public record TituloOmdb(String title, String year, String runtime) {}
 
 É o alvo perfeito para desserialização: o JSON vira um record, e ninguém consegue alterar os valores depois.
 
-#### Imutabilidade
+### Imutabilidade
 
 Um objeto **imutável** não muda depois de criado; como o record e como a própria `String` do Java: "alterar" uma String na verdade **cria um novo objeto**, e a variável passa a apontar para ele. Os ganhos de projetar assim:
 
@@ -948,8 +966,6 @@ Um objeto **imutável** não muda depois de criado; como o record e como a próp
 - **Desempenho** - valores imutáveis podem ser reaproveitados em cache.
 
 ### Exceções
-
-#### O que são e por que tratar
 
 Uma **exceção** é um evento que interrompe o fluxo normal do programa: o arquivo não existe, o texto não é um número, a rede caiu. Sem tratamento, o programa simplesmente quebra. **Tratar** a exceção é decidir o que fazer quando o problema acontecer; avisar, tentar de novo, usar um valor padrão; com o bloco **`try/catch`**:
 
@@ -963,7 +979,7 @@ try {
 
 O `try` envolve o código arriscado; cada `catch` captura um tipo de problema e reage.
 
-#### A hierarquia
+### A hierarquia
 
 Todas as exceções descendem de **`Throwable`**, que se divide em dois ramos:
 
@@ -975,11 +991,11 @@ Dentro de `Exception`, a divisão que importa no dia a dia:
 - **Verificadas** (*checked*) - herdam de `Exception` diretamente (ex.: `IOException`). O compilador **obriga** a tratar com `try/catch` ou a declarar na assinatura com `throws`;
 - **Não verificadas** (*unchecked*) - herdam de `RuntimeException` (ex.: `NullPointerException`, `NumberFormatException`). O compilador não cobra, porque normalmente indicam **erro de lógica** que deveria ser corrigido no código.
 
-#### Ordem dos catch
+### Ordem dos catch
 
 Quando há vários `catch`, a regra é tratar primeiro as exceções **filhas** (mais específicas) e depois as **mães** (mais genéricas). O motivo: um `catch (IOException e)` também captura `FileNotFoundException` (que é filha dela), se vier primeiro, o tratamento específico nunca executa.
 
-#### Exceções personalizadas
+### Exceções personalizadas
 
 Quando a regra violada é **do seu domínio** (um CEP com letras, uma avaliação negativa), nenhuma exceção pronta descreve bem o problema. A solução é criar a sua:
 
@@ -1005,7 +1021,7 @@ Para persistir dados entre execuções, o pacote **`java.io`** oferece classes d
 ```java
 FileWriter escrita = new FileWriter("dados.json");
 escrita.write(json);
-escrita.close();     // sempre fechar — libera o arquivo para o sistema
+escrita.close();     // sempre fechar - libera o arquivo para o sistema
 ```
 
 E a leitura pode ser feita com a mesma `Scanner` usada para o teclado, apontando para um `File`.
@@ -1028,13 +1044,13 @@ Outras classes do pacote, para outros cenários:
 
 ### Spring e Spring Boot
 
-#### O que é um framework
+**O que é um framework**
 
 Uma biblioteca é uma ferramenta que **você chama** quando precisa. Um **framework** inverte essa relação: ele fornece o esqueleto da aplicação e **chama o seu código** nos pontos certos. Você preenche as lacunas; ele cuida da infraestrutura.
 
 O **Spring** é o framework mais usado do ecossistema Java, cuida de configuração, injeção de dependências, acesso a banco, web e muito mais. O **Spring Boot** é a forma moderna de usá-lo: um conjunto de convenções e dependências pré-configuradas (*starters*) que elimina quase toda a configuração manual e deixa a aplicação rodando em minutos.
 
-#### Nascendo no Spring Initializr
+**Nascendo no Spring Initializr**
 
 Um projeto Spring nasce no **Spring Initializr** ([start.spring.io](https://start.spring.io)): escolhe-se o gerenciador de dependências (**Maven**), a linguagem, a versão do Spring Boot e os metadados (grupo, nome do artefato), e ele gera o projeto pronto para abrir na IDE. A estrutura gerada:
 
@@ -1046,7 +1062,7 @@ projeto/
 └── pom.xml               → configuração do Maven
 ```
 
-#### A classe principal e o método run
+**A classe principal e o método run**
 
 A classe principal carrega a anotação **`@SpringBootApplication`**, que liga a autoconfiguração do Spring. O `main` chama `SpringApplication.run(...)`, que sobe o **contexto** do framework.
 
@@ -1062,18 +1078,18 @@ public class MinhaAplicacao implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // ponto de partida da aplicação — executa após o Spring subir
+        // ponto de partida da aplicação - executa após o Spring subir
     }
 }
 ```
 
 ### Maven: build e dependências
 
-#### O problema que ele resolve
+**O problema que ele resolve**
 
 No módulo anterior, adicionar a Gson significou baixar um `.jar` na mão e configurá-lo na IDE, e cada biblioteca pode depender de outras, que dependem de outras... O **Maven** automatiza tudo isso: você **declara** o que precisa em um arquivo, e ele baixa a biblioteca **e as dependências dela** (as *transitivas*), na versão certa. Além disso, padroniza o *build* (compilação, testes, empacotamento).
 
-#### O pom.xml
+**O pom.xml**
 
 O coração do Maven é o **`pom.xml`** (*Project Object Model*). As partes principais:
 
@@ -1123,7 +1139,7 @@ Os ganhos são concretos:
 - **Reúso** - o mesmo serviço atende qualquer parte do programa (e pode ser copiado para outros projetos);
 - **Testabilidade** - classes pequenas com um propósito são fáceis de testar isoladamente.
 
-#### Métodos privados: encapsulamento de comportamento
+**Métodos privados: encapsulamento de comportamento**
 
 A mesma ideia vale dentro de uma classe. A `Principal` expõe **um** método público, o `exibeMenu()`; tudo o que ele coordena (`buscarSerieWeb()`, `listarSeriesBuscadas()`, `buscarSeriePorTitulo()`...) é **`private`**. Encapsulamento não vale só para atributos: métodos que são passos internos de um fluxo não fazem parte do contrato da classe, e mantê-los privados deixa claro o que é serviço oferecido e o que é interno.
 
@@ -1131,7 +1147,7 @@ O menu em si roda dentro de um `do/while` com `switch`, o que permite **buscar v
 
 ### Jackson: JSON e objetos Java
 
-#### ObjectMapper
+**ObjectMapper**
 
 O **Jackson** é a biblioteca de serialização/desserialização mais usada no ecossistema Spring (o papel que a Gson cumpria antes). A classe central é o **`ObjectMapper`**:
 
@@ -1142,9 +1158,9 @@ DadosSerie dados = mapper.readValue(json, DadosSerie.class);  // JSON → objeto
 
 O `readValue` recebe o texto JSON e a classe de destino, e devolve o objeto preenchido.
 
-#### Mapeando o JSON com anotações
+**Mapeando o JSON com anotações**
 
-O JSON de uma API raramente usa os nomes que queremos no código (vem `Title`, queremos `titulo`; vem em inglês, queremos português). As anotações do Jackson resolvem o mapeamento sem renomear nada:
+O JSON de uma API raramente usa os mesmos nomes do código (o JSON traz `Title`, o código usa `titulo`; o JSON vem em inglês, o domínio é em português). As anotações do Jackson resolvem o mapeamento sem renomear nada:
 
 - **`@JsonAlias`** - aceita nomes **alternativos** na hora de **ler** o JSON (mais de um vai entre chaves: `@JsonAlias({"Title", "Titulo"})`);
 - **`@JsonProperty`** - define o nome do campo **tanto na leitura quanto na escrita** do JSON;
@@ -1158,17 +1174,15 @@ public record DadosSerie(@JsonAlias({"Title", "Titulo"}) String titulo,
 }
 ```
 
-Records e Jackson formam um par natural: o JSON entra, vira um pacote de dados imutável e com nomes do nosso domínio.
+Records e Jackson formam um par natural: o JSON entra, vira um pacote de dados imutável e com nomes do domínio.
 
 ### Generics
 
-#### O problema
+Imagine um método que converte JSON para `DadosSerie`. Amanhã é preciso converter para `DadosTemporada`. Depois, `DadosEpisodio`. Sem Generics, seriam três métodos praticamente idênticos, só o tipo muda. Copiar e colar código é sempre um sinal de alerta.
 
-Imagine um método que converte JSON para `DadosSerie`. Amanhã precisamos converter para `DadosTemporada`. Depois, `DadosEpisodio`. Sem Generics, seriam três métodos praticamente idênticos, só o tipo muda. Copiar e colar código é sempre um sinal de alerta.
+**A solução: parâmetro de tipo**
 
-#### A solução: parâmetro de tipo
-
-**Generics** permitem escrever código que funciona **para qualquer tipo, mantendo a segurança de tipos**. O `<T>` é um *parâmetro de tipo*: uma lacuna que só é preenchida na hora do uso. Nós já usávamos isso como consumidores: `List<String>`, `ArrayList<Titulo>`; agora passamos a escrever os nossos:
+**Generics** permitem escrever código que funciona **para qualquer tipo, mantendo a segurança de tipos**. O `<T>` é um *parâmetro de tipo*: uma lacuna que só é preenchida na hora do uso. Esse recurso já aparecia no consumo de coleções (`List<String>`, `ArrayList<Titulo>`); agora ele passa para as próprias assinaturas:
 
 ```java
 public interface IConverteDados {
@@ -1191,7 +1205,7 @@ DadosTemporada temp = conversor.obterDados(json, DadosTemporada.class);  // T = 
 
 **Um único método, zero redundância**, e se alguém tentar atribuir o resultado ao tipo errado, o erro aparece em compilação, não em produção.
 
-#### Generics com listas
+**Generics com listas**
 
 Quando o JSON é um **array** (`[ {...}, {...} ]`), o destino é uma `List<T>`, e aí o token `Class<T>` sozinho não basta. O Jackson resolve com o `CollectionType`, que descreve "uma lista de T":
 
@@ -1205,8 +1219,6 @@ public <T> List<T> obterLista(String json, Class<T> classe) {
 
 ### Funções lambda
 
-#### A ideia
-
 Uma **lambda** é uma **função anônima**: um comportamento escrito direto no lugar onde será usado, sem nome, sem classe, sem cerimônia. A sintaxe:
 
 ```java
@@ -1219,7 +1231,7 @@ n -> { System.out.println(n); }     // corpo com várias linhas: chaves e, se pr
 
 Por trás, uma lambda sempre implementa uma **interface funcional**; uma interface com um único método abstrato. É por isso que dá para passá-la como argumento: `forEach` espera um `Consumer` (recebe um valor, não devolve nada), `filter` espera um `Predicate` (recebe um valor, devolve `true`/`false`), `map` espera uma `Function` (recebe um valor, devolve outro). A lambda é a implementação instantânea desses contratos.
 
-#### O antes e depois
+**O antes e depois**
 
 O ganho de concisão fica óbvio ao percorrer estruturas aninhadas (uma lista de temporadas, cada uma com sua lista de episódios):
 
@@ -1237,7 +1249,7 @@ temporadas.forEach(t -> t.episodios()
         .forEach(e -> System.out.println(e.titulo())));
 ```
 
-#### Method references
+**Method references**
 
 Quando a lambda **só repassa a chamada para um método que já existe**, há um atalho ainda mais curto, a *method reference*, com `::`:
 
@@ -1251,13 +1263,11 @@ Sempre que a lambda for só um "encaminhamento", a method reference diz o mesmo 
 
 ### Streams
 
-#### A ideia
+Uma **stream** é um **fluxo de dados** criado a partir de uma coleção, sobre o qual se encadeiam operações. A diferença de mentalidade em relação aos loops: com `for`, descreve-se **como** fazer (índices, variáveis acumuladoras, condições); com streams, declara-se **o que** se quer (filtre isso, transforme naquilo, pegue os 5 primeiros). O código fica mais próximo da frase que o descreve.
 
-Uma **stream** é um **fluxo de dados** criado a partir de uma coleção, sobre o qual encadeamos operações. A diferença de mentalidade em relação aos loops: com `for`, descrevemos **como** fazer (índices, variáveis acumuladoras, condições); com streams, declaramos **o que** queremos (filtre isso, transforme naquilo, pegue os 5 primeiros). O código fica mais próximo da frase que o descreve.
+> **A stream não altera a origem.** Ela não modifica a coleção original; produz novos resultados a partir dela.
 
-> A stream **não altera a coleção original**, ela produz novos resultados a partir dela.
-
-#### Anatomia do pipeline
+**Anatomia do pipeline**
 
 Todo pipeline de stream tem três partes:
 
@@ -1285,7 +1295,7 @@ Todo pipeline de stream tem três partes:
 
 Um detalhe elegante do design: as operações intermediárias são **preguiçosas** (*lazy*), nada executa até existir uma operação final no pipeline. É ela que "puxa a descarga" do fluxo.
 
-#### A ordem importa
+**A ordem importa**
 
 Cada operação atua sobre **o resultado da anterior**, então trocar a ordem muda o resultado:
 
@@ -1302,9 +1312,9 @@ nomes.stream()
 
 Se o `filter` viesse antes do `limit`, o resultado seria outro. Ao montar um pipeline, vale se perguntar a cada passo: *o que resta no fluxo neste ponto?*
 
-#### flatMap: achatando estruturas aninhadas
+**flatMap: achatando estruturas aninhadas**
 
-O `map` transforma um elemento em **outro elemento**. Mas e quando cada elemento contém **uma lista** (cada temporada tem seus episódios) e queremos uma stream única com tudo dentro? `map` geraria uma "stream de listas". O **`flatMap`** resolve: transforma cada elemento em uma stream e **funde todas em um fluxo só**:
+O `map` transforma um elemento em **outro elemento**. Mas e quando cada elemento contém **uma lista** (cada temporada tem seus episódios) e se quer uma stream única com tudo dentro? `map` geraria uma "stream de listas". O **`flatMap`** resolve: transforma cada elemento em uma stream e **funde todas em um fluxo só**:
 
 ```java
 List<Episodio> episodios = temporadas.stream()
@@ -1315,7 +1325,7 @@ List<Episodio> episodios = temporadas.stream()
 
 Repare no bônus: dentro do `flatMap` ainda dá para usar `map`, aproveitando dados do elemento externo (o número da temporada) na construção de cada item interno.
 
-#### collect e reduce
+**collect e reduce**
 
 O **`collect`** materializa o fluxo em uma coleção. Duas formas de obter uma lista, com uma diferença que importa:
 
@@ -1330,7 +1340,7 @@ int soma = numeros.stream()
         .reduce(0, (total, numero) -> total + numero);  // começa em 0 e vai somando → 15
 ```
 
-#### peek: enxergando cada etapa
+**peek: enxergando cada etapa**
 
 Pipeline não tem "linha para colocar breakpoint"; quando o resultado vem errado, como descobrir em qual etapa? O **`peek`** é uma operação intermediária que **não altera o fluxo**: só executa uma ação (tipicamente um print) em cada elemento que passa por aquele ponto. Intercalado entre as operações, ele revela o estado do fluxo etapa por etapa:
 
@@ -1370,27 +1380,27 @@ A diferença filosófica: com `null`, esquecer a checagem é um erro silencioso;
 
 ### Datas com java.time
 
-#### LocalDate: datas como tipo, não como texto
+**LocalDate: datas como tipo, não como texto**
 
 Data guardada como `String` não serve para nada além de exibir: não dá para comparar, ordenar nem calcular. O pacote **`java.time`** dá às datas um tipo de verdade, o **`LocalDate`** (só data, sem hora):
 
 ```java
 LocalDate data = LocalDate.parse("2011-04-17");   // texto ISO (ano-mês-dia) → LocalDate
-data.isAfter(LocalDate.of(2010, 1, 1));           // true — comparações de verdade
+data.isAfter(LocalDate.of(2010, 1, 1));           // true - comparações de verdade
 ```
 
 Com o tipo certo, comparações (`isAfter`, `isBefore`), ordenações e filtros por período viram chamadas de método.
 
-#### Exibindo em outro formato
+**Exibindo em outro formato**
 
-O `parse` padrão espera o formato ISO (`2011-04-17`), mas exibir para o usuário pede o formato brasileiro. Quem faz a ponte é o **`DateTimeFormatter`**:
+O `parse` padrão espera o formato ISO (`2011-04-17`), mas exibir para a pessoa usuária pede o formato brasileiro. Quem faz a ponte é o **`DateTimeFormatter`**:
 
 ```java
 DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 System.out.println(data.format(formatador));      // 17/04/2011
 ```
 
-#### Quando a conversão falha
+**Quando a conversão falha**
 
 Dados vindos de fora **falham**, uma API pode mandar `"N/A"` onde deveria haver uma data ou um número. Cada conversão arriscada merece seu próprio `try/catch`, com um **valor padrão consciente** para o caso de erro:
 
@@ -1412,7 +1422,7 @@ Capturar a exceção **específica** (e não `Exception` genérica) mantém o tr
 
 ### Estatísticas com streams
 
-#### Agrupando com groupingBy
+**Agrupando com groupingBy**
 
 Perguntas do tipo "média de X **por** Y" (média de avaliação por temporada, total de vendas por mês) pedem duas coisas: **agrupar** e **calcular por grupo**. O coletor **`Collectors.groupingBy`** faz os dois de uma vez, recebendo a chave do grupo e um coletor *downstream* com o cálculo, e devolve um `Map`:
 
@@ -1424,9 +1434,9 @@ Map<Integer, Double> mediaPorTemporada = episodios.stream()
 // → {1=8.3, 2=8.7, 3=9.1}
 ```
 
-#### DoubleSummaryStatistics: várias estatísticas de uma vez
+**DoubleSummaryStatistics: várias estatísticas de uma vez**
 
-Quando queremos média, máximo, mínimo **e** contagem, percorrer a lista quatro vezes seria desperdício. O coletor `Collectors.summarizingDouble` percorre **uma vez** e devolve um objeto **`DoubleSummaryStatistics`** com tudo calculado:
+Quando se quer média, máximo, mínimo **e** contagem, percorrer a lista quatro vezes seria desperdício. O coletor `Collectors.summarizingDouble` percorre **uma vez** e devolve um objeto **`DoubleSummaryStatistics`** com tudo calculado:
 
 ```java
 DoubleSummaryStatistics est = episodios.stream()
@@ -1439,7 +1449,7 @@ est.getMin();       // menor avaliação
 est.getCount();     // quantidade considerada
 ```
 
-#### Higiene dos dados antes da análise
+**Higiene dos dados antes da análise**
 
 Repare no `filter` presente nos dois exemplos: elementos sem avaliação real (convertidos para `0.0` no tratamento de exceção) **distorceriam a média** se entrassem no cálculo. A lição vale para qualquer análise: **defina o que é dado válido e filtre antes de calcular**; estatística sobre dado sujo produz conclusão errada com cara de certa.
 
@@ -1455,7 +1465,7 @@ public enum Categoria {
 
 A partir daí, `Categoria.DRAMA` é um valor válido e `"drma"` sequer compila.
 
-#### Enums com atributos e construtor
+**Enums com atributos e construtor**
 
 Em Java, cada valor de um enum é um **objeto**, e pode carregar atributos próprios. Isso resolve um problema concreto do Screen Match: a API do OMDb devolve `"Action"`, mas o menu precisa entender `"Ação"`. O enum guarda as duas formas:
 
@@ -1479,7 +1489,7 @@ public enum Categoria {
 
 O construtor de um enum é sempre privado (nem precisa escrever `private`): os únicos objetos que existem são os declarados no topo.
 
-#### Métodos personalizados: convertendo texto em enum
+**Métodos personalizados: convertendo texto em enum**
 
 Enum também tem métodos, inclusive estáticos. O método `values()` (que o Java gera de graça) devolve todos os valores, e um `for` sobre ele faz a correspondência entre o texto recebido e a constante certa:
 
@@ -1563,11 +1573,11 @@ E a regra que vale para as duas: **chave de API não fica no código-fonte**, e 
 
 ### Bancos de dados relacionais e PostgreSQL
 
-#### Por que sair da memória?
+**Por que sair da memória?**
 
 Até aqui, tudo o que a aplicação buscava vivia em uma `List` na memória: fechou o programa, os dados sumiram. Gravar em arquivo JSON resolvia metade do problema (persistia), mas não a outra metade: buscar, filtrar, ordenar e relacionar dados em arquivo é lento e manual. Isso é trabalho de **banco de dados**.
 
-#### Relacional x não relacional
+**Relacional x não relacional**
 
 Um banco **relacional** organiza os dados em **tabelas** (linhas e colunas), com esquema definido e relacionamentos explícitos entre elas. É a escolha natural quando os dados têm estrutura estável e as relações importam, o próprio banco garante a consistência (tipos, campos obrigatórios, valores únicos, integridade das relações), e a linguagem de consulta é o **SQL**.
 
@@ -1581,17 +1591,17 @@ O vocabulário mínimo do mundo relacional:
 - **Chave primária (PK)** - a coluna que identifica cada linha de forma única (o `id`);
 - **Chave estrangeira (FK)** - a coluna que aponta para a chave primária de outra tabela, é ela que **materializa o relacionamento**.
 
-#### PostgreSQL
+**PostgreSQL**
 
 O **PostgreSQL** é um SGBD relacional open source, maduro e muito usado no mercado. A instalação traz o servidor, que roda por padrão na porta **5432**, e o **pgAdmin**, interface gráfica para administrar os bancos. Com ele no ar, o passo inicial é criar o banco da aplicação (por exemplo, `screenmatch`) e guardar quatro informações: **host**, **nome do banco**, **usuário** e **senha**.
 
 ### JPA, Hibernate e ORM
 
-#### O problema: objetos de um lado, tabelas do outro
+**O problema: objetos de um lado, tabelas do outro**
 
 O Java pensa em **objetos** (com herança, composição, listas de outros objetos); o banco pensa em **tabelas** (linhas, colunas, chaves). Traduzir manualmente entre os dois mundos, escrevendo SQL na mão para cada operação, é repetitivo e frágil. **ORM** (*Object-Relational Mapping*) é o nome da técnica que automatiza essa tradução.
 
-#### JPA: a especificação
+**JPA: a especificação**
 
 A **JPA** (*Jakarta/Java Persistence API*) é a **especificação** de ORM do ecossistema Java: define uma interface comum para persistir objetos, sem dizer *como* isso é feito. Seus conceitos-chave:
 
@@ -1601,11 +1611,11 @@ A **JPA** (*Jakarta/Java Persistence API*) é a **especificação** de ORM do ec
 
 A vantagem de programar contra uma especificação é o **baixo acoplamento**: como a JPA encapsula a conversa com o banco, trocar o banco da aplicação (ou a implementação da JPA) não exige reescrever o código.
 
-#### Hibernate: a implementação
+**Hibernate: a implementação**
 
 A JPA sozinha não conecta em nada, ela é um contrato. Quem implementa esse contrato são frameworks como o **Hibernate**, a implementação mais popular e a usada aqui. É ele quem gera o SQL, conversa com o driver do banco e devolve objetos Java prontos.
 
-#### Onde cada peça entra
+**Onde cada peça entra**
 
 ```
 Aplicação
@@ -1621,7 +1631,7 @@ Driver JDBC       → conversa com o banco
 PostgreSQL
 ```
 
-Na prática, escrevemos quase só na camada de cima; o resto é configuração.
+Na prática, escreve-se quase só na camada de cima; o resto é configuração.
 
 ### Anotações de mapeamento
 
@@ -1671,11 +1681,11 @@ Três observações que economizam dor de cabeça:
 
 - **Construtor vazio é obrigatório.** A JPA instancia a entidade por reflexão antes de preencher os campos; sem o construtor sem argumentos, a aplicação quebra ao subir.
 - **`EnumType.STRING` em vez de `ORDINAL`.** O padrão (`ORDINAL`) grava a **posição** do valor no enum, se alguém reordenar as constantes depois, todos os registros antigos passam a significar outra coisa. `STRING` grava o nome e é imune a isso.
-- **Atributos sem anotação também viram coluna.** O Hibernate mapeia tudo por convenção (`totalTemporadas` → `total_temporadas`); as anotações só entram quando queremos algo **diferente** do padrão.
+- **Atributos sem anotação também viram coluna.** O Hibernate mapeia tudo por convenção (`totalTemporadas` → `total_temporadas`); as anotações só entram quando se quer algo **diferente** do padrão.
 
 ### Configurando a persistência no projeto
 
-#### Dependências
+**Dependências**
 
 Duas linhas no `pom.xml`: a estrela do Spring Data JPA (que traz a JPA e o Hibernate junto) e o driver do banco.
 
@@ -1692,7 +1702,7 @@ Duas linhas no `pom.xml`: a estrela do Spring Data JPA (que traz a JPA e o Hiber
 </dependency>
 ```
 
-#### application.properties
+**application.properties**
 
 É o arquivo em `src/main/resources` onde a aplicação diz **onde** está o banco e **como** se comportar com ele:
 
@@ -1710,13 +1720,13 @@ spring.jpa.format-sql=true
 - **`ddl-auto`** - o que o Hibernate faz com o **esquema** ao subir: `update` cria o que falta e preserva os dados (ótimo para estudo), `create` recria do zero a cada execução (apaga tudo), `validate` só confere se o mapeamento bate com o banco, `none` não mexe. Em produção, quem controla o esquema são migrações versionadas, não o `ddl-auto`.
 - **`show-sql` / `format-sql`** - imprimem no console o SQL que o Hibernate gerou. É a melhor forma de **ver o ORM trabalhando** e entender o que uma consulta realmente faz.
 
-#### Variáveis de ambiente
+**Variáveis de ambiente**
 
 Repare que nenhuma senha aparece no arquivo: `${DB_HOST}`, `${DB_USER}` e `${DB_PASSWORD}` são **variáveis de ambiente**, lidas do sistema (ou configuradas nas *run configurations* da IDE) na hora de subir a aplicação. Assim o repositório pode ser público sem expor credenciais, e cada máquina, ou cada ambiente, aponta para um banco diferente sem alterar uma linha de código. A mesma ideia vale para as chaves de API.
 
 ### Repositories e injeção de dependências
 
-#### A interface que ninguém implementa
+**A interface que ninguém implementa**
 
 Para operar sobre uma entidade, o Spring Data JPA pede apenas uma **interface** que estenda `JpaRepository`, informando a entidade e o tipo da chave primária:
 
@@ -1735,7 +1745,7 @@ repositorio.delete(serie);      // remove
 repositorio.count();            // conta
 ```
 
-#### Injeção de dependências
+**Injeção de dependências**
 
 Uma interface não pode ser instanciada com `new`, então de onde vem o objeto? Do **contêiner do Spring**. O framework cria e gerencia esses objetos (os *beans*) e os **entrega** a quem declarar que precisa deles, é a **injeção de dependências**. A declaração se faz com `@Autowired`, e só funciona dentro de classes que o próprio Spring gerencia (como a classe anotada com `@SpringBootApplication`):
 
@@ -1774,18 +1784,18 @@ No banco, quem guarda a relação é a tabela `episodios`, através de uma colun
 
 Os tipos de relacionamento possíveis são quatro: **um-para-um** (`@OneToOne`), **um-para-muitos** e **muitos-para-um** (`@OneToMany`/`@ManyToOne`) e **muitos-para-muitos** (`@ManyToMany`, que exige uma tabela intermediária, definida no `@JoinTable`).
 
-#### Cascade: operações que se propagam
+**Cascade: operações que se propagam**
 
 Salvamos a série e, depois, os episódios dela. Sem configuração, o Hibernate reclamaria de estar salvando uma série com episódios ainda não persistidos. O atributo **`cascade`** define quais operações se propagam do pai para os filhos: `CascadeType.ALL` propaga todas (salvar, atualizar, remover), o que aqui faz sentido, um episódio não existe sem a sua série.
 
-#### Fetch: quando os dados relacionados são carregados
+**Fetch: quando os dados relacionados são carregados**
 
 - **`FetchType.LAZY`** (padrão do `@OneToMany`) - carrega a série agora e os episódios **só quando forem acessados**. Economiza consulta, mas exige que a sessão com o banco ainda esteja aberta na hora do acesso;
 - **`FetchType.EAGER`** - traz série **e** episódios de uma vez. Mais simples numa aplicação de console como esta, e mais pesado quanto maior a coleção.
 
 Não há opção universalmente certa: é uma troca entre número de consultas e volume de dados trazido.
 
-#### Relacionamento bidirecional consistente
+**Relacionamento bidirecional consistente**
 
 Quando os dois lados existem no código, os dois lados precisam ser atualizados, senão o objeto em memória fica com uma relação "pela metade" (o episódio não sabe de qual série é, e a FK vai nula para o banco). A solução é resolver isso **dentro do próprio setter**:
 
@@ -1800,7 +1810,7 @@ Assim quem usa a classe não precisa lembrar de fazer as duas chamadas, a entida
 
 ### Derived queries
 
-#### Consultas escritas no nome do método
+**Consultas escritas no nome do método**
 
 O Spring Data JPA lê o **nome do método** declarado no repositório, interpreta as palavras-chave e **gera a consulta**. Nada de corpo, nada de SQL:
 
@@ -1829,13 +1839,13 @@ As palavras-chave mais usadas:
 | `countBy` | `countByCategoriaNome(...)` | contagem |
 | navegação por atributo | `findByCategoriaNome(String nome)` | entra na entidade relacionada |
 
-#### Streams ou banco?
+**Streams ou banco?**
 
 Antes, buscar uma série pelo título era filtrar uma lista em memória com stream. Agora é uma chamada ao repositório. A diferença não é só estética: o stream exige **carregar tudo** para depois descartar quase tudo, enquanto a consulta filtra **dentro do banco**, com índices, e traz só o que interessa. Com dez séries dá na mesma; com dez mil, não. A regra prática: **filtrar e ordenar é trabalho do banco**; streams continuam ótimos para transformar em memória os dados que já vieram.
 
-> E o argumento de "filtrar na aplicação para poupar o banco" não se sustenta: ele leria tudo do disco **e** mandaria tudo pela rede do mesmo jeito, só para a aplicação descartar quase tudo depois.
+> **Filtrar na aplicação não poupa o banco.** O argumento de "filtrar na aplicação para poupar o banco" não se sustenta: ele leria tudo do disco **e** mandaria tudo pela rede do mesmo jeito, só para a aplicação descartar quase tudo depois.
 
-#### Quando a consulta pesa
+**Quando a consulta pesa**
 
 Filtro em coluna indexada é das operações mais baratas que existem, então a saída para uma consulta lenta é **deixá-la mais leve**, não tirar o filtro do SQL:
 
@@ -1845,9 +1855,9 @@ Filtro em coluna indexada é das operações mais baratas que existem, então a 
 
 O que costuma pesar não é o filtro em si, e sim a consulta mal montada: ordenação sem índice ou o problema **N+1**, uma consulta para trazer a lista e mais uma para cada item dela, que é justamente o risco do `FetchType.LAZY` quando os dados relacionados são acessados num laço.
 
-> Existem caminhos mais pesados (cache, réplica de leitura, view materializada), mas eles respondem a **outra** pergunta: o que vale a pena guardar pronto em vez de recalcular. Isso é assunto de arquitetura, não da escolha entre stream e consulta.
+> **Isso é decisão de arquitetura.** Existem caminhos mais pesados (cache, réplica de leitura, view materializada), mas eles respondem a **outra** pergunta: o que vale a pena guardar pronto em vez de recalcular, e não a escolha entre stream e consulta.
 
-#### Tipos de retorno
+**Tipos de retorno**
 
 A assinatura declara o que a busca pode devolver, e cada escolha tem consequência:
 
@@ -1866,7 +1876,7 @@ if (serie.isPresent()) {
 }
 ```
 
-#### Lendo um enum digitado pela pessoa usuária
+**Lendo um enum digitado pela pessoa usuária**
 
 Para filtrar por gênero, o texto digitado em português precisa virar `Categoria` antes de chegar ao repositório, é aí que o método personalizado do enum entra em cena:
 
@@ -1878,7 +1888,7 @@ List<Serie> series = repositorio.findByGenero(categoria);
 
 ### JPQL e consultas personalizadas
 
-#### Quando o nome do método não dá conta
+**Quando o nome do método não dá conta**
 
 `findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual` funciona, mas ninguém merece ler isso. Quando a consulta cresce, a **`@Query`** permite dar ao método um nome curto e escrever a consulta separadamente, em **JPQL**:
 
@@ -1889,7 +1899,7 @@ List<Serie> seriesPorTemporadaEAvaliacao(int totalTemporadas, double avaliacao);
 
 JPQL **se parece** com SQL, mas opera sobre o modelo de objetos: `Serie` é a **classe** (não a tabela `series`) e `s.avaliacao` é o **atributo** (não a coluna). Os `:parametros` são preenchidos pelos argumentos do método, o `@Param("nome")` só é necessário quando os nomes não coincidem.
 
-#### Junções pelo relacionamento
+**Junções pelo relacionamento**
 
 Como o mapeamento já conhece a relação, o `join` é feito **pelo atributo**, sem `on` nem chave estrangeira à vista. Isso permite partir de uma série e buscar **episódios**:
 
@@ -1903,7 +1913,7 @@ List<Episodio> topEpisodiosPorSerie(Serie serie);
 
 Note que o **retorno é `List<Episodio>`** mesmo estando em `SerieRepository`: o `select` define o que volta, não a entidade do repositório.
 
-#### Recursos de SQL que aparecem aqui
+**Recursos de SQL que aparecem aqui**
 
 - **`like` / `ilike`** - busca por trecho com `%`; o `ilike` (do PostgreSQL) ignora maiúsculas/minúsculas;
 - **`order by ... desc`** e **`limit`** - ordenar e cortar o resultado no banco;
@@ -1926,7 +1936,7 @@ List<Object[]> categoriasComMaisDe(@Param("quantidade") long quantidade);
 
 Quando o `select` não devolve uma entidade inteira, mas um conjunto de colunas, o retorno vem como `List<Object[]>`, cada posição do array é uma coluna projetada.
 
-#### Consultas nativas
+**Consultas nativas**
 
 Se for preciso usar um recurso específico do banco, dá para escrever **SQL puro** com `nativeQuery = true`. Aí valem os nomes reais de **tabelas e colunas**, e a consulta deixa de ser portátil entre bancos, é a saída de emergência, não a primeira escolha:
 
@@ -1935,7 +1945,7 @@ Se for preciso usar um recurso específico do banco, dá para escrever **SQL pur
 List<Produto> buscarTop5ProdutosMaisCaros();
 ```
 
-#### Resumo dos três caminhos
+**Resumo dos três caminhos**
 
 | Forma | Como se escreve | Quando usar |
 |---|---|---|
@@ -1945,7 +1955,7 @@ List<Produto> buscarTop5ProdutosMaisCaros();
 
 ### Do console para a web
 
-#### A aplicação ganha um servidor
+**A aplicação ganha um servidor**
 
 Até aqui o Screen Match era uma aplicação **de console**: o `CommandLineRunner` subia o menu e o resultado aparecia no terminal de quem executou. Para que outra aplicação, um site ou um app, consiga usar esses dados, ele precisa **responder por HTTP**. Uma dependência resolve:
 
@@ -1964,7 +1974,7 @@ server.port=8081
 
 Com o servidor no lugar, a classe principal deixa de implementar `CommandLineRunner`, quem "chama" a aplicação agora é o navegador.
 
-#### Front-end e back-end conversando
+**Front-end e back-end conversando**
 
 O front-end (HTML, CSS e JavaScript, aberto com a extensão *Live Server* do VS Code) não sabe nada de Java: ele faz um `fetch` para uma URL e espera **JSON** de volta.
 
@@ -2005,7 +2015,7 @@ Cada camada conversa apenas com a vizinha: o controller chama o serviço, o serv
 
 ### Controllers: as rotas da API
 
-#### A primeira rota
+**A primeira rota**
 
 Um **controller** é a porta de entrada HTTP da aplicação:
 
@@ -2028,9 +2038,9 @@ public class SerieController {
 - **`@RequestMapping("/series")`** - o prefixo comum a todas as rotas da classe, evita repetir `/series` em cada método;
 - **`@GetMapping`** - mapeia o método para o verbo **GET** naquele caminho (aqui, `/series` puro).
 
-Basta subir a aplicação e abrir `localhost:8080/series` no navegador para ver o JSON. Não escrevemos uma linha de conversão: o Jackson, que veio junto com o *starter* `web`, **serializa** a lista de objetos automaticamente.
+Basta subir a aplicação e abrir `localhost:8080/series` no navegador para ver o JSON. Não é preciso escrever uma linha de conversão: o Jackson, que veio junto com o *starter* `web`, **serializa** a lista de objetos automaticamente.
 
-#### Parâmetros na URL com @PathVariable
+**Parâmetros na URL com @PathVariable**
 
 Rotas que dependem de um dado (o id da série, o nome de um gênero) declaram o trecho variável **entre chaves** no mapeamento e recebem esse valor em um parâmetro anotado com **`@PathVariable`**:
 
@@ -2055,7 +2065,7 @@ O nome entre chaves precisa ser **igual** ao do parâmetro do método, e o tipo 
 
 > **`@PathVariable` ou `@RequestParam`?** O primeiro lê um pedaço do **caminho** (`/series/1`); o segundo lê a **query string** (`/series?id=1`). Caminho para identificar o recurso, query string para filtros e opções.
 
-#### As anotações web mais usadas
+**As anotações web mais usadas**
 
 | Anotação | Para que serve |
 |---|---|
@@ -2102,11 +2112,11 @@ Repare no `converteDados`: a mesma transformação de `Serie` em `SerieDTO` apar
 
 ### DTOs e serialização
 
-#### O problema: serialização circular
+**O problema: serialização circular**
 
 Devolver a entidade `Serie` direto do controller parece o caminho curto, mas quebra. `Serie` tem uma lista de `Episodio`, e cada `Episodio` tem uma referência de volta para `Serie`: é o **relacionamento bidirecional** que a JPA pediu. Na hora de gerar o JSON, o Jackson entra em **loop infinito** - série → episódios → série → episódios... até estourar.
 
-#### A solução: Data Transfer Object
+**A solução: Data Transfer Object**
 
 Um **DTO** (*Data Transfer Object*) é uma classe simples, sem relacionamentos e sem comportamento, que existe só para **transportar os dados que a API devolve**. Um `record` cumpre esse papel com uma única declaração:
 
@@ -2237,7 +2247,7 @@ As asserções mais usadas, todas da classe `Assertions` do JUnit:
 - **`assertThrows(Excecao.class, () -> ...)`** - passa se o trecho lançar a exceção indicada (ótimo para testar validações);
 - **`assertDoesNotThrow(() -> ...)`** - o oposto: passa se **não** houver exceção.
 
-O cálculo da calculadora depende de faixas de idade e peso, então **um teste só não basta**: escrevemos um cenário para a probabilidade `ALTA` (gato jovem e leve), outro para a `MEDIA` (gato idoso), e assim por diante. Cada faixa de regra merece o seu cenário.
+O cálculo da calculadora depende de faixas de idade e peso, então **um teste só não basta**: escreve-se um cenário para a probabilidade `ALTA` (gato jovem e leve), outro para a `MEDIA` (gato idoso), e assim por diante. Cada faixa de regra merece o seu cenário.
 
 ### Nomes descritivos com @DisplayName
 
@@ -2693,7 +2703,7 @@ A resposta chega em **`xhr.responseText`** como **texto** no formato **JSON** (*
 
 > **XMLHttpRequest e o que veio depois.** O `XMLHttpRequest` é a base histórica do AJAX, mas hoje o navegador oferece a **API `fetch`**, mais enxuta e baseada em *Promises*, que evita o encadeamento de listeners. O conceito, porém, é o mesmo: pedir dados de forma assíncrona e tratar a resposta (e os erros) quando ela chega.
 
-Um resumo dos eventos que apareceram no curso e do que cada um observa:
+Para fechar, um resumo dos eventos que apareceram no curso e do que cada um observa:
 
 | Evento | Dispara quando | Onde foi usado |
 |---|---|---|
@@ -2710,7 +2720,7 @@ O projeto foi o **Organo**, uma página que organiza os colaboradores de uma emp
 
 ### O que é React (e o Node por trás dele)
 
-O **React** é uma **biblioteca** criada pelo Facebook para resolver um problema específico: páginas com muitos eventos e dados mudando na tela ficavam difíceis de manter em sincronia com o DOM manualmente. A ideia é descrever a interface em **componentes** e deixar um mecanismo de **databinding** manter a tela em dia com os dados: quando o dado muda, o React redesenha **só o que mudou**, em vez de ficar re-renderizando a página inteira o tempo todo. O componente original do React era baseado em **classes**; hoje o padrão são os componentes funcionais que veremos a seguir.
+O **React** é uma **biblioteca** criada pelo Facebook para resolver um problema específico: páginas com muitos eventos e dados mudando na tela ficavam difíceis de manter em sincronia com o DOM manualmente. A ideia é descrever a interface em **componentes** e deixar um mecanismo de **databinding** manter a tela em dia com os dados: quando o dado muda, o React redesenha **só o que mudou**, em vez de ficar re-renderizando a página inteira o tempo todo. O componente original do React era baseado em **classes**; hoje o padrão são os componentes funcionais, vistos a seguir.
 
 Por baixo das ferramentas está o **Node.js**, que roda JavaScript fora do navegador (revisitado em [JavaScript além do navegador](#javascript-além-do-navegador)). O Node é feito de duas peças: o **V8** (o mesmo motor que executa JS no Chrome) e o **libuv** (que cuida da entrada e saída assíncrona). Como o JavaScript roda em uma **única thread** com um **event loop**, ele não trava esperando por I/O, o que o torna rápido para lidar com muitas conexões ao mesmo tempo.
 
@@ -2991,7 +3001,7 @@ Para fechar, um resumo dos componentes construídos no projeto e do que cada um 
 
 ## Curso: React JS: crie testes com Jest e Testing Library e garanta o funcionamento do Front-end
 
-O projeto foi o **Bytebank**, a interface de um banco digital (cabeçalho com o usuário logado, menu de navegação, saldo, extrato e o formulário de nova transação). Diferente dos cursos anteriores, em que o trabalho era construir a aplicação, aqui o foco foi **garantir que ela funciona**: escrever testes automatizados para os componentes e para a regra de negócio, do saldo à submissão do formulário. As ferramentas centrais foram o **Jest** (para estruturar e rodar os testes) e o **React Testing Library** (para renderizar e consultar os componentes como uma pessoa usuária os veria). As duas já vêm instaladas no projeto criado pelo Create React App, e os testes rodam com `npm test`.
+O projeto foi o **Bytebank**, a interface de um banco digital (cabeçalho com o nome de quem está logado, menu de navegação, saldo, extrato e o formulário de nova transação). Diferente dos cursos anteriores, em que o trabalho era construir a aplicação, aqui o foco foi **garantir que ela funciona**: escrever testes automatizados para os componentes e para a regra de negócio, do saldo à submissão do formulário. As ferramentas centrais foram o **Jest** (para estruturar e rodar os testes) e o **React Testing Library** (para renderizar e consultar os componentes como uma pessoa usuária os veria). As duas já vêm instaladas no projeto criado pelo Create React App, e os testes rodam com `npm test`.
 
 ### Por que testar o Front-end e a pirâmide de testes
 
@@ -3125,7 +3135,7 @@ test('Deve renderizar uma lista de links com a classe link', () => {
 
 > **Cuidado com o snapshot sozinho.** Uma dúvida comum é: "por que fazer várias asserções se um snapshot resolveria?" Porque o snapshot é **frágil**: ele é facilmente atualizado (basta um comando quando o componente muda) e precisa de um **olhar humano** para conferir se a renderização está mesmo certa. Ele é um bom aliado, mas só ele torna o teste frágil, sempre combine snapshot com **asserções fortes** que de fato testam o comportamento do componente, como o `toHaveClass` acima.
 
-### Simulando o usuário com o userEvent
+### Simulando a pessoa usuária com o userEvent
 
 Testar um componente interativo exige **simular ações** da pessoa usuária. O **`userEvent`** (de `@testing-library/user-event`, já instalado pelo Create React App) faz isso de forma mais fiel ao navegador do que o `fireEvent` embutido, disparando a sequência de eventos que uma interação real geraria. Alguns dos seus métodos:
 
@@ -3223,7 +3233,7 @@ test('Deve retornar o valor do saldo atualizado com o rendimento', () => {
 2. **Implementar o código** que faça o teste passar, satisfazendo imediatamente a asserção, nada além disso;
 3. **Refatorar** com segurança - com o teste verde, dá para melhorar o código sabendo que, se algo quebrar, o teste acusa, sem precisar reescrevê-lo.
 
-Foi assim que nasceu a função `calculaNovoSaldo` (em `src/utils`): primeiro escrevemos os cenários (depósito aumenta o saldo, transferência diminui) e só depois a implementação que os satisfaz.
+Foi assim que nasceu a função `calculaNovoSaldo` (em `src/utils`): primeiro vêm os cenários (depósito aumenta o saldo, transferência diminui) e só depois a implementação que os satisfaz.
 
 ```javascript
 export const calculaNovoSaldo = (valores, saldo) => {
@@ -3326,7 +3336,7 @@ Sem o `USE`, cada tabela teria de ser referenciada com o nome completo (`Sucos.C
 
 Ao criar uma tabela, cada **coluna** precisa de um **tipo de dado**, que define o que ela pode guardar e quanto espaço ocupa. Escolher o tipo certo economiza espaço e evita erros. O MySQL organiza os tipos em **quatro famílias**: numéricos, de data e hora, de texto e espaciais.
 
-#### Numéricos
+**Numéricos**
 
 Os tipos numéricos se dividem em três grupos, conforme guardem inteiros, decimais ou bits:
 
@@ -3353,7 +3363,7 @@ A regra prática é escolher o **menor tipo que caiba com folga**: quanto menor,
 
 Esse mesmo sistema de prefixos reaparece nos tipos de **texto** e **binários** (vistos abaixo): `TINYTEXT`, `TEXT`, `MEDIUMTEXT` e `LONGTEXT`, e os equivalentes `...BLOB`, seguem a mesma lógica de tamanho, só trocando o maior de `BIG` por `LONG`.
 
-#### Data e hora
+**Data e hora**
 
 | Tipo | Guarda | Formato |
 |---|---|---|
@@ -3365,7 +3375,7 @@ Esse mesmo sistema de prefixos reaparece nos tipos de **texto** e **binários** 
 
 `DATETIME` e `TIMESTAMP` guardam a mesma informação; a diferença é que o `TIMESTAMP` leva o fuso horário em conta e costuma servir para registrar **quando** uma linha foi criada ou alterada. Na base Sucos, as colunas de data (`data_nascimento`, `data_admissao`) são `DATE`, já que só interessa o dia.
 
-#### Texto (string)
+**Texto (string)**
 
 | Tipo | Guarda |
 |---|---|
@@ -3380,7 +3390,7 @@ Dois atributos acompanham essa família: **`SET`** (guarda um conjunto de valore
 
 > **`CHAR` x `VARCHAR`.** O `CHAR(11)` sempre reserva 11 caracteres, sobre ou falte; o `VARCHAR(100)` guarda só o que for necessário, até 100. Por isso o `CHAR` combina com campos de largura sempre igual (CPF, siglas de estado) e o `VARCHAR` com campos de tamanho imprevisível (nomes, endereços).
 
-#### Espaciais
+**Espaciais**
 
 Para dados geográficos e geométricos: `GEOMETRY`, `POINT`, `LINESTRING` e `POLYGON`, usados em aplicações de mapas e localização.
 
@@ -3441,7 +3451,7 @@ VALUES ('00388934505', 'João da Silva', 'CARATINGA', 'AMAZONAS',
         '1989-10-05', 30, 'M', 10000.00, 2000, 0);
 ```
 
-Vale reparar em como cada tipo é escrito: **textos e datas entre aspas simples** (`'João da Silva'`, a data sempre no formato **`AAAA-MM-DD`**), **números sem aspas** (`30`, `10000.00`) e os **campos lógicos `BIT`** como `0` (falso) ou `1` (verdadeiro), também sem aspas — é o caso de `primeira_compra` e `ferias` na base Sucos. Uma mesma instrução `INSERT` pode inserir **vários registros de uma vez**, separando cada conjunto de valores por vírgula, jeito bem mais prático de popular a tabela:
+Vale reparar em como cada tipo é escrito: **textos e datas entre aspas simples** (`'João da Silva'`, a data sempre no formato **`AAAA-MM-DD`**), **números sem aspas** (`30`, `10000.00`) e os **campos lógicos `BIT`** como `0` (falso) ou `1` (verdadeiro), também sem aspas; é o caso de `primeira_compra` e `ferias` na base Sucos. Uma mesma instrução `INSERT` pode inserir **vários registros de uma vez**, separando cada conjunto de valores por vírgula, jeito bem mais prático de popular a tabela:
 
 ```sql
 INSERT INTO Produto(codigo, nome, embalagem, tamanho, sabor, preco_lista) VALUES
@@ -3828,7 +3838,7 @@ A view **não guarda dados**, é virtual: cada vez que é consultada, o `SELECT`
 
 Além de filtrar e agrupar, o SQL traz um arsenal de **funções** que **transformam valores** na saída da consulta. O curso passou por quatro famílias.
 
-#### Texto
+**Texto**
 
 Para limpar, juntar e recortar strings: `TRIM` (e as variantes `LTRIM`/`RTRIM`) tira espaços das pontas, `CONCAT` junta pedaços, `UPPER`/`LOWER` trocam a caixa e `SUBSTRING` recorta a partir de uma posição.
 
@@ -3839,7 +3849,7 @@ SELECT SUBSTRING('OLÁ, TUDO BEM?', 6, 4) AS RESULTADO;       -- 'TUDO' (da posi
 SELECT CONCAT(NOME, ' (', CPF, ')') AS RESULTADO FROM tabela_de_clientes;
 ```
 
-#### Matemáticas
+**Matemáticas**
 
 Para arredondar e calcular: `ROUND` arredonda (opcionalmente a N casas), `CEILING` e `FLOOR` empurram para cima e para baixo, `RAND` sorteia. Operações aritméticas (`+ - * /`) também valem entre colunas:
 
@@ -3849,7 +3859,7 @@ SELECT NUMERO, QUANTIDADE, PRECO, ROUND(QUANTIDADE * PRECO, 2) AS FATURAMENTO
 FROM itens_notas_fiscais;
 ```
 
-#### Datas
+**Datas**
 
 Além de `YEAR()` e `MONTH()` (usadas nos filtros), há funções para a data atual (`CURDATE`, `CURRENT_TIMESTAMP`), diferença entre datas (`DATEDIFF`, em dias), aritmética de datas (`DATE_SUB` com `INTERVAL`), nomes por extenso (`DAYNAME`, `MONTHNAME`) e **formatação** (`DATE_FORMAT`, com máscaras como `%Y` ano, `%m` mês, `%d` dia, `%W` dia da semana):
 
@@ -3859,7 +3869,7 @@ SELECT DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 5 DAY) AS RESULTADO;    -- 5 dias 
 SELECT DATE_FORMAT(CURRENT_TIMESTAMP(), '%W, %d/%m/%y') AS RESULTADO; -- monta a data com máscara
 ```
 
-#### Conversão
+**Conversão**
 
 Para mudar o **tipo** de um valor, o `CONVERT`; por exemplo, transformar um número em texto para depois recortá-lo com `SUBSTRING`:
 

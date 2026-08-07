@@ -6,7 +6,17 @@
 
 ## Índice
 
-- [Artigos](#artigos)
+- [Artigo: Como escolher minha carreira em TI?](#artigo-como-escolher-minha-carreira-em-ti)
+  - [Antes de tudo, a lógica de programação](#antes-de-tudo-a-lógica-de-programação)
+  - [As áreas de atuação em TI](#as-áreas-de-atuação-em-ti)
+  - [Como escolher um caminho](#como-escolher-um-caminho)
+  - [A escolha não é definitiva](#a-escolha-não-é-definitiva)
+- [Artigo: 5 passos para aprender a programar](#artigo-5-passos-para-aprender-a-programar)
+  - [1. Escolha uma linguagem de programação](#1-escolha-uma-linguagem-de-programação)
+  - [2. Praticar rende mais do que teoria](#2-praticar-rende-mais-do-que-teoria)
+  - [3. A lógica de programação em primeiro lugar](#3-a-lógica-de-programação-em-primeiro-lugar)
+  - [4. Procure alguém para estudar junto](#4-procure-alguém-para-estudar-junto)
+  - [5. Crie um projeto seu e compartilhe](#5-crie-um-projeto-seu-e-compartilhe)
 - [Trilha: Iniciante em programação](#trilha-iniciante-em-programação)
   - [O que é programação?](#o-que-é-programação)
   - [Lógica de programação com JavaScript](#lógica-de-programação-com-javascript)
@@ -166,15 +176,60 @@
 
 ---
 
-## Artigos
+## Artigo: Como escolher minha carreira em TI?
 
-### Como escolher minha carreira em TI?
+O programa de formação abre com dois artigos de boas-vindas, e este primeiro responde a uma dúvida frequente de quem está começando: a área de tecnologia é ampla e cheia de caminhos, então por onde começar? A resposta do artigo é que TI não é uma coisa só. Ele apresenta as principais frentes de atuação, mostra que todas partem de uma mesma base e defende que ter um objetivo claro desde o início torna o aprendizado mais direto e menos disperso.
 
-A área de tecnologia não é uma coisa só: existem várias frentes de atuação (desenvolvimento front-end, back-end, mobile, dados, infraestrutura, segurança...), cada uma com rotinas e habilidades diferentes. O artigo apresenta esse panorama e sugere pontos a considerar antes de escolher um caminho: afinidade com o tipo de problema que cada área resolve, demanda do mercado e a possibilidade de migrar depois, a base de programação serve para todas.
+### Antes de tudo, a lógica de programação
 
-### 5 passos para aprender a programar
+Independentemente da área escolhida, o ponto de partida é o mesmo: a **lógica de programação**. Cada linguagem tem suas particularidades de sintaxe, mas o raciocínio para resolver um problema (dividir a tarefa em passos, decidir entre caminhos, repetir ações) é comum a todas. Por isso o artigo recomenda firmar essa base antes de se preocupar com qual linguagem ou framework aprender. Dominada a lógica, trocar de linguagem passa a ser uma questão de adaptação, e não de recomeçar do zero.
 
-Um roteiro para quem está começando: definir um objetivo, escolher uma primeira linguagem, praticar com projetos pequenos, buscar comunidade e manter constância. O recado principal: **aprender a programar é treino, não talento**, errar, ler mensagens de erro e tentar de novo faz parte do processo, e estudar um pouco todo dia rende mais do que maratonar de vez em quando.
+### As áreas de atuação em TI
+
+Tecnologia reúne frentes de trabalho bem diferentes, cada uma com suas ferramentas e rotinas. O artigo apresenta as principais:
+
+- **Front-end**: cuida da interface, a parte do sistema com que a pessoa usuária interage diretamente. É o território do **JavaScript**, uma das linguagens mais usadas no mundo, e de frameworks como **Angular** e **React**, que organizam aplicações maiores.
+- **Back-end**: cuida do que roda nos servidores, longe da tela, como as regras de negócio, o acesso ao banco de dados e as integrações. Aparece em várias linguagens, entre elas **Java** (com o Spring), **C#** (.NET), **Ruby** (com o Rails) e **PHP**.
+- **Mobile**: desenvolve aplicativos para celulares. No **Android** se usa Java ou Kotlin; no **iOS**, Swift; e há opções multiplataforma, que geram apps para os dois sistemas a partir de uma base só, como Ionic e Cordova.
+- **DevOps**: aproxima o desenvolvimento (Dev) das operações e da infraestrutura (Ops), cuidando de automatizar a entrega e a publicação do software.
+- **Infraestrutura e redes**: dá o suporte que sustenta tudo o que roda por cima, como as redes e seus protocolos, os sistemas operacionais (com destaque para o **Linux**) e a administração de servidores.
+
+### Como escolher um caminho
+
+Diante de tantas opções, o artigo sugere alguns pontos para guiar a decisão:
+
+- **Defina um objetivo**: saber se o interesse está no front-end, no back-end, no mobile ou na infraestrutura direciona o que estudar e evita a dispersão de tentar aprender tudo ao mesmo tempo.
+- **Escolha a linguagem de forma estratégica**: vale considerar a demanda do mercado na hora de decidir. Para quem quer começar pela web, o JavaScript é uma porta de entrada natural pela quantidade de oportunidades.
+- **Monte um plano de estudos**: com o objetivo definido, organizar um calendário de estudos ajuda a manter a constância e a acompanhar o progresso.
+- **Cuide da rede de contatos**: manter um perfil ativo no LinkedIn e participar de comunidades aproxima de vagas e de outras pessoas da área.
+
+### A escolha não é definitiva
+
+Um receio comum é o de escolher errado logo no início. O artigo tranquiliza nesse ponto: como a lógica de programação é a base de todas as áreas, mudar de frente mais tarde, do front-end para o back-end por exemplo, não significa começar de novo, e sim aproveitar o que já foi aprendido. O objetivo inicial serve para dar direção aos estudos, não para fechar portas.
+
+## Artigo: 5 passos para aprender a programar
+
+O segundo artigo de boas-vindas é um roteiro para quem vai escrever as primeiras linhas de código. Ele reúne cinco passos que valem mais como postura de estudo do que como receita fechada, e todos giram em torno de uma mesma ideia: aprender a programar é resultado de prática e constância, e não de um talento com que já se nasce.
+
+### 1. Escolha uma linguagem de programação
+
+O primeiro passo é decidir por onde entrar, e o artigo faz aqui uma ressalva importante: a lógica é a mesma para todas as linguagens, então a escolha inicial não precisa ser definitiva nem sofrida. A recomendação é começar por uma linguagem com curva de aprendizado mais suave. O **JavaScript** costuma ser uma boa porta de entrada porque roda direto no navegador, sem exigir a instalação de ferramentas, o que deixa o foco no que realmente importa no começo: aprender a pensar de forma lógica.
+
+### 2. Praticar rende mais do que teoria
+
+Ler sobre programação e programar de fato são coisas diferentes, e o artigo é direto ao afirmar que a prática, com tentativa e erro, ensina mais do que o estudo só teórico. O autor conta, pela própria experiência, que só passou a entender de verdade o próprio código depois de escrevê-lo várias vezes, e foi essa repetição que trouxe a sensação de domínio. A mensagem é colocar a mão na massa cedo e sem medo de errar, porque o erro faz parte do processo.
+
+### 3. A lógica de programação em primeiro lugar
+
+Este é apontado como o passo mais importante e reforça o anterior: a lógica de programação é a base sobre a qual todo o resto se apoia. O artigo usa uma comparação simples, a de tentar fazer um bolo sem os ingredientes, para mostrar que programar sem lógica não se sustenta. Temas mais avançados, como orientação a objetos, programação funcional e estruturas de dados, só fazem sentido depois que essa fundação está firme.
+
+### 4. Procure alguém para estudar junto
+
+Estudar acompanhado potencializa o aprendizado. Ter um colega de estudos cria espaço para trocar ideias, discutir formas diferentes de resolver o mesmo problema e dar e receber feedback sobre o que cada um está aprendendo. O que sozinho poderia travar costuma andar mais rápido a dois.
+
+### 5. Crie um projeto seu e compartilhe
+
+O último passo é transformar o estudo em algo concreto: criar um projeto próprio e mostrá-lo às outras pessoas. Ele não precisa ser complexo, uma calculadora, uma simulação de conta bancária ou um cadastro simples já cumprem o papel. Publicar esse projeto em uma plataforma como o **GitHub**, além da satisfação de concluir, abre a chance de receber orientação de pessoas mais experientes e de construir aos poucos um portfólio.
 
 ---
 

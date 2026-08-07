@@ -73,9 +73,21 @@ O **Programa de Formação AGER** é o programa de formação em tecnologia da A
 
 ## O que aprendi?
 
-### 1 e 2. Artigos de boas-vindas
+### 1. Artigo: Como escolher minha carreira em TI?
 
-Panorama das áreas de atuação em TI, pontos a considerar antes de escolher a carreira e um roteiro prático de 5 passos para aprender a programar, com destaque para a constância e a prática.
+Um panorama das principais frentes de atuação em TI (front-end, back-end, mobile, DevOps e infraestrutura), com a ideia de que todas partem de uma mesma base de **lógica de programação**. O artigo sugere pontos para guiar a escolha, como definir um objetivo, escolher a linguagem conforme o mercado, montar um plano de estudos e cuidar da rede de contatos, e lembra que mudar de área depois é possível, já que a base é comum a todas.
+
+**Principais tópicos:** áreas de atuação em TI · front-end (JavaScript, Angular, React) · back-end (Java, C#, Ruby, PHP) · mobile (Android, iOS, multiplataforma) · DevOps · infraestrutura e redes (Linux) · lógica de programação como base · plano de estudos · LinkedIn e networking
+
+➡️ [Anotações completas deste artigo](./ANOTACOES.md#artigo-como-escolher-minha-carreira-em-ti)
+
+### 2. Artigo: 5 passos para aprender a programar
+
+Um roteiro para quem está dando os primeiros passos, com o recado de que **aprender a programar é treino e constância, não talento**. Os cinco passos são escolher uma primeira linguagem com curva suave (como o JavaScript), praticar mais do que apenas estudar teoria, firmar a lógica de programação como base, estudar acompanhado e criar um projeto próprio para compartilhar no GitHub.
+
+**Principais tópicos:** escolha da primeira linguagem · JavaScript no navegador · prática e tentativa e erro · lógica de programação em primeiro lugar · estudar em dupla · primeiro projeto (calculadora, cadastro) · compartilhar no GitHub e portfólio
+
+➡️ [Anotações completas deste artigo](./ANOTACOES.md#artigo-5-passos-para-aprender-a-programar)
 
 ### 3. Trilha: Iniciante em programação
 
